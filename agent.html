@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NakhlaGuard — Farm Assistant (Agentic AI)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2;
@@ -50,8 +50,8 @@
   }
   .trace .tool-chip{
     display:inline-block; background:#E7DFCB; color:var(--palm-deep); padding:2px 9px;
-    border-radius:10px; margin-inline-end:6px; margin-bottom:4px; font-family:'Space Grotesk',sans-serif;
-    font-size:.72rem;
+    border-radius:12px; margin-inline-end:6px; margin-bottom:4px;
+    font-size:.8rem;
   }
 
   .suggestions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px}
@@ -73,15 +73,21 @@
   }
   body.rtl #sendBtn{font-family:'Tajawal',sans-serif}
   #sendBtn:hover{background:var(--palm-deep)}
+
+  /* ---- Urdu (اردو): Noto Nastaliq Urdu, tall line-height, RTL ---- */
+  body.lang-ur, body.lang-ur *:not(code):not(.repro){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 }
+  body.lang-ur h1, body.lang-ur h2, body.lang-ur h3, body.lang-ur h4{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea, body.lang-ur .nk-tab{ line-height:1.8 }
 </style>
 </head>
 <body>
 <button id="langToggle" onclick="toggleLang()">العربية</button>
 <div class="wrap">
-  <a href="/index.html" class="back" data-en="← Back to overview" data-ar="← رجوع للصفحة الرئيسية">← Back to overview</a>
+  <a href="/index.html" class="back" data-en="← Back to overview" data-ar="← رجوع للصفحة الرئيسية" data-ur="← جائزے پر واپس">← Back to overview</a>
   <header>
-    <h1 data-en="🤖 Farm Assistant" data-ar="🤖 مساعد المزرعة">🤖 Farm Assistant</h1>
-    <p class="sub" data-en="An agentic AI with real access to your palm registry — it decides on its own which farm data to look up." data-ar="ذكاء اصطناعي توكيلي يملك وصولًا حقيقيًا إلى سجل نخيلك — يقرر بنفسه أي بيانات يبحث عنها.">An agentic AI with real access to your palm registry — it decides on its own which farm data to look up.</p>
+    <h1 data-en="🤖 Farm Assistant" data-ar="🤖 مساعد المزرعة" data-ur="🤖 فارم اسسٹنٹ">🤖 Farm Assistant</h1>
+    <p class="sub" data-en="An agentic AI with real access to your palm registry — it decides on its own which farm data to look up." data-ar="ذكاء اصطناعي توكيلي يملك وصولًا حقيقيًا إلى سجل نخيلك — يقرر بنفسه أي بيانات يبحث عنها." data-ur="ایک ایجنٹک AI جسے آپ کی کھجوروں کے ریکارڈ تک حقیقی رسائی حاصل ہے — یہ خود فیصلہ کرتا ہے کہ فارم کا کون سا ڈیٹا دیکھنا ہے۔">An agentic AI with real access to your palm registry — it decides on its own which farm data to look up.</p>
   </header>
 
   <div class="suggestions" id="suggestions"></div>
@@ -89,10 +95,10 @@
   <div id="chatLog"></div>
 
   <div class="input-row">
-    <input type="text" id="userInput" data-en-ph="Ask about your palms…" data-ar-ph="اسأل عن نخيلك…" placeholder="Ask about your palms…" onkeydown="if(event.key==='Enter') sendMessage()">
-    <button id="sendBtn" onclick="sendMessage()" data-en="Send" data-ar="أرسل">Send</button>
+    <input type="text" id="userInput" data-en-ph="Ask about your palms…" data-ar-ph="اسأل عن نخيلك…" data-ur-ph="اپنی کھجوروں کے بارے میں پوچھیں…" placeholder="Ask about your palms…" onkeydown="if(event.key==='Enter') sendMessage()">
+    <button id="sendBtn" onclick="sendMessage()" data-en="Send" data-ar="أرسل" data-ur="بھیجیں">Send</button>
   </div>
-  <p class="disclaimer" data-en="⚠️ This assistant is an AI system, not a certified agricultural expert. Its answers are generated from general knowledge and should not replace an in-person inspection or professional advice for serious cases." data-ar="⚠️ هذا المساعد نظام ذكاء اصطناعي، وليس خبيرًا زراعيًا معتمدًا. إجاباته مبنية على معرفة عامة ولا تغني عن فحص ميداني أو استشارة مختص بالحالات الجدّية.">⚠️ This assistant is an AI system, not a certified agricultural expert. Its answers are generated from general knowledge and should not replace an in-person inspection or professional advice for serious cases.</p>
+  <p class="disclaimer" data-en="⚠️ This assistant is an AI system, not a certified agricultural expert. Its answers are generated from general knowledge and should not replace an in-person inspection or professional advice for serious cases." data-ar="⚠️ هذا المساعد نظام ذكاء اصطناعي، وليس خبيرًا زراعيًا معتمدًا. إجاباته مبنية على معرفة عامة ولا تغني عن فحص ميداني أو استشارة مختص بالحالات الجدّية." data-ur="⚠️ یہ اسسٹنٹ ایک AI نظام ہے، کوئی تصدیق شدہ زرعی ماہر نہیں۔ اس کے جوابات عمومی معلومات سے تیار ہوتے ہیں اور سنگین صورتوں میں ماہر سے براہِ راست معائنے یا پیشہ ورانہ مشورے کا متبادل نہیں ہیں۔">⚠️ This assistant is an AI system, not a certified agricultural expert. Its answers are generated from general knowledge and should not replace an in-person inspection or professional advice for serious cases.</p>
 </div>
 
 <style>
@@ -113,10 +119,16 @@ const SUGGESTIONS = {
     "أعطني ملخص كل نخيلي",
     "ما تاريخ فحص Palm-A12؟",
   ],
+  ur: [
+    "ابھی کس کھجور کو توجہ درکار ہے؟",
+    "میری تمام کھجوروں کا خلاصہ دیں",
+    "Palm-A12 کی جانچ کی تاریخ کیا ہے؟",
+  ],
 };
 const UI_TEXT = {
   en: { thinking:"Thinking…", error:"Could not reach the assistant: " },
-  ar: { thinking:"جاري التفكير…", error:"تعذّر الوصول للمساعد: " },
+  ar: { thinking:"جارٍ التفكير…", error:"تعذّر الوصول إلى المساعد: " },
+  ur: { thinking:"سوچ رہا ہے…", error:"اسسٹنٹ تک رسائی ممکن نہیں ہوئی: " },
 };
 
 function renderSuggestions(){
@@ -135,12 +147,22 @@ function addMessage(text, role){
   return div;
 }
 
+const esc = x => String(x).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function addTrace(trace){
   if(!trace || !trace.length) return;
   const log = document.getElementById('chatLog');
   const div = document.createElement('div');
   div.className = 'trace';
-  div.innerHTML = '🔧 ' + trace.map(t => `<span class="tool-chip">${t.tool}${Object.keys(t.args||{}).length ? '(' + JSON.stringify(t.args).replace(/"/g,'') + ')' : ''}</span>`).join('');
+  const STEP = {
+    list_palms: {en:'📋 Looking at your palms', ar:'📋 يعرض نخيلك', ur:'📋 آپ کی کھجوریں دیکھ رہا ہے'},
+    get_palm_details: {en:'🔍 Reading the details of {p}', ar:'🔍 يقرأ تفاصيل {p}', ur:'🔍 {p} کی تفصیل پڑھ رہا ہے'},
+    palms_needing_attention: {en:'🔎 Looking for the palms that need attention', ar:'🔎 يبحث عن النخيل التي تحتاج انتباهًا', ur:'🔎 توجہ طلب کھجوریں تلاش کر رہا ہے'},
+    palms_due_for_recheck: {en:'📅 Looking for the palms due for a re-check', ar:'📅 يبحث عن النخيل المستحقة لإعادة الفحص', ur:'📅 دوبارہ جانچ کی منتظر کھجوریں تلاش کر رہا ہے'},
+    get_farm_contact: {en:'📞 Reading the farm backup contact', ar:'📞 يقرأ جهة الاتصال الاحتياطية للمزرعة', ur:'📞 فارم کا متبادل رابطہ پڑھ رہا ہے'}
+  };
+  const lang = getLang();
+  const label = t => { const d = STEP[t.tool]; if(!d) return '⚙️ ' + t.tool; const a = t.args || {}; return (d[lang] || d.en).replace('{p}', a.palm_id || a.palm || ''); };
+  div.innerHTML = trace.map(t => `<span class="tool-chip">${esc(label(t))}</span>`).join('');
   log.appendChild(div);
   log.scrollTop = log.scrollHeight;
 }
@@ -183,25 +205,31 @@ async function sendMessage(){
   }
 }
 
-// ---------- تبديل اللغة (عربي/إنجليزي) - مشترك عبر كل صفحات الموقع ----------
-function getLang(){ return localStorage.getItem('nakhlaguard-lang') || 'en'; }
+// ---------- تبديل اللغة (عربي / English / اردو) - مشترك عبر كل صفحات الموقع ----------
+var LANG_CYCLE = ['ar', 'en', 'ur'];
+var LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+var LOCALES = { ar: 'ar-SA', en: 'en-US', ur: 'ur-PK' };
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return (l === 'ar' || l === 'en' || l === 'ur') ? l : 'ar'; }   // لا يعتمد على ثوابت معرَّفة لاحقًا، لأن بعض الصفحات تناديه قبل نهاية السكربت
 function setLang(lang){
-  localStorage.setItem('nakhlaguard-lang', lang);
+  if(!LANG_CYCLE.includes(lang)) lang = 'ar';
+  try{ localStorage.setItem('nakhlaguard-lang', lang); }catch(e){}
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.body.classList.toggle('rtl', lang === 'ar');
+  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.body.classList.toggle('rtl', lang !== 'en');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
   document.querySelectorAll('[data-en]').forEach(el => {
-    el.innerHTML = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    el.innerHTML = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
   });
   document.querySelectorAll('[data-en-ph]').forEach(el => {
-    el.placeholder = lang === 'ar' ? el.getAttribute('data-ar-ph') : el.getAttribute('data-en-ph');
+    el.placeholder = el.getAttribute('data-' + lang + '-ph') ?? el.getAttribute('data-en-ph');
   });
   const btn = document.getElementById('langToggle');
-  if(btn) btn.textContent = lang === 'ar' ? 'English' : 'العربية';
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
   renderSuggestions();
 }
-function toggleLang(){ setLang(getLang() === 'ar' ? 'en' : 'ar'); }
+function toggleLang(){ setLang(LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length]); }
 setLang(getLang());
 </script>
+<script src="/nav.js" defer></script>
 </body>
 </html>

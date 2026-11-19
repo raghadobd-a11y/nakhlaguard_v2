@@ -37,7 +37,7 @@ const int   TRIGGER_PIN   = 2;      // زر فحص يدوي (اختياري) - �
 bool        lastButtonState = HIGH;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(250000);   // 250000 (مو 115200): بـ115200 النص ما يكفي لـ4000 عينة بالثانية. لازم يطابق serial_bridge.py وSerial Monitor
   pinMode(TRIGGER_PIN, INPUT_PULLUP);
   // النص بالإنجليزي فقط (مو عربي) عشان نضمن توافق كامل مع Serial Monitor
   // والجسر (serial_bridge.py) بدون أي مشاكل ترميز (Encoding) محتملة
@@ -46,6 +46,7 @@ void setup() {
 
 void recordAndSend() {
   Serial.println("START");  // إشارة بداية التسجيل لسكربت البايثون
+  unsigned long t0 = millis();
   unsigned long nextSampleTime = micros();
   for (long i = 0; i < NUM_SAMPLES; i++) {
     while (micros() < nextSampleTime) { /* انتظار دقيق */ }
@@ -54,6 +55,9 @@ void recordAndSend() {
     nextSampleTime += SAMPLE_INTERVAL_US;
   }
   Serial.println("END");    // إشارة نهاية التسجيل
+  // الزمن الفعلي للتسجيل: لازم يكون قريبًا من 5000. لو أكبر بكثير فالمعدل الفعلي أقل من 4000
+  Serial.print("ELAPSED_MS,");
+  Serial.println(millis() - t0);
 }
 
 void loop() {

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NakhlaGuard — Palm Registry</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2;
@@ -89,50 +89,63 @@
   .badge.moderate{background:var(--moderate)} .badge.advanced{background:var(--advanced)}
   .badge.unchecked{background:#aaa}
 
+  .side{display:flex; flex-direction:column; align-items:center; gap:6px}
+  .qr-box{width:52px; height:52px; background:#fff; border-radius:6px; padding:4px; cursor:pointer}
+  .qr-box img, .qr-box canvas{width:100% !important; height:100% !important}
+  .qr-link{font-size:.68rem; color:var(--palm-deep); text-decoration:none}
+
   .empty{text-align:center; color:var(--ink-soft); padding:40px 20px; font-size:.9rem}
+
+  /* ---- Urdu (اردو): Noto Nastaliq Urdu, tall line-height, RTL ---- */
+  body.lang-ur, body.lang-ur *:not(code):not(.repro){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 }
+  body.lang-ur h1, body.lang-ur h2, body.lang-ur h3, body.lang-ur h4{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea, body.lang-ur .nk-tab{ line-height:1.8 }
 </style>
 </head>
 <body>
 <button id="langToggle" onclick="toggleLang()">العربية</button>
 <div class="wrap">
-  <a href="/index.html" class="back" data-en="← Back to overview" data-ar="← رجوع للصفحة الرئيسية">← Back to overview</a>
+  <a href="/index.html" class="back" data-en="← Back to overview" data-ar="← رجوع للصفحة الرئيسية" data-ur="← جائزے پر واپس">← Back to overview</a>
   <header>
-    <h1 data-en="🌴 Palm Registry" data-ar="🌴 سجل النخيل">🌴 Palm Registry</h1>
-    <p class="sub" data-en="Track every palm's location and health status in one place." data-ar="تابع موقع وحالة كل نخلة بمكان واحد.">Track every palm's location and health status in one place.</p>
+    <h1 data-en="🌴 Palm Registry" data-ar="🌴 سجل النخيل" data-ur="🌴 کھجوروں کا ریکارڈ">🌴 Palm Registry</h1>
+    <p class="sub" data-en="Track every palm's location and health status in one place." data-ar="تابع موقع كل نخلة وحالتها في مكان واحد." data-ur="ہر کھجور کا مقام اور صحت کی حالت ایک ہی جگہ دیکھیں۔">Track every palm's location and health status in one place.</p>
   </header>
 
   <div class="add-card">
-    <h2 data-en="Register a palm" data-ar="سجّل نخلة">Register a palm</h2>
+    <h2 data-en="Register a palm" data-ar="سجّل نخلة" data-ur="کھجور درج کریں">Register a palm</h2>
     <div class="row">
       <div>
-        <label data-en="Palm ID" data-ar="رقم النخلة">Palm ID</label>
-        <input type="text" id="newPalmId" data-en-ph="e.g. Palm-B07" data-ar-ph="مثلاً Palm-B07" placeholder="e.g. Palm-B07">
+        <label data-en="Palm ID" data-ar="رقم النخلة" data-ur="کھجور نمبر">Palm ID</label>
+        <input type="text" id="newPalmId" data-en-ph="e.g. Palm-B07" data-ar-ph="مثلاً Palm-B07" data-ur-ph="مثلاً Palm-B07" placeholder="e.g. Palm-B07">
       </div>
       <div>
-        <label data-en="Location" data-ar="الموقع">Location</label>
+        <label data-en="Location" data-ar="الموقع" data-ur="مقام">Location</label>
         <div class="loc-row">
-          <input type="text" id="newLocation" data-en-ph="Tap 📍 to auto-detect" data-ar-ph="اضغط 📍 للالتقاط التلقائي" placeholder="Tap 📍 to auto-detect">
+          <input type="text" id="newLocation" data-en-ph="Tap 📍 to auto-detect" data-ar-ph="اضغط 📍 للالتقاط التلقائي" data-ur-ph="خودکار شناخت کے لیے 📍 دبائیں" placeholder="Tap 📍 to auto-detect">
           <button type="button" class="loc-btn" onclick="useMyLocation('newLocation','newLocStatus')">📍</button>
         </div>
         <div class="loc-status" id="newLocStatus"></div>
       </div>
     </div>
-    <label style="margin-top:10px" data-en="Additional description (optional)" data-ar="وصف إضافي (اختياري)">Additional description (optional)</label>
-    <input type="text" id="newNotes" data-en-ph="e.g. planted 2019, irrigation line A" data-ar-ph="مثلاً زُرعت 2019، خط ري A" placeholder="e.g. planted 2019, irrigation line A">
-    <label style="margin-top:10px" data-en="Age in years (optional — affects RPW risk)" data-ar="العمر بالسنوات (اختياري — يؤثر على خطورة الإصابة)">Age in years (optional — affects RPW risk)</label>
-    <input type="number" id="newAge" min="0" max="150" data-en-ph="e.g. 7" data-ar-ph="مثلاً 7" placeholder="e.g. 7">
-    <button onclick="addPalm()" data-en="Add palm" data-ar="أضف النخلة">Add palm</button>
+    <label style="margin-top:10px" data-en="Additional description (optional)" data-ar="وصف إضافي (اختياري)" data-ur="اضافی تفصیل (اختیاری)">Additional description (optional)</label>
+    <input type="text" id="newNotes" data-en-ph="e.g. planted 2019, irrigation line A" data-ar-ph="مثلاً زُرعت 2019، خط ري A" data-ur-ph="مثلاً 2019 میں لگائی گئی، آبپاشی لائن A" placeholder="e.g. planted 2019, irrigation line A">
+    <label style="margin-top:10px" data-en="Age in years (optional — affects RPW risk)" data-ar="العمر بالسنوات (اختياري — يؤثر على خطورة الإصابة)" data-ur="عمر سالوں میں (اختیاری — حملے کے خطرے پر اثر انداز ہوتی ہے)">Age in years (optional — affects RPW risk)</label>
+    <input type="number" id="newAge" min="0" max="150" data-en-ph="e.g. 7" data-ar-ph="مثلاً 7" data-ur-ph="مثلاً 7" placeholder="e.g. 7">
+    <button onclick="addPalm()" data-en="Add palm" data-ar="أضف النخلة" data-ur="کھجور شامل کریں">Add palm</button>
   </div>
 
-  <div class="list-title" data-en="Registered palms" data-ar="النخيل المسجّلة">Registered palms</div>
-  <div id="palmList"><div class="empty" data-en="Loading…" data-ar="جاري التحميل…">Loading…</div></div>
+  <div class="list-title" data-en="Registered palms" data-ar="النخيل المسجّلة" data-ur="درج شدہ کھجوریں">Registered palms</div>
+  <div id="palmList"><div class="empty" data-en="Loading…" data-ar="جارٍ التحميل…" data-ur="لوڈ ہو رہا ہے…">Loading…</div></div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const CLASS_MAP = { "سليم":"healthy","مبكرة":"early","متوسطة":"moderate","متقدمة":"advanced" };
 const CLASS_LABEL = {
   en: { healthy:"Healthy", early:"Early stage", moderate:"Moderate", advanced:"Advanced" },
   ar: { healthy:"سليم", early:"مبكرة", moderate:"متوسطة", advanced:"متقدمة" },
+  ur: { healthy:"صحت مند", early:"ابتدائی مرحلہ", moderate:"درمیانہ", advanced:"شدید" },
 };
 const UI_TEXT = {
   en: { geoUnsupported:"Geolocation is not supported on this device.", detecting:"Detecting…",
@@ -141,14 +154,24 @@ const UI_TEXT = {
         loadError:"Could not load the registry. Is the server running?",
         noLocation:"No location set", lastChecked:"Last checked: ", ageLabel:"Age: ",
         needFields:"Please enter both a Palm ID and a location.",
-        saveError:"Could not save the palm. Is the server running?" },
-  ar: { geoUnsupported:"الجهاز لا يدعم تحديد الموقع.", detecting:"جاري التحديد…",
+        saveError:"Could not save the palm. Is the server running?",
+        viewStatus:"View status" },
+  ar: { geoUnsupported:"الجهاز لا يدعم تحديد الموقع.", detecting:"جارٍ التحديد…",
         captured:"📍 تم التحديد", failed:"فشل: ", notTested:"لم تُفحص بعد",
-        noneYet:"ما فيه نخيل مسجّلة بعد — أضف أول وحدة فوق.",
-        loadError:"تعذّر تحميل السجل. هل السيرفر شغّال؟",
-        noLocation:"ما فيه موقع محدد", lastChecked:"آخر فحص: ", ageLabel:"العمر: ",
+        noneYet:"لا يوجد نخيل مسجَّل بعد — أضف أول نخلة أعلاه.",
+        loadError:"تعذّر تحميل السجل. هل الخادم يعمل؟",
+        noLocation:"لا يوجد موقع محدد", lastChecked:"آخر فحص: ", ageLabel:"العمر: ",
         needFields:"أدخل رقم النخلة والموقع.",
-        saveError:"تعذّر حفظ النخلة. هل السيرفر شغّال؟" },
+        saveError:"تعذّر حفظ النخلة. هل الخادم يعمل؟",
+        viewStatus:"عرض الحالة" },
+  ur: { geoUnsupported:"اس ڈیوائس پر مقام کی شناخت دستیاب نہیں۔", detecting:"شناخت ہو رہی ہے…",
+        captured:"📍 مقام حاصل ہو گیا", failed:"ناکام: ", notTested:"ابھی جانچ نہیں ہوئی",
+        noneYet:"ابھی کوئی کھجور درج نہیں — اوپر اپنی پہلی کھجور شامل کریں۔",
+        loadError:"ریکارڈ لوڈ نہیں ہو سکا۔ کیا سرور چل رہا ہے؟",
+        noLocation:"مقام درج نہیں", lastChecked:"آخری جانچ: ", ageLabel:"عمر: ",
+        needFields:"براہِ کرم کھجور نمبر اور مقام دونوں درج کریں۔",
+        saveError:"کھجور محفوظ نہیں ہو سکی۔ کیا سرور چل رہا ہے؟",
+        viewStatus:"حالت دیکھیں" },
 };
 
 // يلتقط موقع GPS الحالي من متصفح الجهاز تلقائيًا بدل الكتابة اليدوية
@@ -189,7 +212,7 @@ async function loadPalms(){
       const badge = statusKey
         ? `<span class="badge ${statusKey}">${labels[statusKey]}</span>`
         : `<span class="badge unchecked">${t.notTested}</span>`;
-      const lastCheck = p.latest_check ? new Date(p.latest_check).toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US') : '';
+      const lastCheck = p.latest_check ? new Date(p.latest_check).toLocaleDateString(LOCALES[lang]) : '';
       return `
         <div class="palm-card ${statusKey || ''}">
           <div class="info">
@@ -197,12 +220,31 @@ async function loadPalms(){
             <div class="location">${p.location || t.noLocation}${p.age_years != null ? ' · ' + t.ageLabel + p.age_years : ''}</div>
             ${lastCheck ? `<div class="last-check">${t.lastChecked}${lastCheck}</div>` : ''}
           </div>
-          ${badge}
+          <div class="side">
+            ${badge}
+            <div class="qr-box" id="qr-${cssEscape(p.palm_id)}" onclick="location.href='/palm.html?id=${encodeURIComponent(p.palm_id)}'"></div>
+            <a class="qr-link" href="/palm.html?id=${encodeURIComponent(p.palm_id)}">${t.viewStatus}</a>
+          </div>
         </div>`;
     }).join('');
+    renderQrCodes(data.palms.map(p => p.palm_id));
   }catch(e){
     container.innerHTML = `<div class="empty">${t.loadError}</div>`;
   }
+}
+
+// يولّد رمز QR لكل نخلة، يفتح صفحة حالتها الحية (/palm.html?id=...).
+// نولّدها بعد ما يُبنى الـHTML، عشان عناصر qr-box تكون موجودة بالصفحة فعليًا
+function cssEscape(s){ return String(s).replace(/[^a-zA-Z0-9_-]/g, '_'); }
+function renderQrCodes(palmIds){
+  if(typeof QRCode === 'undefined') return;  // لو ما وصل سكربت QR (مثلاً بدون إنترنت)، نتجاهل بصمت
+  const base = location.origin;
+  palmIds.forEach(id => {
+    const el = document.getElementById(`qr-${cssEscape(id)}`);
+    if(!el) return;
+    el.innerHTML = '';
+    new QRCode(el, { text: `${base}/palm.html?id=${encodeURIComponent(id)}`, width: 44, height: 44, correctLevel: QRCode.CorrectLevel.M });
+  });
 }
 
 async function addPalm(){
@@ -234,25 +276,31 @@ async function addPalm(){
 
 loadPalms();
 
-// ---------- تبديل اللغة (عربي/إنجليزي) - مشترك عبر كل صفحات الموقع ----------
-function getLang(){ return localStorage.getItem('nakhlaguard-lang') || 'en'; }
+// ---------- تبديل اللغة (عربي / English / اردو) - مشترك عبر كل صفحات الموقع ----------
+var LANG_CYCLE = ['ar', 'en', 'ur'];
+var LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+var LOCALES = { ar: 'ar-SA', en: 'en-US', ur: 'ur-PK' };
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return (l === 'ar' || l === 'en' || l === 'ur') ? l : 'ar'; }   // لا يعتمد على ثوابت معرَّفة لاحقًا، لأن بعض الصفحات تناديه قبل نهاية السكربت
 function setLang(lang){
-  localStorage.setItem('nakhlaguard-lang', lang);
+  if(!LANG_CYCLE.includes(lang)) lang = 'ar';
+  try{ localStorage.setItem('nakhlaguard-lang', lang); }catch(e){}
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.body.classList.toggle('rtl', lang === 'ar');
+  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.body.classList.toggle('rtl', lang !== 'en');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
   document.querySelectorAll('[data-en]').forEach(el => {
-    el.innerHTML = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    el.innerHTML = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
   });
   document.querySelectorAll('[data-en-ph]').forEach(el => {
-    el.placeholder = lang === 'ar' ? el.getAttribute('data-ar-ph') : el.getAttribute('data-en-ph');
+    el.placeholder = el.getAttribute('data-' + lang + '-ph') ?? el.getAttribute('data-en-ph');
   });
   const btn = document.getElementById('langToggle');
-  if(btn) btn.textContent = lang === 'ar' ? 'English' : 'العربية';
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
   loadPalms(); // نعيد تحميل القائمة عشان الشارات والتواريخ تترجم فورًا
 }
-function toggleLang(){ setLang(getLang() === 'ar' ? 'en' : 'ar'); }
+function toggleLang(){ setLang(LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length]); }
 setLang(getLang());
 </script>
+<script src="/nav.js" defer></script>
 </body>
 </html>

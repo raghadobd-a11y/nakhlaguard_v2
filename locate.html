@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NakhlaGuard — خريطة العلامات الظاهرة على الجذع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2; --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --card:#FBF9F3; --warn:#FAECE7; --warn-ink:#7A2E1A; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{ font-family:'Tajawal','IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink); min-height:100vh; padding:0 0 40px; }
+  body.en{ font-family:'IBM Plex Sans',sans-serif }
+  .wrap{ max-width:1040px; margin:0 auto; padding:0 18px }
+  .top{ display:flex; justify-content:space-between; align-items:center; margin:16px 0 }
+  .back{ font-size:.9rem; color:var(--palm-deep); text-decoration:none }
+  .lang button{ border:1px solid var(--palm); background:transparent; color:var(--palm-deep); border-radius:8px; padding:4px 12px; cursor:pointer; font:inherit }
+  .lang button.on{ background:var(--palm); color:#fff }
+  .card{ background:var(--card); border-radius:16px; padding:24px; border-top:4px solid var(--date); margin-bottom:16px }
+  h1{ font-size:1.5rem; color:var(--palm-deep); margin-bottom:6px }
+  h2{ font-size:1.1rem; color:var(--palm-deep); margin:4px 0 10px }
+  .sub{ color:var(--ink-soft); font-size:.95rem; margin-bottom:14px; line-height:1.8 }
+  .warn{ background:var(--warn); color:var(--warn-ink); border-radius:12px; padding:12px 14px; font-size:.9rem; line-height:1.8; margin:12px 0 }
+  details{ background:#fff; border-radius:12px; padding:10px 14px; margin:10px 0; line-height:1.9; font-size:.93rem }
+  details summary{ cursor:pointer; font-weight:700; color:var(--palm-deep) }
+  details ul, details ol{ margin:8px 0 4px; padding-inline-start:22px }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0 }
+  .row label{ font-size:.92rem; color:var(--ink-soft) }
+  input[type=number]{ width:90px; padding:8px; border:1px solid var(--palm); border-radius:8px; font:inherit; background:#fff }
+  .slots{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:12px 0 }
+  @media (max-width:900px){ .slots{ grid-template-columns:repeat(2,1fr) } }
+  .slot{ background:#fff; border-radius:12px; padding:10px; text-align:center; min-height:170px }
+  .slot h3{ font-size:.95rem; color:var(--palm-deep); margin-bottom:6px }
+  .slot input[type=file]{ width:100%; font-size:.8rem; padding:6px; border:1px dashed var(--palm); border-radius:8px; background:var(--card) }
+  .slot .imgwrap{ position:relative; display:inline-block; max-width:100%; margin-top:8px }
+  .slot img{ display:block; max-width:100%; max-height:200px; border-radius:6px }
+  .slot canvas.ov{ position:absolute; inset:0; width:100%; height:100% }
+  .chip{ font-size:.78rem; margin-top:6px; min-height:1.3em }
+  .chip.bad{ color:#A63D40 } .chip.ok{ color:var(--palm) } .chip.wait{ color:var(--ink-soft) }
+  button.go{ background:var(--palm); color:#fff; border:none; border-radius:10px; padding:11px 22px; font:inherit; font-weight:700; cursor:pointer }
+  button.go:disabled{ opacity:.5; cursor:not-allowed }
+  button.ghost{ background:transparent; color:var(--palm-deep); border:1px solid var(--palm); border-radius:10px; padding:10px 16px; font:inherit; cursor:pointer }
+  #status{ min-height:1.6em; color:var(--ink-soft); margin:6px 0 }
+  #status.err{ color:#A63D40; font-weight:600 }
+  .grid2{ display:grid; grid-template-columns:360px 1fr; gap:16px; align-items:start }
+  @media (max-width:860px){ .grid2{ grid-template-columns:minmax(0,1fr) } }
+  .grid2 > *{ min-width:0 }
+  .figure canvas{ max-width:100%; height:auto }
+  @media (max-width:600px){ .grid2 table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch } }
+  .figure{ background:#fff; border-radius:12px; padding:10px; text-align:center }
+  #c3d{ width:100%; max-width:340px; touch-action:none; cursor:grab }
+  table{ width:100%; border-collapse:collapse; font-size:.92rem; background:#fff; border-radius:10px; overflow:hidden }
+  th,td{ padding:8px 10px; text-align:start; border-bottom:1px solid var(--sand-deep); vertical-align:top }
+  th{ background:var(--palm); color:#fff; font-weight:600 }
+  .num{ display:inline-flex; min-width:24px; height:24px; border-radius:50%; color:#fff; font-weight:700; align-items:center; justify-content:center; font-size:.8rem }
+  #summary{ margin:10px 0; line-height:1.9 }
+  .demo-banner{ background:#FFF3CD; color:#7A5A00; border-radius:10px; padding:8px 12px; font-size:.85rem; margin-bottom:10px }
+  .camwrap{ position:relative; max-width:520px; margin:8px auto; background:#000; border-radius:12px; overflow:hidden }
+  .camwrap video{ width:100%; display:block; min-height:200px }
+  .camguide{ position:absolute; inset:6% 30%; border:2px dashed rgba(255,255,255,.85); border-radius:6px; pointer-events:none }
+  body.embed{ background:transparent; padding:0; min-height:0 }
+  body.embed .wrap{ padding:0; max-width:none }
+  body.embed .top, body.embed h1, body.embed .sub, body.embed details.noprint, body.embed #demo, body.embed #print{ display:none !important }
+  body.embed .slot input[type=file], body.embed #verify, body.embed label:has(#verify){ display:none }
+  body.only3d #inCard > :not(#status):not(.warn){ display:none !important }
+  body.only3d #t_warn{ font-size:.82rem }
+  body.only3d #t_res_h, body.only3d #t_h3d, body.only3d #summary, body.only3d #disc, body.only3d #inCard .warn{ display:none !important }
+  body.only3d #result{ padding:8px 10px !important; margin:0 !important }
+  body.only3d .grid2{ grid-template-columns:minmax(0,1fr) !important; gap:6px }
+  body.only3d .grid2 > div:not(.figure){ display:none !important }
+  body.only3d .figure{ text-align:center }
+  body.only3d #c3d{ height:270px !important; width:auto !important; max-width:100%; margin:0 auto; display:block }
+  body.only3d table{ font-size:.8rem }
+  body.only3d #inCard{ padding:0; margin:0 0 6px; background:transparent; border:none; box-shadow:none }
+  body.only3d #inCard .warn{ margin:0 }
+  body.embed .card{ margin-bottom:8px; padding:12px; border-top:none; background:#FBF9F3 }
+  @media print{ .noprint{ display:none !important } body{ background:#fff } .card{ border:none; padding:0 } }
+
+  /* ---- Urdu (اردو): Noto Nastaliq Urdu, tall line-height, RTL ---- */
+  body.lang-ur, body.lang-ur *:not(code):not(.repro){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 }
+  body.lang-ur h1, body.lang-ur h2, body.lang-ur h3, body.lang-ur h4{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea, body.lang-ur .nk-tab{ line-height:1.8 }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top noprint">
+    <a class="back" href="/index.html" id="t_back">← الرئيسية</a>
+    <div class="lang"><button id="l_ar" class="on">العربية</button> <button id="l_en">English</button> <button id="l_ur">اردو</button></div>
+  </div>
+
+  <div class="card" id="inCard">
+    <h1 id="t_title">خريطة العلامات الظاهرة على جذع النخلة</h1>
+    <p class="sub" id="t_sub">صوّر الجذع من جهة أو أكثر، وسيعلّم النظام العلامات الخارجية التي تستحق الفحص، ويجمعها على مجسم ثلاثي الأبعاد للجذع مع ارتفاع كل علامة عن الأرض.</p>
+    <div class="warn" id="t_warn"></div>
+    <details class="noprint"><summary id="t_how_h">كيف تصوّر؟</summary><ol id="t_how"></ol></details>
+    <details class="noprint"><summary id="t_check_h">ماذا تفحص على النخلة؟ (للفاحص، وليس علاجًا)</summary><ul id="t_check"></ul></details>
+
+    <div class="row noprint"><label id="t_trunkh">ارتفاع الجذع من الأرض حتى بداية السعف (تقريبًا، بالمتر):</label><input type="number" id="trunkH" min="0.5" max="20" step="0.5" value="3"></div>
+    <div class="row noprint"><button class="go" id="camOpen">📷 فتح الكاميرا</button> <label id="t_camside">الجهة التي تلتقطها:</label><select id="camSide"></select> <label><input type="checkbox" id="auto" checked> <span id="t_auto">تحليل تلقائي بعد الالتقاط</span></label></div>
+    <div id="camBox" class="noprint" hidden>
+      <div class="camwrap"><video id="camVideo" autoplay playsinline muted></video><div class="camguide"></div></div>
+      <div class="row" style="justify-content:center"><button class="go" id="camShot">التقط وحلّل</button> <button class="ghost" id="camClose">إغلاق الكاميرا</button></div>
+      <div class="chip" id="camMsg" style="text-align:center"></div>
+    </div>
+    <div class="slots noprint" id="slots"></div>
+    <div class="row noprint"><label><input type="checkbox" id="verify"> <span id="t_verify">فحص ثانٍ بتكبير كل علامة (أبطأ؛ يقلّل العلامات الخاطئة)</span></label></div>
+    <details class="noprint" id="hotBox"><summary id="t_hot_h">نقطة الاهتزاز الصوتي من المستشعرات (اختياري)</summary>
+      <div class="row"><label>x (cm)</label><input type="number" id="hx" step="0.1"> <label>y (cm)</label><input type="number" id="hy" step="0.1"> <label id="t_hside">جهة لوح المستشعرات:</label><select id="hside"></select></div>
+      <div class="row"><label id="t_hbase">ارتفاع أسفل اللوح عن الأرض (م):</label><input type="number" id="hbase" step="0.1" value="0.5"> <label id="t_hcirc">محيط الجذع (سم):</label><input type="number" id="hcirc" value="125"> <label id="t_herr">خطأ تقريبي ± (سم):</label><input type="number" id="herr" step="0.1" value="0"></div>
+      <div class="row"><label id="t_hmode">الحالة:</label><select id="hmode"></select> <button class="ghost" id="hadd">إضافة النقطة</button> <button class="ghost" id="hdel">إزالة</button></div>
+      <p class="sub" id="t_hnote"></p></details>
+    <div class="row noprint">
+      <button class="go" id="go" disabled>حلّل الصور</button>
+      <button class="ghost" id="demo">عرض تجريبي ببيانات افتراضية</button>
+      <button class="ghost" id="print" hidden>طباعة / حفظ PDF</button>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <div class="card" id="result" hidden>
+    <div class="demo-banner" id="demoBanner" hidden></div>
+    <h2 id="t_res_h">النتيجة</h2>
+    <div class="grid2">
+      <div class="figure"><div id="t_h3d" style="font-size:.92rem;color:var(--palm-deep);margin-bottom:6px"></div><canvas id="c3d" width="340" height="400"></canvas></div>
+      <div>
+        <p id="summary"></p>
+        <table><thead><tr><th>#</th><th id="th_type"></th><th id="th_side"></th><th id="th_h"></th><th id="th_ver"></th><th id="th_note"></th></tr></thead><tbody id="rows"></tbody></table>
+      </div>
+    </div>
+    <div class="warn" id="disc" style="margin-top:14px"></div>
+  </div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const AZ = [0, Math.PI / 2, Math.PI, -Math.PI / 2];     // الأمام، اليمين، الخلف، اليسار (نسبةً إلى صورة الأمام)
+const SPAN = 1.5;                                          // الزاوية (راديان) التي يغطيها عرض كل صورة على الجذع: افتراض للعرض
+const COLORS = { exit_hole:"#C0392B", ooze:"#D68910", frass:"#8E6E3E", fiber_damage:"#7D3C98", crown_damage:"#1F618D", adult_weevil:"#212F3D", other:"#566573" };
+const L = {
+ ar:{ back:"← الرئيسية", title:"خريطة العلامات الظاهرة على جذع النخلة", sub:"صوّر الجذع من جهة أو أكثر، وسيعلّم النظام العلامات الخارجية التي تستحق الفحص، ويجمعها على مجسم ثلاثي الأبعاد للجذع مع ارتفاع كل علامة عن الأرض.",
+  warn:"⚠️ هذه الميزة لا ترى اليرقات داخل الجذع، فلا تحدد موضعها. تعلّم علامات ظاهرة على السطح، وقد ترصد حشرة بالغة إن ظهرت بوضوح، وقد تنتج العلامات عن أسباب أخرى أو يقع خطأ في التعرف عليها. القرار لمرشد زراعي مختص، وهو من يحدد المعالجة والحقن والمبيد والجرعة.",
+  howH:"كيف تصوّر؟", how:["صوّر نهارًا وبإضاءة جيدة، وتجنّب الظل القوي والتصوير باتجاه الشمس.","ابتعد 2 إلى 3 أمتار، وأدخل الجذع كاملًا من الأرض حتى بداية السعف.","صوّر من أربع جهات: الأمامية، ثم اليمنى، ثم الخلفية، ثم اليسرى (يكفي صورة أو اثنتان إن ضاق الوقت).","ثبّت الهاتف ولا تتحرك أثناء الالتقاط، فالصورة الضبابية تُفوّت العلامات.","اكتب ارتفاع الجذع التقريبي، لأن ارتفاع العلامات يُحسب منه."],
+  checkH:"ماذا تفحص على النخلة؟ (للفاحص، وليس علاجًا)", check:["حشرة بالغة بنية محمرّة بخرطوم طويل على الجذع أو القمة أو الأرض قربها.","فتحات دائرية أو غير منتظمة في الجذع أو عند قواعد السعف.","إفراز بني لزج أو جافّ يسيل على الجذع.","نشارة أو ألياف ممضوغة قرب الفتحات.","رائحة تخمّر قوية قرب موضع الشك.","اصفرار أو تدلٍّ أو جفاف في السعف المركزي، أو انحناء القمة.","أصوات قضم عند الإنصات للجذع (لا تُسمع دائمًا).","أي من هذا يستدعي إبلاغ المرشد الزراعي أو الجهة الزراعية المختصة."],
+  trunkh:"ارتفاع الجذع من الأرض حتى بداية السعف (تقريبًا، بالمتر):", sides:["الجهة الأمامية","الجهة اليمنى","الجهة الخلفية","الجهة اليسرى"], sidesShort:["أمامية","يمنى","خلفية","يسرى"],
+  go:"حلّل الصور", demo:"عرض تجريبي ببيانات افتراضية", print:"طباعة / حفظ PDF", resH:"النتيجة", h3d:"مجسم الجذع (اسحب للتدوير)", thType:"النوع", thSide:"الجهة", thH:"الارتفاع", thNote:"ملاحظة",
+  working:"جارٍ تحليل الصور…", chooseFirst:"اختر صورة واحدة على الأقل.", wait:"بانتظار التحليل", analyzing:"جارٍ التحليل…", done:"تم", failed:"تعذّر تحليل هذه الصورة", dark:"الصورة مظلمة، فقد تفوت علامات. أعد التصوير بإضاءة أفضل.", bright:"الصورة ساطعة جدًا، فقد تضيع التفاصيل.", blur:"الصورة قد تكون ضبابية. ثبّت الهاتف وأعد التصوير.",
+  noSigns:"لم يعلّم النظام علامات واضحة في الصور المحلَّلة. هذا لا يعني أن النخلة سليمة؛ جرّب صورًا أقرب وأوضح.", noPalm:"لم يتعرف النظام على نخلة واضحة في بعض الصور.", partial:"تعذّر تحليل بعض الصور.",
+  netErr:"تعذّر الوصول إلى الخادم. تأكد من أن الخادم يعمل وأن الصفحة مفتوحة من عنوانه (localhost).", demoBanner:"بيانات افتراضية للعرض فقط، وليست نتيجة تحليل لصورك.", conf:"الثقة", m:"م", cm:"نحو",
+  sumLine:(n, types, sides) => `عدد العلامات المعلَّمة: ${n}. الأنواع: ${types}. الجهات: ${sides}. هذه مواضع للفحص عن قرب، وليست مواضع اليرقات.`,
+  types:{ exit_hole:"فتحة", ooze:"إفراز بني", frass:"نشارة ألياف", fiber_damage:"تلف الألياف", crown_damage:"تلف القمة", adult_weevil:"حشرة بالغة ظاهرة", other:"علامة أخرى" }, confs:{ low:"منخفضة", medium:"متوسطة", high:"عالية" },
+  dirs:["الأمام","اليمين","الخلف","اليسار"], demoNotes:["ثقب دائري","بقعة بنية سائلة","ألياف ممضوغة","سعف متدلٍّ","إفراز جافّ","فتحة صغيرة"], demoDisc:"هذه علامات ظاهرة تستحق الفحص، وليست مواضع اليرقات داخل الجذع. القرار لمرشد زراعي مختص." },
+ en:{ back:"← Home", title:"Map of visible signs on the palm trunk", sub:"Photograph the trunk from one or more sides. The system marks external signs worth inspecting and combines them on a 3D trunk with each sign's height above the ground.",
+  warn:"⚠️ This feature cannot see larvae inside the trunk, so it does not locate them. It marks visible signs on the surface and may spot an adult insect if one is clearly visible; signs can have other causes and mistakes happen. Treatment, injection, pesticide and dose are decided by an agricultural specialist.",
+  howH:"How to take the photos", how:["Shoot in daylight with good light; avoid strong shadow and shooting into the sun.","Stand 2 to 3 metres away and include the whole trunk from the ground to the base of the fronds.","Photograph four sides: front, right, back, left (one or two are enough if time is short).","Hold the phone steady; blurry photos miss signs.","Enter the approximate trunk height, because the sign heights are computed from it."],
+  checkH:"What to inspect on the palm (for the inspector, not a treatment)", check:["A large reddish-brown beetle with a long curved snout on the trunk, the crown or the ground next to it.","Round or irregular holes in the trunk or at frond bases.","Sticky brown or dried liquid running down the trunk.","Sawdust-like or chewed fibre near the holes.","A strong fermented smell near the suspect spot.","Yellowing, drooping or dry central fronds, or a bent crown.","Gnawing sounds when listening to the trunk (not always audible).","Any of these is a reason to contact an agricultural advisor or the competent agricultural authority."],
+  trunkh:"Trunk height from the ground to the base of the fronds (approx., metres):", sides:["Front side","Right side","Back side","Left side"], sidesShort:["front","right","back","left"],
+  go:"Analyze photos", demo:"Demo with sample data", print:"Print / save PDF", resH:"Result", h3d:"Trunk model (drag to rotate)", thType:"Type", thSide:"Side", thH:"Height", thNote:"Note",
+  working:"Analyzing the photos…", chooseFirst:"Choose at least one photo.", wait:"Waiting", analyzing:"Analyzing…", done:"Done", failed:"This photo could not be analyzed", dark:"The photo is dark and may miss signs. Retake it with better light.", bright:"The photo is very bright; details may be lost.", blur:"The photo may be blurry. Hold the phone steady and retake it.",
+  noSigns:"No clear signs were marked in the analyzed photos. This does not mean the palm is healthy; try closer, clearer photos.", noPalm:"The system did not recognize a clear palm in some photos.", partial:"Some photos could not be analyzed.",
+  netErr:"Could not reach the server. Make sure it is running and open this page from its address (localhost).", demoBanner:"Sample data for demonstration only, not an analysis of your photos.", conf:"Confidence", m:"m", cm:"about",
+  sumLine:(n, types, sides) => `Marked signs: ${n}. Types: ${types}. Sides: ${sides}. These are spots to inspect up close, not where larvae are.`,
+  types:{ exit_hole:"Hole", ooze:"Brown ooze", frass:"Fibre frass", fiber_damage:"Fibre damage", crown_damage:"Crown damage", adult_weevil:"Visible adult insect", other:"Other sign" }, confs:{ low:"low", medium:"medium", high:"high" },
+  dirs:["Front","Right","Back","Left"], demoNotes:["round hole","brown wet stain","chewed fibre","drooping fronds","dried ooze","small hole"], demoDisc:"These are visible signs worth inspecting, not the position of larvae inside the trunk. A specialist decides." }
+};
+Object.assign(L.ar, { verify:"فحص ثانٍ بتكبير كل علامة (أبطأ؛ يقلّل العلامات الخاطئة)", thVer:"التحقق", vYes:"✓ مؤكدة بالتكبير", vNo:"✗ لم تتأكد", vUn:"؟ غير واضحة", vNone:"—",
+  vSum:(y, n, u) => `الفحص الثاني بتكبير: أكّد ${y}، ولم يتأكد ${n} (مستبعدة من العدّ)، وغير واضح ${u}.`, vUnavail:"الفحص الثاني غير متاح على الخادم (ثبّت Pillow: pip install pillow).", vErr:"تعذّر الفحص الثاني لبعض العلامات.",
+  hotH:"نقطة الاهتزاز الصوتي من المستشعرات (اختياري)", hSide:"جهة لوح المستشعرات:", hBase:"ارتفاع أسفل اللوح عن الأرض (م):", hCirc:"محيط الجذع (سم):", hErr:"خطأ تقريبي ± (سم):", hMode:"الحالة:", hAdd:"إضافة النقطة", hDel:"إزالة",
+  hModes:{ demo:"تجريبي (مستشعرات محاكاة)", live:"حيّ، غير معايَر", cal:"معايَر" }, hNote:"أدخل إحداثيات النقطة (سم) كما تظهر في صفحة تحديد الاهتزاز، أو افتح هذه الصفحة منها بزر «عرض النقطة على جذع العلامات». لوح المستشعرات 40×80 سم.",
+  hName:"نقطة اهتزاز صوتي", hDemo:"نقطة تجريبية من مستشعرات محاكاة.", hLive:"غير معايَرة: دقتها غير معروفة.", hCal:(e) => `معايَرة، خطأ تقريبي ± ${e} سم.`,
+  hNear:(n, ty, d) => `أقرب علامة بصرية للنقطة الصوتية: #${n} (${ty}) على بعد نحو ${d} سم. هذا تقارب مكاني بين مصدر اهتزاز مقدَّر وعلامة ظاهرة، فيُرجَّح بدء الفحص من هنا، وهو ليس تأكيدًا للإصابة.`,
+  hFar:(n, ty, d) => `أقرب علامة بصرية للنقطة الصوتية: #${n} (${ty}) على بعد نحو ${d} سم، أي لا تقارب واضح بين النتيجتين.`, hNoSigns:"لا علامات بصرية للمقارنة مع النقطة الصوتية.", hOnlyHot:"أُضيفت النقطة الصوتية فقط. أضف صورًا لتقارنها بالعلامات البصرية." });
+Object.assign(L.en, { verify:"Second look: zoom into each sign (slower; reduces false marks)", thVer:"Check", vYes:"✓ confirmed by zoom", vNo:"✗ not confirmed", vUn:"? unclear", vNone:"—",
+  vSum:(y, n, u) => `Zoomed second look: ${y} confirmed, ${n} not confirmed (excluded from the count), ${u} unclear.`, vUnavail:"The second look is unavailable on the server (install Pillow: pip install pillow).", vErr:"The second look failed for some signs.",
+  hotH:"Acoustic hotspot from the sensors (optional)", hSide:"Sensor panel side:", hBase:"Height of the panel bottom above ground (m):", hCirc:"Trunk circumference (cm):", hErr:"Approx. error ± (cm):", hMode:"Status:", hAdd:"Add the point", hDel:"Remove",
+  hModes:{ demo:"Demo (simulated sensors)", live:"Live, not calibrated", cal:"Calibrated" }, hNote:"Enter the point coordinates (cm) as shown in the vibration-location page, or open this page from it with the button 'Show the point on the signs trunk'. The sensor panel is 40 x 80 cm.",
+  hName:"Acoustic hotspot", hDemo:"Sample point from simulated sensors.", hLive:"Not calibrated: accuracy unknown.", hCal:(e) => `Calibrated, approx. error ± ${e} cm.`,
+  hNear:(n, ty, d) => `Nearest visual sign to the acoustic point: #${n} (${ty}), about ${d} cm away. This is a spatial agreement between an estimated vibration source and a visible sign, so inspection should start here, but it is not a confirmation of infestation.`,
+  hFar:(n, ty, d) => `Nearest visual sign to the acoustic point: #${n} (${ty}), about ${d} cm away, so there is no clear agreement between the two results.`, hNoSigns:"No visual signs to compare with the acoustic point.", hOnlyHot:"Only the acoustic point was added. Add photos to compare it with visual signs." });
+Object.assign(L.ar, { noSensorLoc:"لم تُسجَّل نقطة صوتية من المستشعرات لهذه النخلة بعد.", camOpen:"📷 فتح الكاميرا", camSideL:"الجهة التي تلتقطها:", auto:"تحليل تلقائي بعد الالتقاط", camShot:"التقط وحلّل", camClose:"إغلاق الكاميرا",
+  camHint:"وجّه الكاميرا للجذع وأدخله كاملًا داخل الإطار المتقطع، ثم اضغط «التقط وحلّل».", camInsecure:"الكاميرا المباشرة لا تعمل بهذا العنوان بسبب أمان المتصفح (تحتاج https أو localhost). سأفتح كاميرا الهاتف بدلًا منها.",
+  camDenied:"تعذّر فتح الكاميرا. اسمح للمتصفح باستخدامها، وتأكد أنها غير مشغولة بتطبيق آخر.", camNext:(side) => `تم التقاط «${side}». انتقل للجهة التالية ثم التقط.`, camDone:"التقطت الجهات الأربع. يمكنك إغلاق الكاميرا." });
+Object.assign(L.en, { noSensorLoc:"No acoustic point from the sensors has been recorded for this palm yet.", camOpen:"📷 Open the camera", camSideL:"Side being photographed:", auto:"Analyze automatically after capture", camShot:"Capture and analyze", camClose:"Close the camera",
+  camHint:"Point the camera at the trunk, keep the whole trunk inside the dashed frame, then press 'Capture and analyze'.", camInsecure:"The live camera does not work on this address because of browser security (it needs https or localhost). Opening the phone camera instead.",
+  camDenied:"Could not open the camera. Allow the browser to use it and make sure no other app is using it.", camNext:(side) => `Captured: ${side}. Move to the next side and capture.`, camDone:"All four sides captured. You can close the camera." });
+
+L.ur = {
+ back:"← ہوم", title:"کھجور کے تنے پر نظر آنے والی علامات کا نقشہ",
+ sub:"تنے کی ایک یا زیادہ جانب سے تصویر لیں۔ نظام ان ظاہری بیرونی علامات کو نشان زد کرتا ہے جو معائنے کے قابل ہیں، اور انہیں تنے کے تھری ڈی ماڈل پر زمین سے ہر علامت کی اونچائی کے ساتھ یکجا کر دیتا ہے۔",
+ warn:"⚠️ یہ فیچر تنے کے اندر موجود لاروے کو نہیں دیکھ سکتا، اس لیے ان کا مقام نہیں بتاتا۔ یہ سطح پر نظر آنے والی علامات نشان زد کرتا ہے، اور اگر کوئی بالغ کیڑا صاف نظر آئے تو اسے بھی پہچان سکتا ہے؛ علامات کی دوسری وجوہات بھی ہو سکتی ہیں اور غلطیاں بھی ہوتی ہیں۔ علاج، انجکشن، کیڑے مار دوا اور اس کی مقدار کا فیصلہ زرعی ماہر کرتا ہے۔",
+ howH:"تصاویر کیسے لیں", how:["دن کی روشنی میں اچھی روشنی کے ساتھ تصویر لیں؛ تیز سائے اور سورج کی طرف رخ کر کے تصویر لینے سے بچیں۔","2 سے 3 میٹر دور کھڑے ہوں اور زمین سے پتوں کی جڑ تک پورا تنا فریم میں لیں۔","چار جانب سے تصویر لیں: سامنے، دائیں، پیچھے، بائیں (وقت کم ہو تو ایک یا دو کافی ہیں)۔","فون کو مضبوطی سے تھامیں؛ دھندلی تصاویر میں علامات چھوٹ جاتی ہیں۔","تنے کی تقریبی اونچائی درج کریں، کیونکہ علامات کی اونچائی اسی سے نکالی جاتی ہے۔"],
+ checkH:"کھجور پر کیا دیکھیں (معائنہ کرنے والے کے لیے، علاج نہیں)", check:["تنے، چوٹی یا اس کے ساتھ زمین پر لمبی مڑی ہوئی سونڈ والا بڑا سرخی مائل بھورا بھونرا۔","تنے میں یا پتوں کی جڑوں پر گول یا بے ترتیب سوراخ۔","تنے پر بہتا ہوا چپچپا بھورا یا خشک مادہ۔","سوراخوں کے قریب برادے جیسے یا چبائے ہوئے ریشے۔","مشتبہ جگہ کے قریب خمیر اٹھنے کی تیز بو۔","درمیانی پتوں کا پیلا پڑنا، جھک جانا یا سوکھ جانا، یا جھکا ہوا تاج۔","تنے پر کان لگانے سے کتر کھانے کی آوازیں (ہمیشہ سنائی نہیں دیتیں)۔","ان میں سے کوئی بھی علامت زرعی مشیر یا متعلقہ زرعی اتھارٹی سے رابطہ کرنے کی وجہ ہے۔"],
+ trunkh:"زمین سے پتوں کی جڑ تک تنے کی اونچائی (تقریباً، میٹر میں):", sides:["سامنے کی جانب","دائیں جانب","پیچھے کی جانب","بائیں جانب"], sidesShort:["سامنے","دائیں","پیچھے","بائیں"],
+ go:"تصاویر کا تجزیہ کریں", demo:"فرضی ڈیٹا کے ساتھ نمونہ", print:"پرنٹ / PDF محفوظ کریں", resH:"نتیجہ", h3d:"تنے کا ماڈل (گھمانے کے لیے کھینچیں)", thType:"قسم", thSide:"جانب", thH:"اونچائی", thNote:"نوٹ",
+ working:"تصاویر کا تجزیہ ہو رہا ہے…", chooseFirst:"کم از کم ایک تصویر منتخب کریں۔", wait:"تجزیے کے انتظار میں", analyzing:"تجزیہ ہو رہا ہے…", done:"مکمل", failed:"اس تصویر کا تجزیہ نہیں ہو سکا", dark:"تصویر تاریک ہے اور علامات چھوٹ سکتی ہیں۔ بہتر روشنی میں دوبارہ لیں۔", bright:"تصویر بہت زیادہ روشن ہے؛ تفصیلات ضائع ہو سکتی ہیں۔", blur:"تصویر دھندلی ہو سکتی ہے۔ فون کو مضبوطی سے تھام کر دوبارہ لیں۔",
+ noSigns:"تجزیہ شدہ تصاویر میں کوئی واضح علامت نشان زد نہیں ہوئی۔ اس کا مطلب یہ نہیں کہ کھجور صحت مند ہے؛ قریب سے اور زیادہ واضح تصاویر لیں۔", noPalm:"کچھ تصاویر میں نظام کو کھجور واضح طور پر نظر نہیں آئی۔", partial:"کچھ تصاویر کا تجزیہ نہیں ہو سکا۔",
+ netErr:"سرور تک رسائی نہیں ہو سکی۔ یقینی بنائیں کہ سرور چل رہا ہے اور یہ صفحہ اسی کے ایڈریس (localhost) سے کھولا گیا ہے۔", demoBanner:"صرف نمائش کے لیے فرضی ڈیٹا ہے، آپ کی تصاویر کا تجزیہ نہیں۔", conf:"اعتماد", m:"م", cm:"تقریباً",
+ sumLine:(n, types, sides) => `نشان زد علامات: ${n}۔ اقسام: ${types}۔ جانب: ${sides}۔ یہ قریب سے جانچنے کی جگہیں ہیں، لاروے کی جگہیں نہیں۔`,
+ types:{ exit_hole:"سوراخ", ooze:"بھورا رساؤ", frass:"ریشوں کا برادہ", fiber_damage:"ریشوں کو نقصان", crown_damage:"تاج کو نقصان", adult_weevil:"نظر آنے والا بالغ کیڑا", other:"دوسری علامت" }, confs:{ low:"کم", medium:"درمیانی", high:"زیادہ" },
+ dirs:["سامنے","دائیں","پیچھے","بائیں"], demoNotes:["گول سوراخ","بھورا گیلا دھبہ","چبائے ہوئے ریشے","جھکے ہوئے پتے","خشک رساؤ","چھوٹا سوراخ"], demoDisc:"یہ نظر آنے والی علامات ہیں جو معائنے کے لائق ہیں، تنے کے اندر لاروے کا مقام نہیں۔ فیصلہ ماہر کرتا ہے۔" };
+Object.assign(L.ur, { verify:"دوسری نظر: ہر علامت کو زوم کر کے دیکھیں (سست؛ غلط نشانات کم کرتی ہے)", thVer:"جانچ", vYes:"✓ زوم سے تصدیق شدہ", vNo:"✗ تصدیق نہیں ہوئی", vUn:"؟ غیر واضح", vNone:"—",
+  vSum:(y, n, u) => `زوم کے ساتھ دوسری نظر: ${y} کی تصدیق ہوئی، ${n} کی تصدیق نہیں ہوئی (گنتی سے خارج)، ${u} غیر واضح۔`, vUnavail:"سرور پر دوسری نظر دستیاب نہیں (Pillow انسٹال کریں: pip install pillow)۔", vErr:"کچھ علامات کے لیے دوسری نظر ناکام رہی۔",
+  hotH:"سینسرز سے صوتی ہاٹ اسپاٹ (اختیاری)", hSide:"سینسر پینل کی جانب:", hBase:"زمین سے پینل کے نچلے حصے کی اونچائی (م):", hCirc:"تنے کا گھیرا (سم):", hErr:"تقریبی غلطی ± (سم):", hMode:"حالت:", hAdd:"نقطہ شامل کریں", hDel:"ہٹائیں",
+  hModes:{ demo:"نمائشی (فرضی سینسرز)", live:"براہِ راست، غیر کیلیبریٹڈ", cal:"کیلیبریٹڈ" }, hNote:"نقطے کے نقاط (سم) درج کریں جیسے کمپن کے مقام والے صفحے پر نظر آتے ہیں، یا «علامات والے تنے پر نقطہ دکھائیں» کے بٹن سے وہیں سے یہ صفحہ کھولیں۔ سینسر پینل 40×80 سم کا ہے۔",
+  hName:"صوتی ہاٹ اسپاٹ", hDemo:"فرضی سینسرز سے نمونہ نقطہ۔", hLive:"غیر کیلیبریٹڈ: درستگی معلوم نہیں۔", hCal:(e) => `کیلیبریٹڈ، تقریبی غلطی ± ${e} سم۔`,
+  hNear:(n, ty, d) => `صوتی نقطے سے قریب ترین بصری علامت: #${n} (${ty})، تقریباً ${d} سم کے فاصلے پر۔ یہ تخمینہ شدہ کمپن کے ماخذ اور نظر آنے والی علامت کے درمیان مکانی مطابقت ہے، اس لیے معائنہ یہیں سے شروع کرنا چاہیے، لیکن یہ حملے کی تصدیق نہیں ہے۔`,
+  hFar:(n, ty, d) => `صوتی نقطے سے قریب ترین بصری علامت: #${n} (${ty})، تقریباً ${d} سم کے فاصلے پر، یعنی دونوں نتائج میں کوئی واضح مطابقت نہیں۔`, hNoSigns:"صوتی نقطے سے موازنہ کرنے کے لیے کوئی بصری علامت نہیں۔", hOnlyHot:"صرف صوتی نقطہ شامل ہوا۔ بصری علامات سے موازنہ کرنے کے لیے تصاویر شامل کریں۔",
+  noSensorLoc:"اس کھجور کے لیے سینسرز سے ابھی تک کوئی صوتی نقطہ درج نہیں ہوا۔", camOpen:"📷 کیمرا کھولیں", camSideL:"جس جانب کی تصویر لی جا رہی ہے:", auto:"تصویر لینے کے بعد خود بخود تجزیہ", camShot:"تصویر لیں اور تجزیہ کریں", camClose:"کیمرا بند کریں",
+  camHint:"کیمرا تنے کی طرف کریں، پورا تنا نقطہ دار فریم کے اندر رکھیں، پھر «تصویر لیں اور تجزیہ کریں» دبائیں۔", camInsecure:"براؤزر کی سکیورٹی کی وجہ سے اس ایڈریس پر لائیو کیمرا کام نہیں کرتا (https یا localhost درکار ہے)۔ اس کی جگہ فون کا کیمرا کھولا جا رہا ہے۔",
+  camDenied:"کیمرا نہیں کھل سکا۔ براؤزر کو اس کے استعمال کی اجازت دیں اور یقینی بنائیں کہ کوئی اور ایپ اسے استعمال نہ کر رہی ہو۔", camNext:(side) => `لی گئی: ${side}۔ اگلی جانب جائیں اور تصویر لیں۔`, camDone:"چاروں جانب کی تصاویر لی جا چکی ہیں۔ آپ کیمرا بند کر سکتے ہیں۔" });
+let lang = "ar", isDemo = false, all = [], hot = null, verifInfo = null, hotTime = null;
+const QP = new URLSearchParams(location.search);
+const slots = [0, 1, 2, 3].map(() => ({ blob: null, url: null, data: null, q: null, state: "", err: "" }));
+
+function buildSlots() { const box = $("slots"); box.innerHTML = ""; slots.forEach((s, i) => { const d = document.createElement("div"); d.className = "slot"; d.innerHTML = `<h3 id="sh${i}"></h3><input type="file" accept="image/*" capture="environment" id="photo${i}"><div class="imgwrap" id="iw${i}" hidden><img id="im${i}" alt=""><canvas class="ov" id="ov${i}"></canvas></div><div class="chip" id="ch${i}"></div>`; box.appendChild(d);
+  $("photo" + i).onchange = () => onPick(i); }); }
+buildSlots();
+function setLang(l) { lang = l; document.documentElement.lang = l; document.documentElement.dir = l === "en" ? "ltr" : "rtl"; document.body.classList.toggle("en", l === "en"); document.body.classList.toggle("lang-ur", l === "ur"); $("l_ar").classList.toggle("on", l === "ar"); $("l_en").classList.toggle("on", l === "en"); $("l_ur").classList.toggle("on", l === "ur"); const t = L[l];
+  $("t_back").textContent = t.back; $("t_title").textContent = t.title; $("t_sub").textContent = t.sub; $("t_warn").textContent = t.warn; $("t_how_h").textContent = t.howH; $("t_check_h").textContent = t.checkH; $("t_trunkh").textContent = t.trunkh;
+  $("t_how").innerHTML = t.how.map(x => `<li>${x}</li>`).join(""); $("t_check").innerHTML = t.check.map(x => `<li>${x}</li>`).join(""); $("go").textContent = t.go; $("demo").textContent = t.demo; $("print").textContent = t.print;
+  $("t_res_h").textContent = t.resH; $("t_h3d").textContent = t.h3d; $("th_type").textContent = t.thType; $("th_side").textContent = t.thSide; $("th_h").textContent = t.thH; $("th_note").textContent = t.thNote; slots.forEach((s, i) => { $("sh" + i).textContent = t.sides[i]; chip(i); });
+  $("t_verify").textContent = t.verify; $("th_ver").textContent = t.thVer; $("t_hot_h").textContent = t.hotH; $("t_hside").textContent = t.hSide; $("t_hbase").textContent = t.hBase; $("t_hcirc").textContent = t.hCirc; $("t_herr").textContent = t.hErr; $("t_hmode").textContent = t.hMode; $("hadd").textContent = t.hAdd; $("hdel").textContent = t.hDel; $("t_hnote").textContent = t.hNote;
+  const hs = $("hside").value, hm = $("hmode").value; $("hside").innerHTML = t.sides.map((x, i) => `<option value="${i}">${x}</option>`).join(""); $("hside").value = hs || "0"; $("hmode").innerHTML = Object.entries(t.hModes).map(([k, v]) => `<option value="${k}">${v}</option>`).join(""); $("hmode").value = hm || "demo";
+  $("camOpen").textContent = t.camOpen; $("t_camside").textContent = t.camSideL; $("t_auto").textContent = t.auto; $("camShot").textContent = t.camShot; $("camClose").textContent = t.camClose;
+  const cs = $("camSide").value; $("camSide").innerHTML = t.sides.map((x, i) => `<option value="${i}">${x}</option>`).join(""); $("camSide").value = cs || "0";
+  if (all.length || anyData() || hot) render(); }
+$("l_ar").onclick = () => setLang("ar"); $("l_en").onclick = () => setLang("en"); $("l_ur").onclick = () => setLang("ur");
+const anyData = () => slots.some(s => s.data);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+// ===== تصغير الصورة + فحص جودتها محليًا =====
+function loadImg(file) { return new Promise((res, rej) => { const im = new Image(), u = URL.createObjectURL(file); im.onload = () => { res({ im, u }); }; im.onerror = () => rej(new Error("image")); im.src = u; }); }
+async function prep(file, maxSide = 1600) { const { im, u } = await loadImg(file); const k = Math.min(1, maxSide / Math.max(im.width, im.height)), c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u);
+  const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.86)); return { blob, canvas: c }; }
+function quality(canvas) { const w = 200, h = Math.round(canvas.height * 200 / canvas.width), c = document.createElement("canvas"); c.width = w; c.height = h; const g = c.getContext("2d"); g.drawImage(canvas, 0, 0, w, h);
+  const d = g.getImageData(0, 0, w, h).data, gray = new Float32Array(w * h); let sum = 0; for (let i = 0; i < w * h; i++) { gray[i] = 0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]; sum += gray[i]; }
+  let m2 = 0, n = 0; for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) { const v = 4 * gray[y * w + x] - gray[y * w + x - 1] - gray[y * w + x + 1] - gray[(y - 1) * w + x] - gray[(y + 1) * w + x]; m2 += v * v; n++; }
+  return { mean: sum / (w * h), blur: m2 / n }; }   // تدرّج لابلاسيان: قيمة منخفضة = ضبابية (عتبات تقريبية)
+function setSlotBlob(i, blob, canvas) { const s = slots[i]; s.data = null; s.state = ""; s.err = ""; s.blob = blob; if (s.url) URL.revokeObjectURL(s.url); s.url = URL.createObjectURL(blob); s.q = quality(canvas); $("im" + i).src = s.url; $("iw" + i).hidden = false; clearOv(i); chip(i); updateGo(); }
+async function onPick(i) { const f = $("photo" + i).files[0], s = slots[i]; if (!f) { s.data = null; s.state = ""; s.err = ""; s.blob = null; $("iw" + i).hidden = true; chip(i); updateGo(); return; }
+  try { const { blob, canvas } = await prep(f); setSlotBlob(i, blob, canvas); } catch (e) { s.data = null; s.blob = null; s.err = "bad"; chip(i); updateGo(); return; }
+  if ($("auto").checked) await runSlots([i]); }
+function chip(i) { const s = slots[i], t = L[lang], el = $("ch" + i); if (!el) return; let txt = "", cls = "wait";
+  if (s.err === "bad") { txt = t.failed; cls = "bad"; } else if (s.state === "run") { txt = t.analyzing; } else if (s.state === "ok") { txt = "✓ " + t.done; cls = "ok"; } else if (s.state === "err") { txt = s.err || t.failed; cls = "bad"; }
+  else if (s.blob) { txt = t.wait; const q = s.q; if (q) { if (q.mean < 60) { txt = "⚠️ " + t.dark; cls = "bad"; } else if (q.mean > 215) { txt = "⚠️ " + t.bright; cls = "bad"; } else if (q.blur < 40) { txt = "⚠️ " + t.blur; cls = "bad"; } } }
+  el.textContent = txt; el.className = "chip " + cls; }
+function updateGo() { $("go").disabled = !slots.some(s => s.blob); }
+
+// ===== التحليل =====
+async function analyzeSlot(i) { const s = slots[i]; s.state = "run"; s.data = null; chip(i); let net = false;
+  try { const fd = new FormData(); fd.append("photo", s.blob, "palm.jpg"); fd.append("language", lang); fd.append("verify", $("verify").checked ? "1" : "0"); const r = await fetch("/locate-signs", { method: "POST", body: fd }); const j = await r.json();
+    if (j.error) { s.state = "err"; s.err = j.error; } else { s.data = j; s.state = "ok"; } } catch (e) { s.state = "err"; s.err = L[lang].netErr; net = true; }
+  chip(i); return net; }
+async function runSlots(idxs) { $("go").disabled = true; $("status").className = ""; $("status").textContent = L[lang].working; isDemo = false; let netFail = false;
+  for (const i of idxs) { if (await analyzeSlot(i)) netFail = true; }
+  $("status").textContent = ""; if (netFail && !anyData()) { $("status").className = "err"; $("status").textContent = L[lang].netErr; } else if (idxs.some(i => slots[i].state === "err")) { $("status").textContent = L[lang].partial; }
+  updateGo(); if (anyData()) render(); }
+$("go").onclick = async () => { if (!slots.some(s => s.blob)) { $("status").textContent = L[lang].chooseFirst; return; } await runSlots([0, 1, 2, 3].filter(i => slots[i].blob)); };
+
+// ===== العرض التجريبي: صور مرسومة وعلامات افتراضية لأربع جهات =====
+function drawDemoImage(tone) { const c = document.createElement("canvas"); c.width = 360; c.height = 480; const g = c.getContext("2d"); g.fillStyle = "#cfe3ee"; g.fillRect(0, 0, 360, 480); g.fillStyle = "#d9c79b"; g.fillRect(0, 400, 360, 80);
+  g.fillStyle = tone; g.fillRect(125, 90, 110, 330); g.strokeStyle = "#6b4f33"; g.lineWidth = 3; for (let y = 130; y < 420; y += 38) { g.beginPath(); g.moveTo(125, y); g.quadraticCurveTo(180, y + 8, 235, y); g.stroke(); }
+  g.fillStyle = "#2e7d4f"; for (let a = -2; a <= 2; a++) { g.beginPath(); g.ellipse(180 + a * 48, 82 - Math.abs(a) * 7, 60, 12, a * 0.45, 0, 7); g.fill(); } return c; }
+$("demo").onclick = async () => { const t = L[lang], tones = ["#8b6a47", "#836141", "#7d5d3d", "#876744"]; const box = { x0: 0.347, y0: 0.19, x1: 0.653, y1: 0.875 };
+  const sets = [ [["exit_hole", .47, .46, "medium", 0], ["ooze", .55, .6, "medium", 1], ["crown_damage", .5, .17, "low", 3]], [["frass", .5, .52, "low", 2]], [], [["exit_hole", .45, .7, "high", 5], ["ooze", .5, .35, "low", 4]] ];
+  for (let i = 0; i < 4; i++) { const c = drawDemoImage(tones[i]), blob = await new Promise(r => c.toBlob(r, "image/png")), s = slots[i]; if (s.url) URL.revokeObjectURL(s.url); s.blob = blob; s.url = URL.createObjectURL(blob); s.q = { mean: 150, blur: 100 }; $("im" + i).src = s.url; $("iw" + i).hidden = false; s.state = "ok";
+    s.data = { palm_visible: true, photo_quality: "good", trunk_box: box, summary: "", disclaimer: t.demoDisc, signs: sets[i].map(([type, x, y, conf, ni]) => relSign({ type, x, y, confidence: conf, note: t.demoNotes[ni] }, box)) }; chip(i); }
+  isDemo = true; updateGo(); $("status").textContent = ""; $("status").className = ""; render(); };
+function relSign(s, b) { const u = (s.x - b.x0) / (b.x1 - b.x0), v = 1 - (s.y - b.y0) / (b.y1 - b.y0); return Object.assign({}, s, { rel_u: Math.max(0, Math.min(1, u)), rel_v: Math.max(0, Math.min(1, v)), outside_trunk: false }); }
+
+// ===== العرض =====
+function clearOv(i) { const cv = $("ov" + i); cv.getContext("2d").clearRect(0, 0, cv.width, cv.height); }
+function trunkH() { return Math.max(0.5, parseFloat($("trunkH").value) || 3); }
+function hotPlace() { if (!hot) return null; const R = hot.circ / (2 * Math.PI), th = AZ[hot.side] + (hot.x - 20) / R, h = hot.base + hot.y / 100; return { th, h, v: h / trunkH(), R }; }
+function render() { const t = L[lang]; $("result").hidden = false; $("print").hidden = false; $("demoBanner").hidden = !isDemo; $("demoBanner").textContent = isDemo ? t.demoBanner : "";
+  all = []; slots.forEach((s, i) => { if (s.data && s.data.palm_visible) s.data.signs.forEach(sg => all.push(Object.assign({}, sg, { side: i, n: all.length + 1, h: sg.rel_v * trunkH(), rej: sg.verified === "no" }))); });
+  const vtxt = x => x.verified === "yes" ? t.vYes : x.verified === "no" ? t.vNo : x.verified === "unclear" ? t.vUn : t.vNone;
+  const rows = $("rows"); rows.innerHTML = ""; all.forEach(s => { const tr = document.createElement("tr"); if (s.rej) tr.style.opacity = ".5"; tr.innerHTML = `<td><span class="num" style="background:${COLORS[s.type] || "#566573"}">${s.n}</span></td><td>${t.types[s.type] || s.type}<br><span style="font-size:.78rem;color:var(--ink-soft)">${t.conf}: ${t.confs[s.confidence] || s.confidence}</span></td><td>${t.sidesShort[s.side]}</td><td>${t.cm} ${s.h.toFixed(1)} ${t.m}</td><td>${vtxt(s)}</td><td>${(s.note || s.verify_note || "").replace(/</g, "&lt;")}</td>`; rows.appendChild(tr); });
+  const hp = hotPlace(); if (hp) { const tr = document.createElement("tr"); tr.innerHTML = `<td><span class="num" style="background:#E11D2A">●</span></td><td>${t.hName}</td><td>${t.sidesShort[hot.side]}</td><td>${t.cm} ${hp.h.toFixed(1)} ${t.m}</td><td>${t.vNone}</td><td>${hot.mode === "demo" ? t.hDemo : hot.mode === "cal" ? t.hCal(hot.err.toFixed(1)) : t.hLive}${hotTime ? " · " + new Date(hotTime + "Z").toLocaleString() : ""}</td>`; rows.appendChild(tr); }
+  const cnt = (arr, f) => { const m = {}; arr.forEach(x => { const k = f(x); m[k] = (m[k] || 0) + 1; }); return Object.entries(m).map(([k, v]) => `${k} ×${v}`).join("، "); };
+  const kept = all.filter(x => !x.rej); let sm = ""; if (!all.length) sm = hp ? t.hOnlyHot : (slots.some(s => s.data && !s.data.palm_visible) ? t.noPalm : t.noSigns); else if (!kept.length) sm = t.noSigns; else sm = t.sumLine(kept.length, cnt(kept, x => t.types[x.type] || x.type), cnt(kept, x => t.sidesShort[x.side]));
+  const ver = slots.filter(s => s.data && s.data.verification).map(s => s.data.verification); if (ver.length) { if (ver.some(v => v.available === false)) sm += " " + t.vUnavail; else { const y = ver.reduce((a, v) => a + (v.yes || 0), 0), n = ver.reduce((a, v) => a + (v.no || 0), 0), u = ver.reduce((a, v) => a + (v.unclear || 0), 0), e = ver.reduce((a, v) => a + (v.error || 0), 0); sm += " " + t.vSum(y, n, u) + (e ? " " + t.vErr : ""); } }
+  if (hp) { if (!kept.length) sm += all.length ? "" : ""; else { let best = null; kept.forEach(s => { let d = AZ[s.side] + (s.rel_u - 0.5) * SPAN - hp.th; d = Math.atan2(Math.sin(d), Math.cos(d)); const D = Math.hypot(hp.R * Math.abs(d), Math.abs(s.h - hp.h) * 100); if (!best || D < best.D) best = { s, D }; }); const thr = Math.max(30, 2 * hot.err), ty = t.types[best.s.type] || best.s.type; sm += " " + (best.D <= thr ? t.hNear(best.s.n, ty, Math.round(best.D)) : t.hFar(best.s.n, ty, Math.round(best.D))); } }
+  if (slots.some(s => s.data && s.data.photo_quality === "poor")) sm += " " + t.warnPoor; $("summary").textContent = sm; const d = slots.find(s => s.data && s.data.disclaimer); $("disc").textContent = d ? d.data.disclaimer : t.demoDisc;
+  slots.forEach((s, i) => drawOverlay(i)); draw3d(); }
+L.ar.warnPoor = "جودة بعض الصور ضعيفة."; L.en.warnPoor = "Some photos are of poor quality.";
+function drawOverlay(i) { const s = slots[i], im = $("im" + i), cv = $("ov" + i); if (!s.data || !im.complete || !im.clientWidth) { if (s.data && !im.complete) im.onload = () => drawOverlay(i); return; } const k = window.devicePixelRatio || 1;
+  cv.width = im.clientWidth * k; cv.height = im.clientHeight * k; const g = cv.getContext("2d"), W = cv.width, H = cv.height; g.clearRect(0, 0, W, H);
+  if (s.data.trunk_box) { const b = s.data.trunk_box; g.setLineDash([8 * k, 6 * k]); g.strokeStyle = "rgba(255,255,255,.9)"; g.lineWidth = 2 * k; g.strokeRect(b.x0 * W, b.y0 * H, (b.x1 - b.x0) * W, (b.y1 - b.y0) * H); g.setLineDash([]); }
+  all.filter(a => a.side === i).forEach(a => { const x = a.x * W, y = a.y * H; g.globalAlpha = a.rej ? 0.35 : 1; g.beginPath(); g.arc(x, y, 13 * k, 0, 7); g.fillStyle = COLORS[a.type] || "#566573"; g.fill(); g.lineWidth = 3 * k; g.strokeStyle = "#fff"; g.stroke(); g.fillStyle = "#fff"; g.font = `bold ${12 * k}px sans-serif`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(String(a.n), x, y + k); g.globalAlpha = 1; }); }
+window.addEventListener("resize", () => slots.forEach((s, i) => drawOverlay(i))); $("trunkH").addEventListener("input", () => { if (anyData() || hot) render(); });
+$("print").onclick = () => window.print();
+
+// ===== مجسم الجذع ثلاثي الأبعاد: أربع جهات، ومسطرة ارتفاع =====
+const TR = 20, TH = 90;
+const V3 = { yaw: -0.5, pitch: 0.25, drag: null };
+function draw3d() { const cv = $("c3d"), g = cv.getContext("2d"), k = cv.width / 340, w = 340, h = 400, SC = 3.1, cx = w / 2 + 8, cy = h * 0.56; g.setTransform(k, 0, 0, k, 0, 0); g.clearRect(0, 0, w, h);
+  const cyw = Math.cos(V3.yaw), syw = Math.sin(V3.yaw), cp = Math.cos(V3.pitch), sp = Math.sin(V3.pitch);
+  const P3 = (th, z, r = 1) => { const x0 = TR * r * Math.sin(th), z0 = TR * r * Math.cos(th), x1 = x0 * cyw + z0 * syw, z1 = -x0 * syw + z0 * cyw, y1 = z * cp - z1 * sp, d = z * sp + z1 * cp; return [cx + x1 * SC, cy - (y1 - TH / 2) * SC, d]; };
+  const N = 56, strips = []; for (let q = 0; q < N; q++) { const t0 = -Math.PI + 2 * Math.PI * q / N, t1 = -Math.PI + 2 * Math.PI * (q + 1) / N, tm = (t0 + t1) / 2, a = P3(t0, 0), b = P3(t1, 0), c = P3(t1, TH), d = P3(t0, TH);
+    const nx = Math.sin(tm) * cyw + Math.cos(tm) * syw, nz = -Math.sin(tm) * syw + Math.cos(tm) * cyw; strips.push({ pts: [a, b, c, d], depth: (a[2] + b[2] + c[2] + d[2]) / 4, shade: 0.45 + 0.55 * Math.max(0, nx * -0.35 + nz * 0.85) }); }
+  strips.sort((p, q) => p.depth - q.depth); for (const s of strips) { g.beginPath(); s.pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.closePath(); g.fillStyle = `rgb(${Math.round(140 * s.shade)},${Math.round(106 * s.shade)},${Math.round(71 * s.shade)})`; g.fill(); }
+  g.strokeStyle = "#5a4128"; g.lineWidth = 1.2; const H = trunkH(); for (let m = 1; m < H; m++) { const z = m / H * TH; g.beginPath(); let pen = false; for (let i = 0; i <= 96; i++) { const p = P3(-Math.PI + 2 * Math.PI * i / 96, z); if (p[2] > 0) { pen ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); pen = true; } else pen = false; } g.stroke(); }
+  g.beginPath(); for (let i = 0; i <= 64; i++) { const p = P3(-Math.PI + 2 * Math.PI * i / 64, TH); i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); } g.closePath(); g.fillStyle = "#B08D63"; g.fill(); g.strokeStyle = "#6B4E31"; g.stroke();
+  // مسطرة الارتفاع (يسار الصورة) وتسميات الجهات على الحلقة السفلية
+  g.fillStyle = "#4A5750"; g.font = "10px sans-serif"; g.textAlign = "left"; g.textBaseline = "middle"; g.strokeStyle = "#4A5750"; g.lineWidth = 1; g.beginPath(); g.moveTo(22, cy - (0 * cp - TH / 2) * SC); g.lineTo(22, cy - (TH * cp - TH / 2) * SC); g.stroke();
+  for (let m = 0; m <= H; m++) { const z = m / H * TH, y = cy - (z * cp - TH / 2) * SC; g.beginPath(); g.moveTo(18, y); g.lineTo(26, y); g.stroke(); g.fillText(m + " " + L[lang].m, 28, y); }
+  g.textAlign = "center"; g.font = "bold 11px sans-serif"; for (let i = 0; i < 4; i++) { const p = P3(AZ[i], 0, 1.45); g.globalAlpha = p[2] > -4 ? 1 : 0.35; g.fillStyle = "#123A2E"; g.fillText(L[lang].dirs[i], p[0], p[1] + 8); g.globalAlpha = 1; }
+  all.forEach(s => { const th = AZ[s.side] + (s.rel_u - 0.5) * SPAN, p = P3(th, s.rel_v * TH), front = p[2] > 0; g.globalAlpha = s.rej ? 0.2 : (front ? 1 : 0.3); g.beginPath(); g.arc(p[0], p[1], 11, 0, 7); g.fillStyle = COLORS[s.type] || "#566573"; g.fill(); g.lineWidth = 2.2; g.strokeStyle = "#fff"; g.stroke(); g.fillStyle = "#fff"; g.font = "bold 11px sans-serif"; g.textAlign = "center"; g.fillText(String(s.n), p[0], p[1] + 1); g.globalAlpha = 1; });
+  const hp = hotPlace(); if (hp) { const p = P3(hp.th, clamp(hp.v, 0, 1.05) * TH), front = p[2] > 0; g.globalAlpha = front ? 1 : 0.35;
+    if (hot.err > 0) { g.beginPath(); g.arc(p[0], p[1], Math.max(14, hot.err / 100 * (TH / trunkH()) * SC), 0, 7); g.fillStyle = "rgba(225,29,42,.14)"; g.fill(); g.setLineDash([4, 3]); g.strokeStyle = "#E11D2A"; g.lineWidth = 1.5; g.stroke(); g.setLineDash([]); }
+    g.beginPath(); g.arc(p[0], p[1], 19, 0, 7); g.fillStyle = "rgba(225,29,42,.16)"; g.fill(); g.beginPath(); g.arc(p[0], p[1], 19, 0, 7); g.lineWidth = 1.5; g.strokeStyle = "rgba(225,29,42,.55)"; g.stroke();
+    g.beginPath(); g.arc(p[0], p[1], 12, 0, 7); g.lineWidth = 1.5; g.strokeStyle = "rgba(225,29,42,.8)"; g.stroke();
+    g.beginPath(); g.arc(p[0], p[1], 7.5, 0, 7); g.fillStyle = "#E11D2A"; g.fill(); g.lineWidth = 2.5; g.strokeStyle = "#fff"; g.stroke(); g.globalAlpha = 1; } }
+const cv3 = $("c3d");
+cv3.addEventListener("pointerdown", e => { V3.drag = { x: e.clientX, y: e.clientY, yaw: V3.yaw, pitch: V3.pitch }; cv3.setPointerCapture(e.pointerId); cv3.style.cursor = "grabbing"; });
+cv3.addEventListener("pointermove", e => { if (!V3.drag) return; V3.yaw = V3.drag.yaw + (e.clientX - V3.drag.x) * 0.012; V3.pitch = Math.max(-0.2, Math.min(0.95, V3.drag.pitch + (e.clientY - V3.drag.y) * 0.006)); draw3d(); });
+cv3.addEventListener("pointerup", () => { V3.drag = null; cv3.style.cursor = "grab"; });
+window.__locate = { get all() { return all; }, get hot() { return hot; }, V3, get cam() { return !!camStream; } };
+// ===== الكاميرا المباشرة: التقاط إطار وتحليله بدون رفع ملف =====
+let camStream = null;
+function camMsg(t, bad) { $("camMsg").textContent = t; $("camMsg").className = "chip " + (bad ? "bad" : "wait"); }
+async function camOpen(auto) { const t = L[lang], side = +$("camSide").value;
+  if (!(window.isSecureContext && navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) { $("status").className = "err"; $("status").textContent = t.camInsecure; if (!auto) $("photo" + side).click(); return; }
+  try { camClose(); camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false });
+    $("camVideo").srcObject = camStream; $("camBox").hidden = false; $("status").textContent = ""; $("status").className = ""; camMsg(t.camHint, false); } catch (e) { $("status").className = "err"; $("status").textContent = t.camDenied; } }
+function camClose() { if (camStream) camStream.getTracks().forEach(tr => tr.stop()); camStream = null; $("camVideo").srcObject = null; $("camBox").hidden = true; }
+async function camShot() { const v = $("camVideo"), t = L[lang]; if (!v.videoWidth) return; const side = +$("camSide").value, k = Math.min(1, 1600 / Math.max(v.videoWidth, v.videoHeight)), c = document.createElement("canvas");
+  c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k); c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
+  const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.86)); $("photo" + side).value = ""; setSlotBlob(side, blob, c);
+  if (side < 3) { $("camSide").value = String(side + 1); camMsg(t.camNext(t.sides[side]), false); } else camMsg(t.camDone, false);
+  if ($("auto").checked) await runSlots([side]); }
+$("camOpen").onclick = () => camOpen(false); $("camClose").onclick = camClose; $("camShot").onclick = camShot; window.addEventListener("pagehide", camClose);
+$("hadd").onclick = () => { const x = parseFloat($("hx").value), y = parseFloat($("hy").value); if (isNaN(x) || isNaN(y)) return; hot = { x: clamp(x, 0, 40), y: clamp(y, 0, 80), side: +$("hside").value, base: parseFloat($("hbase").value) || 0, circ: Math.max(40, parseFloat($("hcirc").value) || 125), err: Math.max(0, parseFloat($("herr").value) || 0), mode: $("hmode").value }; render(); };
+$("hdel").onclick = () => { hot = null; if (anyData()) render(); else { $("result").hidden = true; } draw3d(); };
+(function fromUrl() { const q = new URLSearchParams(location.search), h = q.get("hot"); if (!h) return; const [x, y] = h.split(",").map(parseFloat); if (isNaN(x) || isNaN(y)) return;
+  $("hx").value = x; $("hy").value = y; const m = q.get("mode"); if (["demo", "live", "cal"].includes(m)) window.__urlMode = m; const e = parseFloat(q.get("err")); if (!isNaN(e)) $("herr").value = e; $("hotBox").open = true; })();
+function initLang() { let l = QP.get("lang"); if (!["ar", "en", "ur"].includes(l)) { try { l = localStorage.getItem("nakhlaguard-lang"); } catch (e) { l = null; } } return ["ar", "en", "ur"].includes(l) ? l : "ar"; }
+const EMBED = QP.get("embed") === "1";
+if (EMBED && QP.get("view") === "3d") document.body.classList.add("only3d");
+if (EMBED) { document.body.classList.add("embed"); const post = () => parent.postMessage({ type: "nk-embed-height", h: Math.ceil(document.body.getBoundingClientRect().height) }, "*"); try { new ResizeObserver(post).observe(document.body); } catch (e) {} post(); }
+setLang(initLang()); if (window.__urlMode) $("hmode").value = window.__urlMode;   // الخيارات تُبنى داخل setLang، فنضبط الحالة بعدها
+if ($("hx").value !== "" && $("hy").value !== "") $("hadd").click(); draw3d();
+(async function fromPalm() { const pid = QP.get("palm"); if (!pid || QP.get("hot")) return;      // نقطة المستشعرات المخزَّنة لهذه النخلة
+  try { const r = await fetch("/palms/" + encodeURIComponent(pid) + "/sensor-location"), j = await r.json(), l = j && j.location;
+    if (l) { $("hx").value = l.x; $("hy").value = l.y; $("hmode").value = l.mode || "live"; $("herr").value = l.err || 0; hotTime = j.time; $("hadd").click(); } else { $("status").className = ""; $("status").textContent = L[lang].noSensorLoc; } } catch (e) {} })();
+if (QP.get("autocam") === "1") camOpen(true);
+</script>
+<script src="/nav.js" data-mode="tabs" defer></script>
+</body>
+</html>

@@ -109,11 +109,17 @@ def fuse_audio_image(audio_result, image_infested_probability=None, image_weight
     idx = min(int(round(final_score * (len(SEVERITY_ORDER) - 1))), len(SEVERITY_ORDER) - 1)
     final_class = SEVERITY_ORDER[idx]
 
+    # درجة الثقة = احتمال النموذج الصوتي نفسه لنفس الفئة النهائية - مقياس
+    # صادق لمدى تأكد النموذج من هذا التصنيف تحديدًا، منفصل عن "نسبة الخطورة"
+    # (اللي هي درجة مستمرة مرجّحة حسب شدة كل فئة، مو مقياس ثقة إحصائي)
+    confidence = audio_result["probabilities"].get(final_class)
+
     return {
         "audio_only_score": round(audio_score, 3),
         "fusion_used": used_fusion,
         "final_score": round(final_score, 3),
         "final_class": final_class,
+        "confidence": round(confidence, 3) if confidence is not None else None,
     }
 
 
@@ -179,7 +185,7 @@ SHORT_SYSTEM_PROMPT_AR = """أنت مساعد زراعي متخصص بآفة س�
 
 FULL_REPORT_SYSTEM_PROMPT_AR = """أنت خبير زراعي متخصص بآفة سوسة النخيل الحمراء بالسعودية.
 حالة النخلة تستدعي عناية فعلية. اكتب تقريرًا كاملاً ومنظّمًا للمزارع
-بنفس العناوين التالية بالضبط (استخدمي ## قبل كل عنوان):
+بنفس العناوين التالية بالضبط (استخدم ## قبل كل عنوان):
 
 ## التشخيص
 فقرة قصيرة تشرح معنى التصنيف الحالي بلغة بسيطة يفهمها المزارع.
@@ -214,6 +220,14 @@ FULL_REPORT_SYSTEM_PROMPT_AR = """أنت خبير زراعي متخصص بآفة
 أجب بالعربية الفصحى المبسطة فقط، بدون أي مقدمة قبل العنوان الأول."""
 
 
+# الأردية: نبني السياق بالإنجليزي (قيم مترجمة) ثم نطلب من Gemini الجواب بالأردية.
+# نُبقي كلمتي Week/Day وعلامة | كما هي لأن الواجهة تقرؤها لبناء جدول الأسابيع.
+URDU_RULE = ("Respond in Urdu only (Urdu script, simple words a farmer understands; do not use Arabic or English words "
+             "except the palm ID, numbers and units). Translate the text of each section header into Urdu but keep the '## ' "
+             "marker before it. In the timeline lines keep the literal English words 'Week' and 'Day' followed by the number "
+             "and the '|' separator exactly as specified, and write only the text after the separator in Urdu), plain and clear")
+
+
 def build_gemini_prompt(fusion_result, palm_id=None, history=None, location=None, language="en",
                          age_years=None, visual_notes=None):
     """
@@ -230,6 +244,9 @@ def build_gemini_prompt(fusion_result, palm_id=None, history=None, location=None
     فيه أي كلمة عربية. بالعربي: نُبقي القيم كما هي (عربية أصلاً) لأن
     هذا أطبع لنموذج يجاوب بالعربي.
     """
+    out_language = language
+    if language == "ur":
+        language = "en"   # السياق بالإنجليزي، والجواب المطلوب بالأردية (انظر URDU_RULE)
     severity_value = (
         anglicize(fusion_result["final_class"]) if language == "en" else fusion_result["final_class"]
     )
@@ -260,6 +277,10 @@ def build_gemini_prompt(fusion_result, palm_id=None, history=None, location=None
         system_prompt = FULL_REPORT_SYSTEM_PROMPT_EN if needs_full_report else SHORT_SYSTEM_PROMPT_EN
         intro = "Analyze the following case:\n"
 
+    if out_language == "ur":
+        assert "Respond in English only, plain and clear" in system_prompt
+        system_prompt = system_prompt.replace("Respond in English only, plain and clear", URDU_RULE)
+
     user_message = intro + json.dumps(context, ensure_ascii=False, indent=2)
     return system_prompt, user_message
 
@@ -277,6 +298,15 @@ async def get_gemini_recommendation(fusion_result, palm_id=None, history=None, l
         )
         no_key_msg = "⚠️ لم يتم ضبط GEMINI_API_KEY - هذا نص توصية تجريبي بديل: "
         fail_msg = "⚠️ تعذّر الاتصال بـ Gemini حاليًا - هذا نص توصية تجريبي بديل: "
+    elif language == "ur":
+        ur_label = {"سليم": "صحت مند", "مبكرة": "ابتدائی مرحلہ", "متوسطة": "درمیانہ", "متقدمة": "شدید"}.get(
+            fusion_result["final_class"], fusion_result["final_class"])
+        fallback_text = (
+            f"درجہ بند حالت ({ur_label}) علاج کا فیصلہ کرنے سے پہلے نتیجے کی تصدیق کے "
+            "لیے میدانی معائنے کا تقاضا کرتی ہے۔"
+        )
+        no_key_msg = "⚠️ GEMINI_API_KEY سیٹ نہیں ہے - یہ متبادل نمونہ تجویز ہے: "
+        fail_msg = "⚠️ Gemini سے ابھی رابطہ نہیں ہو سکا - یہ متبادل نمونہ تجویز ہے: "
     else:
         fallback_text = (
             f"The classified condition ({anglicize(fusion_result['final_class'])}) "

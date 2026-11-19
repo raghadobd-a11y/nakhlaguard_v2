@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NakhlaGuard — Run a Test</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2;
@@ -19,6 +19,7 @@
     min-height:100vh; padding:0 0 32px;
   }
   body.rtl{font-family:'Tajawal',sans-serif; direction:rtl}
+  body.lang-ur{font-family:'Noto Nastaliq Urdu',serif; direction:rtl; line-height:2}
   body.rtl h1, body.rtl h2{font-family:'Tajawal',sans-serif}
   h1,h2{font-family:'Space Grotesk',sans-serif}
   .wrap{max-width:520px; margin:0 auto; padding:0 20px}
@@ -59,6 +60,35 @@
   }
   @keyframes spin{ to{ transform:rotate(360deg); } }
   .loading-text{font-size:.85rem; color:var(--ink-soft); text-align:center}
+  .conf-pill{display:inline-block; font-size:.75rem; font-weight:600; color:var(--palm-deep); background:#F2F6F3; border:1px solid var(--sand-deep); padding:3px 10px; border-radius:12px; margin-inline-start:6px}
+  .confirm-box{margin-top:18px; padding-top:14px; border-top:1px solid var(--sand-deep); display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:.85rem}
+  .confirm-q{color:var(--ink-soft)}
+  .confirm-btn{width:auto !important; margin:0 !important; padding:6px 14px !important; font-size:.8rem !important; border-radius:14px !important; font-family:inherit !important; cursor:pointer; border:1.5px solid var(--sand-deep)}
+  .confirm-btn.yes{background:#EAF3DE; color:#3B6D11; border-color:#C0DD97}
+  .confirm-btn.no{background:#FAECE7; color:#993C1D; border-color:#F0997B}
+  .confirm-thanks{font-size:.85rem; color:var(--palm-deep); font-weight:600}
+
+  .pdf-btn{
+    width:100% !important; margin:14px 0 0 !important; padding:10px !important;
+    background:#fff !important; color:var(--palm-deep) !important; border:1.5px solid var(--palm) !important;
+    border-radius:10px !important; font-weight:700 !important; font-size:.85rem !important;
+    font-family:inherit !important; cursor:pointer;
+  }
+  .pdf-btn:hover{background:#F2F6F3 !important}
+
+  .print-only{display:none}
+  @media print{
+    body *{visibility:hidden}
+    #result, #result *, #printHeader, #printHeader *{visibility:visible}
+    #printHeader{display:block; margin-bottom:14px}
+    .print-title{font-family:'Space Grotesk',sans-serif; font-size:1.3rem; font-weight:700; color:#123A2E}
+    .print-meta{font-size:.9rem; color:#4A5750; margin-top:2px}
+    #result{position:absolute; top:0; left:0; width:100%; border:none !important; padding:0 !important}
+    #printHeader{position:absolute; top:0; left:0; width:100%}
+    #result{margin-top:90px}
+    #confirmBox, #pdfBtn, .week-btn{display:none !important}
+    details.acc > summary::after, details.wk > summary::after{display:none}
+  }
   #result.r-healthy{border-inline-start-color:var(--healthy)}
   #result.r-early{border-inline-start-color:var(--early)}
   #result.r-moderate{border-inline-start-color:var(--moderate)}
@@ -139,62 +169,112 @@
   .ag-row input{flex:1}
   .ag-send{width:auto !important; margin:0 !important; padding:0 20px !important; font-size:.88rem !important}
   .ag-disc{font-size:.72rem; color:var(--ink-soft); text-align:center; margin-top:10px; line-height:1.5}
+  .trunk-card{ margin-top:18px; border:1px solid #d9cfb8; border-radius:14px; padding:12px; background:#fff }
+  .trunk-title{ font-weight:700; color:#123A2E; margin-bottom:4px }
+  .trunk-sub{ font-size:.85rem; color:#4A5750; margin-bottom:8px; line-height:1.7 }
+  .ask-farmer{ display:flex; align-items:center; justify-content:center; margin-top:12px; padding:12px 14px; border-radius:10px; background:#123A2E; color:#fff; text-decoration:none; font-weight:700; font-size:.9rem; text-align:center }
+  .ask-farmer:hover{ background:#1F5C4A }
+  .device-card{ margin:14px 0 10px; border:1px solid #d9cfb8; border-radius:12px; padding:12px; background:#F7F3E8 }
+  .device-card-h{ font-weight:700; color:#123A2E; margin-bottom:4px }
+  .device-card-p{ font-size:.86rem; line-height:1.8; color:#4A5750; margin-bottom:8px }
+  .device-status{ font-size:.82rem; line-height:1.8; border-radius:8px; padding:6px 10px; background:#EEF3EF; color:#2F4A3F }
+  .device-status.on{ background:#E4F1E8; color:#14522F }
+  .device-status.off{ background:#FAECE7; color:#7A2E1A }
+  .trunk-mode{ font-size:.82rem; line-height:1.7; border-radius:8px; padding:6px 10px; margin-bottom:8px; background:#EEF3EF; color:#2F4A3F }
+  .trunk-mode.demo{ background:#FAECE7; color:#7A2E1A }
+  #trunkFrame{ width:100%; height:640px; border:0; border-radius:10px }
+  .stepper{ list-style:none; display:flex; gap:8px; margin:6px 0 18px; padding:0 }
+  .stepper li{ flex:1; display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #e1d8c2; border-radius:12px; padding:8px 10px; font-size:.85rem; color:#123A2E }
+  @media (max-width:420px){ .stepper{ gap:6px } .stepper li{ min-width:0; padding:8px 6px; gap:5px; font-size:.76rem } .stepper b{ width:20px !important; height:20px !important; font-size:.72rem !important } }
+  .stepper b{ width:24px; height:24px; border-radius:50%; background:#1F5C4A; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.8rem; flex:none }
+  input.sr-file{ position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; margin:-1px !important; border:0 !important; overflow:hidden !important; clip:rect(0 0 0 0) !important; opacity:0 !important; pointer-events:none }
+  .upload-box{ display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; padding:22px 14px; margin:8px 0 14px; border:2px dashed #1F5C4A; border-radius:16px; background:#fff; cursor:pointer; color:#123A2E; transition:background .15s }
+  .upload-box:hover{ background:#f3f7f4 } .ub-icon{ font-size:2rem } .ub-title{ font-weight:700 } .ub-name{ font-size:.85rem; color:#1F5C4A; min-height:1.2em; word-break:break-all }
+  .samples{ margin:0 0 16px } .samples-h{ font-size:.9rem; color:#4A5750; margin-bottom:8px } .samples-n{ font-size:.78rem; color:#6a746d; margin-top:8px; line-height:1.6 }
+  .chips{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px }
+  @media (min-width:640px){ .chips{ grid-template-columns:repeat(4,1fr) } }
+  .chip{ min-width:0; border:none; border-radius:999px; padding:11px 8px; font:inherit; font-weight:700; cursor:pointer; color:#fff }
+  .chip.healthy{ background:#2e7d4f } .chip.early{ background:#c79a1b } .chip.moderate{ background:#d9701f } .chip.advanced{ background:#b3342d }
+  .go-big{ width:100%; padding:16px; font-size:1.15rem; border-radius:14px; box-shadow:0 6px 16px rgba(31,92,74,.35) }
+  .more-opts{ margin:16px 0 4px; background:#fff; border-radius:12px; padding:10px 14px } .more-opts summary{ cursor:pointer; font-weight:700; color:#123A2E }
+  .verdict{ display:flex; gap:14px; align-items:center; border-radius:16px; padding:16px; margin-bottom:12px; color:#fff }
+  .verdict.v-healthy{ background:#2e7d4f } .verdict.v-early{ background:#b88a12 } .verdict.v-moderate{ background:#c4631a } .verdict.v-advanced{ background:#b3342d }
+  .v-icon{ font-size:2.4rem; line-height:1 } .v-title{ font-size:1.35rem; font-weight:800 } .v-text{ margin-top:4px; line-height:1.7 } .v-note{ margin-top:6px; font-size:.78rem; opacity:.85 }
+  .soft-err{ background:#faece7; color:#7a2e1a; border-radius:12px; padding:14px; line-height:1.7 }
+  a.nav-link{ display:block; text-align:center; text-decoration:none; background:#fff; border:1px solid #e1d8c2; border-radius:12px; padding:12px; margin-top:10px; color:#123A2E }
+  @media print{ .trunk-card{ display:none } .verdict{ color:#000; background:#fff !important; border:2px solid #000 } }
+
+  /* ---- Urdu (اردو): Noto Nastaliq Urdu, tall line-height, RTL ---- */
+  body.lang-ur, body.lang-ur *:not(code):not(.repro){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 }
+  body.lang-ur h1, body.lang-ur h2, body.lang-ur h3, body.lang-ur h4{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea, body.lang-ur .nk-tab{ line-height:1.8 }
 </style>
 </head>
 <body>
 <button id="langToggle" onclick="toggleLang()">العربية</button>
 <div class="wrap">
-  <a href="/index.html" class="back" data-en="← Back to overview" data-ar="← رجوع للصفحة الرئيسية">← Back to overview</a>
+  <a href="/index.html" class="back" data-en="← Back to overview" data-ur="← جائزے پر واپس" data-ar="← رجوع للصفحة الرئيسية">← Back to overview</a>
   <div class="card">
-    <h1 data-en="Run a live test" data-ar="تجربة النموذج">Run a live test</h1>
-    <p class="sub" data-en="Upload a trunk audio recording (WAV) and see the model classify it instantly." data-ar="ارفع تسجيلًا صوتيًا للجذع (WAV) وشاهد تصنيف النموذج فورًا.">Upload a trunk audio recording (WAV) and see the model classify it instantly.</p>
-
-    <label data-en="Palm ID" data-ar="رقم النخلة">Palm ID</label>
-    <input type="text" id="palmId" list="savedPalms" data-en-ph="e.g. Palm-A12" data-ar-ph="مثلاً Palm-A12" placeholder="e.g. Palm-A12" value="Palm-A12">
+    <h1 data-en="Check your palm" data-ur="اپنی کھجور جانچیں" data-ar="افحص نخلتك">Check your palm</h1>
+    <p class="sub" data-en="Three simple steps: pick the palm, add the trunk recording, then press Analyze." data-ur="تین آسان مراحل: کھجور منتخب کریں، تنے کی ریکارڈنگ شامل کریں، پھر تجزیہ دبائیں۔" data-ar="ثلاث خطوات بسيطة: اختر النخلة، أضف تسجيل الجذع، ثم اضغط «ابدأ التحليل».">Three simple steps: pick the palm, add the trunk recording, then press Analyze.</p>
+    <ol class="stepper"><li><b>1</b><span data-en="Palm" data-ur="کھجور" data-ar="النخلة">Palm</span></li><li><b>2</b><span data-en="Recording" data-ur="ریکارڈنگ" data-ar="التسجيل">Recording</span></li><li><b>3</b><span data-en="Analysis" data-ur="تجزیہ" data-ar="التحليل">Analysis</span></li></ol>
+    <label data-en="Palm ID" data-ur="کھجور نمبر" data-ar="رقم النخلة">Palm ID</label>
+    <input type="text" id="palmId" list="savedPalms" data-en-ph="e.g. Palm-A12" data-ur-ph="مثلاً Palm-A12" data-ar-ph="مثلاً Palm-A12" placeholder="e.g. Palm-A12" value="Palm-A12">
     <datalist id="savedPalms"></datalist>
 
-    <label data-en="Location (auto-captured, or type it yourself)" data-ar="الموقع (يُلتقط تلقائيًا، أو اكتبه بنفسك)">Location (auto-captured, or type it yourself)</label>
+    <div class="device-card"><div class="device-card-h" data-en="📡 From the device" data-ar="📡 من الجهاز" data-ur="📡 ڈیوائس سے">📡 From the device</div><div class="device-card-p" data-en="When the device is connected, each reading is sent here automatically: the result, the alert and the position on the trunk appear without uploading any file. No device at hand? Upload a recording below or try a ready sample." data-ar="عند توصيل الجهاز تصل كل قراءة إلى هنا تلقائيًا، فتظهر النتيجة والتنبيه والموضع على الجذع دون رفع أي ملف. لا جهاز بين يديك؟ ارفع تسجيلًا في الأسفل أو جرّب تسجيلًا جاهزًا." data-ur="ڈیوائس جڑی ہو تو ہر ریڈنگ خود بخود یہاں آ جاتی ہے، اور بغیر فائل اپ لوڈ کیے نتیجہ، الرٹ اور تنے پر مقام ظاہر ہو جاتا ہے۔ ڈیوائس نہیں ہے؟ نیچے ریکارڈنگ اپ لوڈ کریں یا تیار نمونہ آزمائیں۔">When the device is connected, each reading is sent here automatically: the result, the alert and the position on the trunk appear without uploading any file. No device at hand? Upload a recording below or try a ready sample.</div><div id="deviceStatus" class="device-status idle"></div></div>
+
+    <label class="upload-box" id="samples" for="audioFile"><span class="ub-icon">🎙️</span><span class="ub-title" data-en="Tap here to choose the trunk recording (WAV)" data-ur="تنے کی ریکارڈنگ (WAV) منتخب کرنے کے لیے دبائیں" data-ar="اضغط هنا لاختيار تسجيل الجذع (WAV)">Tap here to choose the trunk recording (WAV)</span><span class="ub-name" id="audioName"></span></label>
+    <input type="file" id="audioFile" accept="audio/*" class="sr-file">
+    <div class="samples"><div class="samples-h" data-en="No recording? Try a ready sample:" data-ur="ریکارڈنگ نہیں ہے؟ تیار نمونہ آزمائیں:" data-ar="ليس لديك تسجيل؟ جرّب تسجيلًا جاهزًا:">No recording? Try a ready sample:</div><div class="chips"><button type="button" class="chip healthy" onclick="useSample('healthy')" data-en="Healthy" data-ur="صحت مند" data-ar="سليمة">Healthy</button><button type="button" class="chip early" onclick="useSample('early')" data-en="Early" data-ur="ابتدائی" data-ar="مبكرة">Early</button><button type="button" class="chip moderate" onclick="useSample('moderate')" data-en="Moderate" data-ur="درمیانہ" data-ar="متوسطة">Moderate</button><button type="button" class="chip advanced" onclick="useSample('advanced')" data-en="Advanced" data-ur="شدید" data-ar="متقدمة">Advanced</button></div><div class="samples-n" data-en="Simulated sample recordings to show how it works, not from a real palm." data-ur="یہ نقلی نمونہ ریکارڈنگز ہیں جو طریقہ کار دکھاتی ہیں، حقیقی کھجور کی نہیں۔" data-ar="تسجيلات تجريبية مُحاكاة لعرض طريقة العمل، وليست من نخلة حقيقية.">Simulated sample recordings to show how it works, not from a real palm.</div><div class="samples-n"><a href="/evidence.html" data-en="Evidence and sources" data-ur="ثبوت اور ذرائع" data-ar="الأدلة والمصادر">Evidence and sources</a></div></div>
+    <button class="go-big" onclick="analyze()" data-en="Analyze now" data-ur="ابھی تجزیہ کریں" data-ar="ابدأ التحليل">Analyze now</button>
+    <details class="more-opts"><summary data-en="⚙️ More options (optional): location, age, notes" data-ur="⚙️ مزید اختیارات (اختیاری): مقام، عمر، نوٹس" data-ar="⚙️ خيارات إضافية (اختيارية): الموقع، العمر، الوصف">⚙️ More options (optional): location, age, notes</summary>
+    <label data-en="Location (auto-captured, or type it yourself)" data-ur="مقام (خودکار یا خود لکھیں)" data-ar="الموقع (يُلتقط تلقائيًا، أو اكتبه بنفسك)">Location (auto-captured, or type it yourself)</label>
     <div class="loc-row">
-      <input type="text" id="location" data-en-ph="Tap the button to auto-detect →" data-ar-ph="اضغط الزر للالتقاط التلقائي ←" placeholder="Tap the button to auto-detect →">
-      <button type="button" class="loc-btn" onclick="useMyLocation('location','locStatus')" data-en="📍 Use current" data-ar="📍 استخدم موقعي">📍 Use current</button>
+      <input type="text" id="location" data-en-ph="Tap the button to auto-detect →" data-ur-ph="خودکار شناخت کے لیے بٹن دبائیں ←" data-ar-ph="اضغط الزر للالتقاط التلقائي ←" placeholder="Tap the button to auto-detect →">
+      <button type="button" class="loc-btn" onclick="useMyLocation('location','locStatus')" data-en="📍 Use current" data-ur="📍 موجودہ مقام" data-ar="📍 استخدم موقعي">📍 Use current</button>
     </div>
     <div class="loc-status" id="locStatus"></div>
 
-    <label data-en="Additional description (optional)" data-ar="وصف إضافي (اختياري)">Additional description (optional)</label>
-    <input type="text" id="notes" data-en-ph="e.g. near the well, tall old palm by the fence" data-ar-ph="مثلاً جنب البئر، نخلة قديمة طويلة جنب السور" placeholder="e.g. near the well, tall old palm by the fence">
+    <label data-en="Additional description (optional)" data-ur="اضافی تفصیل (اختیاری)" data-ar="وصف إضافي (اختياري)">Additional description (optional)</label>
+    <input type="text" id="notes" data-en-ph="e.g. near the well, tall old palm by the fence" data-ur-ph="مثلاً کنویں کے قریب، باڑ کے پاس لمبی کھجور" data-ar-ph="مثلاً جنب البئر، نخلة قديمة طويلة جنب السور" placeholder="e.g. near the well, tall old palm by the fence">
 
-    <label data-en="Palm age in years (optional — affects RPW risk)" data-ar="عمر النخلة بالسنوات (اختياري — يؤثر على خطورة الإصابة)">Palm age in years (optional — affects RPW risk)</label>
+    <label data-en="Palm age in years (optional — affects RPW risk)" data-ur="کھجور کی عمر سالوں میں (اختیاری — خطرے پر اثر انداز)" data-ar="عمر النخلة بالسنوات (اختياري — يؤثر على خطورة الإصابة)">Palm age in years (optional — affects RPW risk)</label>
     <div class="loc-row">
-      <input type="number" id="ageYears" min="0" max="150" data-en-ph="e.g. 7" data-ar-ph="مثلاً 7" placeholder="e.g. 7">
-      <button type="button" class="loc-btn" onclick="document.getElementById('agePhoto').click()" data-en="📷 Estimate from photo" data-ar="📷 قدّر من صورة">📷 Estimate from photo</button>
+      <input type="number" id="ageYears" min="0" max="150" data-en-ph="e.g. 7" data-ur-ph="مثلاً 7" data-ar-ph="مثلاً 7" placeholder="e.g. 7">
+      <button type="button" class="loc-btn" onclick="document.getElementById('agePhoto').click()" data-en="📷 Estimate from photo" data-ur="📷 تصویر سے اندازہ" data-ar="📷 قدّر من صورة">📷 Estimate from photo</button>
     </div>
     <input type="file" id="agePhoto" accept="image/*" style="display:none" onchange="estimateAgeFromPhoto()">
     <div class="loc-status" id="ageStatus"></div>
 
-    <label data-en="Trunk audio recording (WAV)" data-ar="تسجيل صوتي للجذع (WAV)">Trunk audio recording (WAV)</label>
-    <input type="file" id="audioFile" accept="audio/*">
+    <label data-en="Image-based infestation probability (optional, 0–1)" data-ur="تصویر سے انفیکشن کا امکان (اختیاری، 0–1)" data-ar="احتمال الإصابة من الصورة (اختياري، 0-1)">Image-based infestation probability (optional, 0–1)</label>
+    <input type="number" id="imgProb" min="0" max="1" step="0.05" data-en-ph="e.g. 0.6" data-ur-ph="مثلاً 0.6" data-ar-ph="مثلاً 0.6" placeholder="e.g. 0.6">
 
-    <label data-en="Image-based infestation probability (optional, 0–1)" data-ar="احتمال الإصابة من الصورة (اختياري، 0-1)">Image-based infestation probability (optional, 0–1)</label>
-    <input type="number" id="imgProb" min="0" max="1" step="0.05" data-en-ph="e.g. 0.6" data-ar-ph="مثلاً 0.6" placeholder="e.g. 0.6">
+    </details>
 
-    <button onclick="analyze()" data-en="Analyze now" data-ar="حلّل الآن">Analyze now</button>
-
+    <div id="printHeader" class="print-only">
+      <div class="print-title">🌴 NakhlaGuard — <span data-en="Report" data-ar="تقرير" data-ur="رپورٹ">Report</span></div>
+      <div class="print-meta"><span data-en="Palm:" data-ar="النخلة:" data-ur="کھجور:">Palm:</span> <span id="pdfPalmId"></span></div>
+      <div class="print-meta"><span data-en="Date:" data-ar="التاريخ:" data-ur="تاریخ:">Date:</span> <span id="pdfDate"></span></div>
+    </div>
     <div id="result"></div>
 
     <div class="ag-box">
-      <h2 class="ag-title" data-en="🤖 Ask the AI Assistant" data-ar="🤖 اسأل المساعد الذكي">🤖 Ask the AI Assistant</h2>
-      <p class="ag-sub" data-en="It looks up your real palm data on its own before answering." data-ar="يبحث في بيانات نخيلك الحقيقية بنفسه قبل أن يجيب.">It looks up your real palm data on its own before answering.</p>
+      <h2 class="ag-title" data-en="🤖 Ask the AI Assistant" data-ur="🤖 AI اسسٹنٹ سے پوچھیں" data-ar="🤖 اسأل المساعد الذكي">🤖 Ask the AI Assistant</h2>
+      <p class="ag-sub" data-en="It looks up your real palm data on its own before answering." data-ur="جواب سے پہلے یہ خود آپ کا حقیقی ڈیٹا دیکھتا ہے۔" data-ar="يبحث في بيانات نخيلك الحقيقية بنفسه قبل أن يجيب.">It looks up your real palm data on its own before answering.</p>
       <div class="ag-chips" id="agSuggestions"></div>
       <div class="ag-log" id="agLog"></div>
       <div class="ag-row">
-        <input type="text" id="agInput" data-en-ph="Ask about your palms…" data-ar-ph="اسأل عن نخيلك…" placeholder="Ask about your palms…" onkeydown="if(event.key==='Enter') agSend()">
-        <button type="button" class="ag-send" onclick="agSend()" data-en="Send" data-ar="أرسل">Send</button>
+        <input type="text" id="agInput" data-en-ph="Ask about your palms…" data-ur-ph="اپنی کھجوروں کے بارے میں پوچھیں…" data-ar-ph="اسأل عن نخيلك…" placeholder="Ask about your palms…" onkeydown="if(event.key==='Enter') agSend()">
+        <button type="button" class="ag-send" onclick="agSend()" data-en="Send" data-ur="بھیجیں" data-ar="أرسل">Send</button>
       </div>
-      <p class="ag-disc" data-en="⚠️ This assistant is an AI system, not a certified agricultural expert. Its answers are generated from general knowledge and should not replace an in-person inspection or professional advice for serious cases." data-ar="⚠️ هذا المساعد نظام ذكاء اصطناعي، وليس خبيرًا زراعيًا معتمدًا. إجاباته مبنية على معرفة عامة ولا تغني عن فحص ميداني أو استشارة مختص في الحالات الجدّية.">⚠️ This assistant is an AI system, not a certified agricultural expert. Its answers are generated from general knowledge and should not replace an in-person inspection or professional advice for serious cases.</p>
-      <a href="/agent.html" class="nav-link" data-en="Open the full assistant →" data-ar="افتح المساعد كاملًا ←">Open the full assistant →</a>
+      <p class="ag-disc" data-en="⚠️ This assistant is an AI system, not a certified agricultural expert. Its answers are generated from general knowledge and should not replace an in-person inspection or professional advice for serious cases." data-ur="⚠️ یہ ایک AI نظام ہے، کوئی تصدیق شدہ زرعی ماہر نہیں۔ جوابات عمومی معلومات پر مبنی ہیں اور سنگین صورتوں میں ماہر کے مشورے کا متبادل نہیں۔" data-ar="⚠️ هذا المساعد نظام ذكاء اصطناعي، وليس خبيرًا زراعيًا معتمدًا. إجاباته مبنية على معرفة عامة ولا تغني عن فحص ميداني أو استشارة مختص في الحالات الجدّية.">⚠️ This assistant is an AI system, not a certified agricultural expert. Its answers are generated from general knowledge and should not replace an in-person inspection or professional advice for serious cases.</p>
+      <a href="/agent.html" class="nav-link" data-en="Open the full assistant →" data-ur="مکمل اسسٹنٹ کھولیں ←" data-ar="افتح المساعد كاملًا ←">Open the full assistant →</a>
     </div>
-    <a href="/palms.html" class="nav-link" data-en="View full palm registry →" data-ar="عرض سجل النخيل كامل ←">View full palm registry →</a>
-    <a href="/instructions.html" class="nav-link" data-en="How to use this app →" data-ar="كيف تستخدم التطبيق ←">How to use this app →</a>
+    <a href="/palms.html" class="nav-link" data-en="View full palm registry →" data-ur="مکمل کھجور فہرست دیکھیں ←" data-ar="عرض سجل النخيل كاملًا ←">View full palm registry →</a>
+    <a href="/locate.html" class="nav-link" data-en="Mark visible signs on a photo →" data-ur="تصویر پر نظر آنے والی علامات نشان زد کریں ←" data-ar="تحديد العلامات الظاهرة بالصورة ←">Mark visible signs on a photo →</a>
+    <a href="/instructions.html" class="nav-link" data-en="How to use this app →" data-ur="ایپ استعمال کرنے کا طریقہ ←" data-ar="كيف تستخدم التطبيق ←">How to use this app →</a>
   </div>
 </div>
 
@@ -207,6 +287,7 @@ const CLASS_MAP = {
 const CLASS_LABEL = {
   en: { healthy:"Healthy", early:"Early stage", moderate:"Moderate", advanced:"Advanced" },
   ar: { healthy:"سليم", early:"مبكرة", moderate:"متوسطة", advanced:"متقدمة" },
+  ur: { healthy:"صحت مند", early:"ابتدائی مرحلہ", moderate:"درمیانہ", advanced:"شدید" },
 };
 const UI_TEXT = {
   en: { needFile:"Please upload an audio file first.", analyzing:"Analyzing…", result:"Result:",
@@ -217,20 +298,54 @@ const UI_TEXT = {
         healthFlag:"⚠️ Possible visual health signs noticed (see below)",
         flagDrought:"Drought/wilting signs", flagDust:"Dusty webbing on fruit bunches",
         flagYellow:"Leaf yellowing / tip burn", flagRot:"Frond-base rot/dieback",
-        visualDisc:"Visual signs only, not a diagnosis — have a professional confirm." },
-  ar: { needFile:"ارفع ملف صوتي أولاً.", analyzing:"جاري التحليل…", result:"النتيجة:",
-        risk:"نسبة الخطورة المدمجة:", report:"تقرير علاج كامل", error:"تعذّر الوصول للسيرفر: ",
-        loadingSteps:["جاري قراءة التسجيل…","تصنيف شدة الإصابة…","كتابة تقرير الذكاء الاصطناعي…","خلّصنا تقريبًا…"],
-        estimating:"جاري التقدير من الصورة…", ageDone:"✓ تقدير العمر تقريبًا ", ageFail:"تعذّر التقدير — أدخل العمر يدويًا.",
+        visualDisc:"Visual signs only, not a diagnosis — have a professional confirm.",
+        confidence:"Confidence:", confirmQ:"Was this result correct?", confirmYes:"Yes, correct",
+        confirmNo:"No, incorrect", confirmThanks:"✓ Thanks for your feedback", downloadPdf:"📄 Download as PDF" },
+  ar: { needFile:"ارفع ملفًا صوتيًا أولًا.", analyzing:"جارٍ التحليل…", result:"النتيجة:",
+        risk:"نسبة الخطورة المدمجة:", report:"تقرير علاج كامل", error:"تعذّر الوصول إلى الخادم: ",
+        loadingSteps:["جارٍ قراءة التسجيل…","تصنيف شدة الإصابة…","كتابة تقرير الذكاء الاصطناعي…","نوشك على الانتهاء…"],
+        estimating:"جارٍ التقدير من الصورة…", ageDone:"✓ تقدير العمر تقريبًا ", ageFail:"تعذّر التقدير — أدخل العمر يدويًا.",
         droughtFlag:"⚠️ لوحظت علامات إجهاد/جفاف محتملة بالصورة",
         healthFlag:"⚠️ لوحظت علامات بصرية محتملة (بالأسفل)",
         flagDrought:"علامات جفاف/ذبول", flagDust:"خيوط ترابية على العذوق",
         flagYellow:"اصفرار السعف / احتراق الأطراف", flagRot:"تعفن/جفاف قواعد السعف",
-        visualDisc:"علامات بصرية أولية فقط، مو تشخيصًا — راجع مختصًا للتأكيد." },
+        visualDisc:"علامات بصرية أولية فقط، وليست تشخيصًا؛ راجع مختصًا للتأكيد.",
+        confidence:"الثقة:", confirmQ:"هل كانت هذه النتيجة صحيحة؟", confirmYes:"نعم، صحيحة",
+        confirmNo:"لا، غير صحيحة", confirmThanks:"✓ شكرًا على ملاحظتك", downloadPdf:"📄 تحميل كـPDF" },
+  ur: { needFile:"پہلے آڈیو فائل اپ لوڈ کریں۔", analyzing:"تجزیہ ہو رہا ہے…", result:"نتیجہ:",
+        risk:"مجموعی خطرے کا اسکور:", report:"مکمل علاج کی رپورٹ", error:"سرور تک رسائی ناممکن: ",
+        loadingSteps:["ریکارڈنگ پڑھی جا رہی ہے…","شدت کی درجہ بندی ہو رہی ہے…","AI رپورٹ لکھی جا رہی ہے…","تقریباً مکمل…"],
+        estimating:"تصویر سے اندازہ لگایا جا رہا ہے…", ageDone:"✓ تخمینی عمر ", ageFail:"اندازہ ناممکن — عمر خود درج کریں۔",
+        droughtFlag:"⚠️ تصویر میں خشک سالی کی ممکنہ علامات",
+        healthFlag:"⚠️ ممکنہ بصری علامات (نیچے دیکھیں)",
+        flagDrought:"خشک سالی/مرجھانے کی علامات", flagDust:"پھلوں کے خوشوں پر گرد آلود جالا",
+        flagYellow:"پتوں کا پیلا پن / سرے جلنا", flagRot:"پتوں کی جڑ کا سڑنا",
+        visualDisc:"صرف بصری علامات، تشخیص نہیں — ماہر سے تصدیق کروائیں۔",
+        confidence:"اعتماد:", confirmQ:"کیا یہ نتیجہ درست تھا؟", confirmYes:"ہاں، درست",
+        confirmNo:"نہیں، غلط", confirmThanks:"✓ آپ کی رائے کا شکریہ", downloadPdf:"📄 PDF ڈاؤن لوڈ کریں" },
 };
 
+Object.assign(UI_TEXT.en, { advHealthy:"No signs of infestation in this recording. Check again in about 30 days.", advEarly:"Early infestation is suspected. Contact the agricultural advisor and check again soon.", advModerate:"Moderate infestation is suspected. Inform the agricultural advisor and inspect the palm in person.", advAdvanced:"Advanced infestation is suspected. Inform the agricultural advisor immediately; do not delay.", verdictNote:"This is a suspicion, not a final diagnosis.", sampleErr:"Could not load the sample recording.", rateLimited:"Too many requests. Please try again in a minute.", tooLarge:"The file is too large (maximum 6 MB)." });
+Object.assign(UI_TEXT.ar, { advHealthy:"لا مؤشرات إصابة في هذا التسجيل. أعد الفحص بعد نحو 30 يومًا.", advEarly:"يُشتبه بإصابة مبكرة. تواصل مع المرشد الزراعي وأعد الفحص قريبًا.", advModerate:"يُشتبه بإصابة متوسطة. أبلغ المرشد الزراعي وافحص النخلة ميدانيًا.", advAdvanced:"يُشتبه بإصابة متقدمة. أبلغ المرشد الزراعي فورًا ولا تؤجّل.", verdictNote:"هذه النتيجة اشتباه وليست تشخيصًا نهائيًا.", sampleErr:"تعذّر تحميل التسجيل التجريبي.", rateLimited:"الطلبات كثيرة جدًا. أعد المحاولة بعد دقيقة.", tooLarge:"الملف كبير جدًا (الحد الأقصى 6 ميغابايت)." });
+Object.assign(UI_TEXT.ur, { advHealthy:"اس ریکارڈنگ میں انفیکشن کے آثار نہیں ہیں۔ تقریباً 30 دن بعد دوبارہ جانچ کریں۔", advEarly:"ابتدائی انفیکشن کا شبہ ہے۔ زرعی ماہر سے رابطہ کریں اور جلد دوبارہ جانچ کریں۔", advModerate:"درمیانے درجے کی انفیکشن کا شبہ ہے۔ زرعی ماہر کو اطلاع دیں اور کھجور کا موقع پر معائنہ کریں۔", advAdvanced:"شدید انفیکشن کا شبہ ہے۔ فوراً زرعی ماہر کو اطلاع دیں، تاخیر نہ کریں۔", verdictNote:"یہ نتیجہ شبہ ہے، حتمی تشخیص نہیں۔", sampleErr:"نمونہ ریکارڈنگ لوڈ نہیں ہو سکی۔", rateLimited:"درخواستیں بہت زیادہ ہیں۔ ایک منٹ بعد دوبارہ کوشش کریں۔", tooLarge:"فائل بہت بڑی ہے (زیادہ سے زیادہ 6 MB)۔" });
+Object.assign(UI_TEXT.en, { askFarmer:"🧑‍🌾 Not on the farm? Request a farmer to visit this palm", trunkTitle:"Estimated vibration-source position on the trunk (3D)", trunkSub:"Shown automatically after each check. The red dot is the estimated vibration source.", trunkMore:"📷 Open the camera and mark visible signs",
+  mapDemo:"Demonstration: no sensor readings arrived, so this point is simulated to illustrate the idea. It is not a measurement.",
+  mapLive:"Estimated from the three sensors, not calibrated: accuracy unknown. It is the position of the vibration source, not a confirmed larva position.",
+  mapCal:(e)=>`Estimated from the three sensors, calibrated, approx. error ± ${e} cm. It is the position of the vibration source, not a confirmed larva position.`,
+  mapNone:"No sensor position for this check (the result is healthy, or the sensors sent no usable readings)." });
+Object.assign(UI_TEXT.ar, { askFarmer:"🧑‍🌾 لست في المزرعة؟ اطلب مزارعًا يزور هذه النخلة", trunkTitle:"موضع مصدر الاهتزاز المقدَّر على الجذع (ثلاثي الأبعاد)", trunkSub:"يظهر تلقائيًا بعد كل فحص. والنقطة الحمراء هي مصدر الاهتزاز المقدَّر.", trunkMore:"📷 فتح الكاميرا وتحديد العلامات الظاهرة",
+  mapDemo:"عرض توضيحي: لم تصل قراءات من مستشعرات، فالنقطة محاكاة لتوضيح الفكرة وليست قياسًا.",
+  mapLive:"تقدير من المستشعرات الثلاثة غير معايَر: دقته غير معروفة. وهو موضع مصدر الاهتزاز لا موضع اليرقة المؤكد.",
+  mapCal:(e)=>`تقدير من المستشعرات الثلاثة بعد المعايرة، بخطأ تقريبي ± ${e} سم. وهو موضع مصدر الاهتزاز لا موضع اليرقة المؤكد.`,
+  mapNone:"لا يوجد موضع من المستشعرات لهذا الفحص (النتيجة سليمة، أو لم ترسل المستشعرات قراءات صالحة)." });
+Object.assign(UI_TEXT.ur, { askFarmer:"🧑‍🌾 باغ میں نہیں ہیں؟ اس کھجور کے لیے کسان کے دورے کی درخواست کریں", trunkTitle:"تنے پر کمپن کے ماخذ کا تخمینی مقام (تھری ڈی)", trunkSub:"ہر جانچ کے بعد خود بخود ظاہر ہوتا ہے۔ سرخ نقطہ کمپن کے ماخذ کا تخمینی مقام ہے۔", trunkMore:"📷 کیمرا کھولیں اور نظر آنے والی علامات نشان زد کریں",
+  mapDemo:"نمائشی مثال: سینسرز سے کوئی ریڈنگ نہیں آئی، اس لیے یہ نقطہ خیال واضح کرنے کے لیے مصنوعی ہے۔ یہ پیمائش نہیں ہے۔",
+  mapLive:"تین سینسرز سے تخمینہ، کیلیبریٹ نہیں: درستگی معلوم نہیں۔ یہ کمپن کے ماخذ کا مقام ہے، لاروے کا تصدیق شدہ مقام نہیں۔",
+  mapCal:(e)=>`تین سینسرز سے تخمینہ، کیلیبریٹ شدہ، تقریباً ± ${e} سینٹی میٹر غلطی۔ یہ کمپن کے ماخذ کا مقام ہے، لاروے کا تصدیق شدہ مقام نہیں۔`,
+  mapNone:"اس جانچ کے لیے سینسرز سے کوئی مقام نہیں (نتیجہ صحت مند ہے، یا سینسرز نے قابلِ استعمال ریڈنگ نہیں بھیجی)۔" });
 Object.assign(UI_TEXT.en, { more:"More details", recTitle:"AI recommendation", week:"Week ", day:"Day ", weekHead:"Week", focus:"Focus", viewPlan:"View plan", hideBtn:"Hide" });
 Object.assign(UI_TEXT.ar, { more:"مزيد من التفاصيل", recTitle:"توصية الذكاء الاصطناعي", week:"الأسبوع ", day:"اليوم ", weekHead:"الأسبوع", focus:"المحور", viewPlan:"عرض الخطة", hideBtn:"إخفاء" });
+UI_TEXT.ur = Object.assign(UI_TEXT.ur || {}, { more:"مزید تفصیلات", recTitle:"AI تجویز", week:"ہفتہ ", day:"دن ", weekHead:"ہفتہ", focus:"مرکز", viewPlan:"منصوبہ دیکھیں", hideBtn:"چھپائیں" });
 
 // يقدّر عمر النخلة (وهل فيها علامات جفاف ظاهرة) من صورة عادية عبر
 // Gemini Vision - بدون أي حساس إضافي، بس نفس الكاميرا
@@ -277,23 +392,40 @@ function useMyLocation(inputId, statusId){
   const status = document.getElementById(statusId);
   const lang = getLang();
   if(!navigator.geolocation){
-    status.textContent = lang==='ar' ? 'الجهاز لا يدعم تحديد الموقع.' : 'Geolocation is not supported on this device.';
+    status.textContent = {ar:'الجهاز لا يدعم تحديد الموقع.', en:'Geolocation is not supported on this device.', ur:'اس ڈیوائس پر مقام کی شناخت دستیاب نہیں۔'}[lang];
     return;
   }
-  status.textContent = lang==='ar' ? 'جاري تحديد الموقع…' : 'Detecting location…';
+  status.textContent = {ar:'جارٍ تحديد الموقع…', en:'Detecting location…', ur:'مقام کی شناخت ہو رہی ہے…'}[lang];
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       const lat = pos.coords.latitude.toFixed(5);
       const lon = pos.coords.longitude.toFixed(5);
       document.getElementById(inputId).value = `${lat}, ${lon}`;
-      status.textContent = lang==='ar' ? '📍 تم تحديد الموقع' : '📍 Location captured';
+      status.textContent = {ar:'📍 تم تحديد الموقع', en:'📍 Location captured', ur:'📍 مقام حاصل ہو گیا'}[lang];
     },
-    (err) => { status.textContent = (lang==='ar' ? 'تعذّر تحديد الموقع: ' : 'Could not get location: ') + err.message; },
+    (err) => { status.textContent = ({ar:'تعذّر تحديد الموقع: ', en:'Could not get location: ', ur:'مقام حاصل نہیں ہو سکا: '}[lang]) + err.message; },
     { enableHighAccuracy: true, timeout: 10000 }
   );
 }
 
 // يحمّل قائمة النخيل المسجّلة مسبقًا لتسهيل الاختيار بدل الكتابة كل مرة
+window.addEventListener('message', e => { if (e.data && e.data.type === 'nk-embed-height') { const f = document.getElementById('trunkFrame'); if (f) f.style.height = Math.max(300, e.data.h + 8) + 'px'; } });
+function openTrunkFull(btn){ const f = document.getElementById('trunkFrame'); if (f && window.__trunkBase) { f.style.height = '640px'; f.src = window.__trunkBase + '&autocam=1'; } if (btn) btn.remove(); }
+const SAMPLE_FILES = { healthy: '1_healthy.wav', early: '2_early.wav', moderate: '3_moderate.wav', advanced: '4_advanced.wav' };
+async function useSample(key){
+  const t = UI_TEXT[getLang()];
+  try{
+    const r = await fetch(`${API_BASE}/demo-wav/${SAMPLE_FILES[key]}`);
+    if(!r.ok) throw new Error('sample');
+    const file = new File([await r.blob()], SAMPLE_FILES[key], { type: 'audio/wav' });
+    const dt = new DataTransfer(); dt.items.add(file);
+    document.getElementById('audioFile').files = dt.files;
+    document.getElementById('audioName').textContent = '🎧 ' + SAMPLE_FILES[key];
+    analyze();
+  }catch(e){ alert(t.sampleErr); }
+}
+document.getElementById('audioFile').addEventListener('change', e => { const f = e.target.files[0]; document.getElementById('audioName').textContent = f ? '🎧 ' + f.name : ''; });
+if(location.hash === '#samples'){ setTimeout(() => { const el = document.getElementById('samples'); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 500); }
 async function loadSavedPalms(){
   try{
     const res = await fetch('/palms');
@@ -303,6 +435,7 @@ async function loadSavedPalms(){
   }catch(e){ /* صامت - القائمة اختيارية فقط */ }
 }
 loadSavedPalms();
+window.addEventListener('load', () => { if (window.nkDeviceStatus) window.nkDeviceStatus('deviceStatus'); });
 
 // يحوّل عناوين ## القادمة من التقرير الكامل إلى عناوين HTML منسّقة
 function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -384,6 +517,9 @@ async function analyze(){
     const res = await fetch(`${API_BASE}/predict-full`, { method:'POST', body: form });
     clearInterval(loadingTimer);
     const data = await res.json();
+    if (res.status === 429) { resultDiv.className = ''; resultDiv.innerHTML = `<div class="soft-err">${t.rateLimited}</div>`; return; }
+    if (res.status === 413) { resultDiv.className = ''; resultDiv.innerHTML = `<div class="soft-err">${t.tooLarge}</div>`; return; }
+    if (data.error || !data.fusion_result) { resultDiv.className = ''; resultDiv.innerHTML = `<div class="soft-err">${t.error}${data.message || data.error || ''}</div>`; return; }
 
     const clsAr = data.fusion_result.final_class;
     const cls = CLASS_MAP[clsAr] || 'healthy';
@@ -397,18 +533,68 @@ async function analyze(){
       ? `<span class="report-badge">${t.report}</span>`
       : '';
 
+    const confPct = data.fusion_result.confidence != null ? Math.round(data.fusion_result.confidence * 100) : null;
+    const confHtml = confPct != null ? `<span class="conf-pill">${t.confidence} ${confPct}%</span>` : '';
+
+    const hs = data.sensor_location;
+    const trunkBase = `${API_BASE}/locate.html?embed=1&lang=${lang}` + (hs ? `&hot=${hs.x},${hs.y}&mode=${hs.mode || 'live'}&err=${hs.err || 0}` : '');
+    window.__trunkBase = trunkBase;
+    const trunkSrc = trunkBase + '&view=3d';
     resultDiv.className = `r-${cls}`;
+    const verdictIcon = { healthy: '✅', early: '⚠️', moderate: '🟠', advanced: '🚨' }[cls] || '•';
+    const verdictAdvice = { healthy: t.advHealthy, early: t.advEarly, moderate: t.advModerate, advanced: t.advAdvanced }[cls] || '';
     resultDiv.innerHTML = `
-      <div>${t.result} <span class="badge b-${cls}">${labels[cls]}</span> ${reportLabel}</div>
+      <div class="verdict v-${cls}"><div class="v-icon">${verdictIcon}</div><div><div class="v-title">${labels[cls]}</div><div class="v-text">${verdictAdvice}</div><div class="v-note">${t.verdictNote}</div></div></div>
+      <div>${t.result} <span class="badge b-${cls}">${labels[cls]}</span> ${confHtml} ${reportLabel}</div>
+      <div class="trunk-card"><div class="trunk-title">📍 ${t.trunkTitle}</div><div class="trunk-sub">${t.trunkSub}</div>${(()=>{ const m = hs ? (hs.mode || 'live') : 'none'; const n = m === 'demo' ? t.mapDemo : m === 'cal' ? t.mapCal(hs.err || 0) : m === 'live' ? t.mapLive : t.mapNone; return `<div class="trunk-mode ${m === 'demo' ? 'demo' : ''}">${n}</div>`; })()}<iframe id="trunkFrame" src="${trunkSrc}" allow="camera" title="trunk map"></iframe><button type="button" class="loc-btn trunk-more" onclick="openTrunkFull(this)">${t.trunkMore}</button></div>
+      ${data.needs_attention ? `<a class="ask-farmer" href="/farmers.html?palm=${encodeURIComponent(palmId)}&severity=${encodeURIComponent(labels[cls])}${location ? '&area=' + encodeURIComponent(location) : ''}">${t.askFarmer}</a>` : ''}
       <div class="acc-list">
         <details class="acc"><summary>${t.more}</summary><div class="acc-body">${data.location ? `<div class="score-line">📍 ${escapeHtml(data.location)}</div>` : ''}<div class="score-line">${t.risk} ${(data.fusion_result.final_score*100).toFixed(0)}%</div><div style="margin-top:10px">${probsHtml}</div></div></details>
         ${formatReport(data.recommendation)}
       </div>
+      <div class="confirm-box" id="confirmBox" data-reading-id="${data.reading_id}">
+        <span class="confirm-q">${t.confirmQ}</span>
+        <button type="button" class="confirm-btn yes" onclick="confirmReading(true)">${t.confirmYes}</button>
+        <button type="button" class="confirm-btn no" onclick="confirmReading(false)">${t.confirmNo}</button>
+      </div>
+      <button type="button" id="pdfBtn" class="pdf-btn" onclick="printReport()">${t.downloadPdf}</button>
     `;
+    document.getElementById('pdfPalmId').textContent = palmId;
+    document.getElementById('pdfDate').textContent = new Date().toLocaleString();
     loadSavedPalms();
   }catch(err){
     clearInterval(loadingTimer);
     resultDiv.innerHTML = t.error + err;
+  }
+}
+
+// ---------- تحميل/طباعة التقرير كـPDF (عبر حوار الطباعة الأصلي بالمتصفح) ----------
+function printReport(){
+  // نفتح كل الأقسام القابلة للطي (التفاصيل، التشخيص، الجدول الأسبوعي...)
+  // عشان تظهر كاملة بالمطبوع، بدل ما تطبع فاضية وهي مقفولة
+  const openedNow = [];
+  document.querySelectorAll('#result details:not([open])').forEach(d => {
+    d.open = true; openedNow.push(d);
+  });
+  window.print();
+  // نرجعهم لحالتهم الأصلية بعد الطباعة (تجربة أنظف بالواجهة نفسها)
+  window.onafterprint = () => { openedNow.forEach(d => d.open = false); };
+}
+
+// ---------- تأكيد المزارع: هل كانت النتيجة صحيحة؟ (يبني بيانات ملاحظات حقيقية) ----------
+async function confirmReading(wasCorrect){
+  const t = UI_TEXT[getLang()];
+  const box = document.getElementById('confirmBox');
+  if(!box) return;
+  const readingId = box.getAttribute('data-reading-id');
+  const form = new FormData();
+  form.append('reading_id', readingId);
+  form.append('confirmed', wasCorrect ? 'correct' : 'incorrect');
+  try{
+    await fetch('/confirm-reading', { method:'POST', body: form });
+    box.innerHTML = `<span class="confirm-thanks">${t.confirmThanks}</span>`;
+  }catch(err){
+    // صامت - التأكيد ميزة إضافية، ما توقف باقي الصفحة
   }
 }
 
@@ -419,6 +605,8 @@ const AG = {
         s1:"Which palms need attention right now?", s2:"Give me a summary of all my palms", s3:(id) => `What is the history of ${id}?` },
   ar: { thinking:"جارٍ التفكير…", error:"تعذّر الوصول إلى المساعد: ",
         s1:"أي نخيل تحتاج إلى عناية الآن؟", s2:"أعطني ملخص كل نخيلي", s3:(id) => `ما تاريخ فحص ${id}؟` },
+  ur: { thinking:"سوچ رہا ہے…", error:"اسسٹنٹ تک رسائی ناممکن: ",
+        s1:"ابھی کس کھجور کو توجہ درکار ہے؟", s2:"میری تمام کھجوروں کا خلاصہ دیں", s3:(id) => `${id} کی تاریخ کیا ہے؟` },
 };
 function renderAgSuggestions(){
   const box = document.getElementById('agSuggestions'); if(!box) return;
@@ -453,24 +641,34 @@ async function agSend(){
 document.getElementById('palmId').addEventListener('input', renderAgSuggestions);
 
 // ---------- تبديل اللغة (عربي/إنجليزي) - مشترك عبر كل صفحات الموقع ----------
-function getLang(){ return localStorage.getItem('nakhlaguard-lang') || 'en'; }
+function getLang(){ return localStorage.getItem('nakhlaguard-lang') || 'ar'; }
+// الترتيب: en -> ar -> ur -> en ... ولكل لغة اسم اللغة التالية (تطلع بالزر)
+const LANG_CYCLE = ['ar', 'en', 'ur'];
+const LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+
 function setLang(lang){
+  if(!LANG_CYCLE.includes(lang)) lang = 'en';
   localStorage.setItem('nakhlaguard-lang', lang);
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.body.classList.toggle('rtl', lang === 'ar');
+  document.documentElement.dir = (lang === 'ar' || lang === 'ur') ? 'rtl' : 'ltr';
+  document.body.classList.toggle('rtl', lang === 'ar' || lang === 'ur');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
   document.querySelectorAll('[data-en]').forEach(el => {
-    el.innerHTML = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    el.innerHTML = el.getAttribute(`data-${lang}`) ?? el.getAttribute('data-en');
   });
   document.querySelectorAll('[data-en-ph]').forEach(el => {
-    el.placeholder = lang === 'ar' ? el.getAttribute('data-ar-ph') : el.getAttribute('data-en-ph');
+    el.placeholder = el.getAttribute(`data-${lang}-ph`) ?? el.getAttribute('data-en-ph');
   });
   const btn = document.getElementById('langToggle');
-  if(btn) btn.textContent = lang === 'ar' ? 'English' : 'العربية';
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
   renderAgSuggestions();
 }
-function toggleLang(){ setLang(getLang() === 'ar' ? 'en' : 'ar'); }
+function toggleLang(){
+  const next = LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length];
+  setLang(next);
+}
 setLang(getLang());
 </script>
+<script src="/nav.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>NakhlaGuard — Choose a farmer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2; --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --date-light:#D99A55; --alert:#A63D40; --card:#FBF9F3; --ok:#1F6B45 }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink); line-height:1.65; font-size:16px}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif; letter-spacing:-0.01em}
+  body.rtl{font-family:'Tajawal',sans-serif; direction:rtl}
+  body.rtl h1, body.rtl h2, body.rtl h3{font-family:'Tajawal',sans-serif; letter-spacing:0}
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px}
+  a{color:inherit}
+  #langToggle{position:fixed; top:14px; right:14px; z-index:1000; background:var(--ink); border:1px solid rgba(237,230,214,.35); color:var(--sand); padding:7px 16px; border-radius:20px; font-size:.78rem; cursor:pointer; font-family:inherit}
+  .phero{background:radial-gradient(ellipse at 30% -10%, var(--palm) 0%, var(--palm-deep) 60%, var(--ink) 100%); color:var(--sand); padding:44px 0 36px}
+  .phero h1{font-size:2rem; line-height:1.2; margin-bottom:10px}
+  .phero p{color:#D8E2DC; max-width:560px; font-size:1rem}
+  .badge{display:inline-block; font-size:.72rem; font-weight:600; color:var(--sand); border:1px solid rgba(237,230,214,.45); border-radius:999px; padding:2px 11px; margin-bottom:12px}
+  main{padding:30px 0 40px}
+  .card{background:var(--card); border-radius:14px; padding:22px; margin-bottom:18px}
+  .card h2{font-size:1.2rem; color:var(--palm-deep); margin-bottom:10px}
+  .card p{color:var(--ink-soft); font-size:.92rem}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 22px; border-radius:8px; font-weight:600; font-size:.92rem; text-decoration:none; border:1.5px solid transparent; cursor:pointer; font-family:inherit}
+  .btn-fill{background:var(--date); color:var(--ink)} .btn-fill:hover{background:var(--date-light)}
+  .btn-line{border-color:var(--palm); color:var(--palm-deep); background:transparent}
+  .btn-dark{background:var(--palm-deep); color:var(--sand)}
+  .btn[disabled]{opacity:.55; cursor:not-allowed}
+  label.f{display:block; font-weight:600; font-size:.88rem; margin:14px 0 5px; color:var(--palm-deep)}
+  input[type=text],input[type=tel],input[type=password],select,textarea{width:100%; padding:11px 12px; border:1.5px solid var(--sand-deep); border-radius:8px; background:#fff; font:inherit; color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--palm); outline-offset:1px}
+  textarea{min-height:76px; resize:vertical}
+  .hint{font-size:.8rem; color:var(--ink-soft); margin-top:4px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+  .chip{display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1.5px solid var(--sand-deep); border-radius:999px; background:#fff; font-size:.85rem; cursor:pointer; user-select:none}
+  .chip input{accent-color:var(--palm)}
+  .chip.on, .chip:has(input:checked){border-color:var(--palm); background:#E8F1EC}
+  button.chip{font-family:inherit; color:var(--ink)}
+  .consent{display:flex; gap:10px; align-items:flex-start; margin-top:16px; font-size:.86rem; color:var(--ink-soft)}
+  .consent input{margin-top:5px; accent-color:var(--palm)}
+  .msg{border-radius:10px; padding:12px 14px; font-size:.9rem; margin-top:14px}
+  .msg.ok{background:#E3F1E8; color:#14502F} .msg.err{background:#FAE4E1; color:#7A2321} .msg.info{background:#FFF4DD; color:#6B4A12}
+  .steps3{display:grid; gap:10px; margin-top:14px; list-style:none}
+  .steps3 li{display:grid; grid-template-columns:32px 1fr; gap:12px; align-items:start; font-size:.92rem; color:var(--ink-soft)}
+  .steps3 b{width:30px; height:30px; border-radius:50%; background:var(--palm); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem}
+  footer{text-align:center; padding:24px 0; color:var(--ink-soft); font-size:.8rem}
+  [hidden]{display:none !important}
+  body.lang-ur, body.lang-ur *:not(code){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 } body.lang-ur h1, body.lang-ur h2, body.lang-ur h3{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea{ line-height:1.8 }
+
+  .flt{margin-bottom:6px}
+  .fgrid{display:grid; gap:14px; margin-top:14px}
+  .fcard{background:var(--card); border-radius:14px; padding:18px; border-inline-start:5px solid var(--palm)}
+  .fcard h3{font-size:1.05rem; color:var(--palm-deep); display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .vbadge{font-size:.72rem; font-weight:600; color:#14502F; background:#E3F1E8; border-radius:999px; padding:2px 10px}
+  .fcard .area{font-size:.88rem; color:var(--ink-soft); margin:2px 0 8px}
+  .tags{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px}
+  .tag{font-size:.78rem; background:#F2EBDA; color:var(--palm-deep); border-radius:999px; padding:2px 10px}
+  .fcard .fnote{font-size:.85rem; color:var(--ink-soft); margin-bottom:12px}
+  .empty{background:var(--card); border-radius:14px; padding:22px; color:var(--ink-soft); text-align:center; margin-top:14px}
+  .modal{position:fixed; inset:0; background:rgba(20,32,27,.55); z-index:200; display:flex; align-items:flex-end; justify-content:center; padding:0}
+  .modal .sheet{background:var(--card); width:100%; max-width:560px; max-height:92vh; overflow:auto; border-radius:18px 18px 0 0; padding:22px 20px 28px}
+  @media(min-width:640px){ .modal{align-items:center; padding:20px} .modal .sheet{border-radius:18px} }
+  .sheet h2{font-size:1.15rem; color:var(--palm-deep); margin-bottom:4px}
+  .contact{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  .req{background:var(--card); border-radius:12px; padding:14px 16px; margin-top:10px; font-size:.9rem}
+  .req b{color:var(--palm-deep)}
+</style>
+</head>
+<body>
+<button id="langToggle" onclick="toggleLang()">العربية</button>
+
+<div class="phero"><div class="wrap">
+  <span class="badge" data-en="Owner site" data-ar="موقع المالك" data-ur="مالک کی سائٹ">Owner site</span>
+  <h1 data-en="Choose a licensed farmer" data-ar="اختر مزارعًا مرخّصًا" data-ur="لائسنس یافتہ کسان چنیں">Choose a licensed farmer</h1>
+  <p data-en="Pick by the problem your palm has. Every farmer here has a license that we reviewed by hand." data-ar="اختر حسب المشكلة التي تعاني منها نخلتك. كل مزارع هنا لديه ترخيص راجعناه يدويًا." data-ur="اپنی کھجور کے مسئلے کے مطابق چنیں۔ یہاں ہر کسان کا لائسنس ہم نے ہاتھ سے جانچا ہے۔">Pick by the problem your palm has. Every farmer here has a license that we reviewed by hand.</p>
+</div></div>
+<main><div class="wrap">
+  <label class="f flt"><span data-en="What do you need?" data-ar="ماذا تحتاج؟" data-ur="آپ کو کیا چاہیے؟">What do you need?</span></label>
+  <div class="chips" id="flt">
+<button type="button" class="chip on" data-f="all" data-en="All" data-ar="الكل" data-ur="سب">All</button>
+<button type="button" class="chip" data-f="inspect" data-en="Inspection and diagnosis" data-ar="فحص وتشخيص النخلة" data-ur="کھجور کی جانچ اور تشخیص">Inspection and diagnosis</button>
+<button type="button" class="chip" data-f="treat" data-en="Weevil treatment and control" data-ar="علاج ومكافحة سوسة النخيل" data-ur="ویول کا علاج اور کنٹرول">Weevil treatment and control</button>
+<button type="button" class="chip" data-f="remove" data-en="Removing an infested palm" data-ar="إزالة نخلة مصابة" data-ur="متاثرہ کھجور ہٹانا">Removing an infested palm</button>
+<button type="button" class="chip" data-f="prune" data-en="Pruning and upkeep" data-ar="تقليم وصيانة" data-ur="کٹائی اور دیکھ بھال">Pruning and upkeep</button>
+<button type="button" class="chip" data-f="general" data-en="General palm care" data-ar="رعاية عامة للنخيل" data-ur="کھجور کی عمومی دیکھ بھال">General palm care</button>
+  </div>
+  <label class="f" for="areaQ"><span data-en="Area (optional)" data-ar="المنطقة (اختياري)" data-ur="علاقہ (اختیاری)">Area (optional)</span></label>
+  <input type="text" id="areaQ" maxlength="80" data-en-ph="Type part of the area name" data-ar-ph="اكتب جزءًا من اسم المنطقة" data-ur-ph="علاقے کے نام کا کچھ حصہ لکھیں" placeholder="Type part of the area name" >
+  <div id="list" class="fgrid" aria-live="polite"></div>
+
+  <section id="mineBox" hidden style="margin-top:30px">
+    <h2 style="font-size:1.15rem;color:var(--palm-deep)" data-en="My visit requests" data-ar="طلبات الزيارة الخاصة بي" data-ur="میری زیارت کی درخواستیں">My visit requests</h2>
+    <div id="mine"></div>
+  </section>
+</div></main>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true">
+  <div class="sheet">
+    <div id="formView">
+      <h2 id="mTitle"></h2>
+      <p class="hint" id="mSub"></p>
+      <form id="reqForm" novalidate>
+        <label class="f" for="rName"><span data-en="Your name" data-ar="اسمك" data-ur="آپ کا نام">Your name</span></label>
+        <input type="text" id="rName" maxlength="60" required autocomplete="name">
+        <label class="f" for="rPhone"><span data-en="Your mobile number" data-ar="رقم جوالك" data-ur="آپ کا موبائل نمبر">Your mobile number</span></label>
+        <input type="tel" id="rPhone" dir="ltr" maxlength="20" required autocomplete="tel">
+        <label class="f" for="rArea"><span data-en="Where is the palm?" data-ar="أين النخلة؟" data-ur="کھجور کہاں ہے؟">Where is the palm?</span></label>
+        <input type="text" id="rArea" maxlength="80" required>
+        <label class="f" for="rPalm"><span data-en="Palm number (optional)" data-ar="رقم النخلة (اختياري)" data-ur="کھجور نمبر (اختیاری)">Palm number (optional)</span></label>
+        <input type="text" id="rPalm" maxlength="60" list="palmList"><datalist id="palmList"></datalist>
+        <label class="f" for="rPurpose"><span data-en="What for?" data-ar="لأي غرض؟" data-ur="کس مقصد کے لیے؟">What for?</span></label>
+        <select id="rPurpose">
+<option value="inspect" data-en="Inspect the palm" data-ar="فحص النخلة" data-ur="کھجور کی جانچ">Inspect the palm</option>
+<option value="treat" data-en="Treat the infestation" data-ar="علاج الإصابة" data-ur="حملے کا علاج">Treat the infestation</option>
+<option value="remove" data-en="Remove the palm" data-ar="إزالة النخلة" data-ur="کھجور ہٹانا">Remove the palm</option>
+<option value="other" data-en="Something else" data-ar="شيء آخر" data-ur="کچھ اور">Something else</option>
+        </select>
+        <label class="f" for="rWhen"><span data-en="When?" data-ar="متى؟" data-ur="کب؟">When?</span></label>
+        <select id="rWhen">
+<option value="urgent" data-en="Urgent (today)" data-ar="عاجل (اليوم)" data-ur="فوری (آج)">Urgent (today)</option>
+<option value="3days" data-en="Within 3 days" data-ar="خلال 3 أيام" data-ur="3 دن میں">Within 3 days</option>
+<option value="week" data-en="This week" data-ar="هذا الأسبوع" data-ur="اسی ہفتے">This week</option>
+<option value="flexible" data-en="Flexible" data-ar="مرن" data-ur="لچکدار">Flexible</option>
+        </select>
+        <label class="f" for="rDetails"><span data-en="Details (optional)" data-ar="تفاصيل (اختياري)" data-ur="تفصیل (اختیاری)">Details (optional)</span></label>
+        <textarea id="rDetails" maxlength="300"></textarea>
+        <label class="consent"><input type="checkbox" id="rConsent"><span data-en="I agree to send my name and number to this farmer so he can contact me." data-ar="أوافق على إرسال اسمي ورقمي لهذا المزارع ليتواصل معي." data-ur="میں اپنا نام اور نمبر اس کسان کو بھیجنے سے متفق ہوں تاکہ وہ مجھ سے رابطہ کرے۔">I agree to send my name and number to this farmer so he can contact me.</span></label>
+        <div id="rMsg" class="msg err" hidden></div>
+        <p style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap">
+          <button class="btn btn-fill" type="submit" id="rGo" data-en="Send request" data-ar="أرسل الطلب" data-ur="درخواست بھیجیں">Send request</button>
+          <button class="btn btn-line" type="button" id="rCancel" data-en="Cancel" data-ar="إلغاء" data-ur="منسوخ">Cancel</button>
+        </p>
+      </form>
+    </div>
+    <div id="doneView" hidden>
+      <h2 data-en="Request sent" data-ar="أُرسل الطلب" data-ur="درخواست بھیج دی گئی">Request sent</h2>
+      <p class="hint" id="dSub"></p>
+      <div class="contact" id="dContact"></div>
+      <p style="margin-top:18px"><button class="btn btn-line" type="button" id="dClose" data-en="Close" data-ar="إغلاق" data-ur="بند کریں">Close</button></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- تبديل اللغة (عربي / English / اردو) - مشترك عبر كل صفحات الموقع ----------
+var LANG_CYCLE = ['ar', 'en', 'ur'];
+var LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+var LOCALES = { ar: 'ar-SA', en: 'en-US', ur: 'ur-PK' };
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return (l === 'ar' || l === 'en' || l === 'ur') ? l : 'ar'; }   // لا يعتمد على ثوابت معرَّفة لاحقًا، لأن بعض الصفحات تناديه قبل نهاية السكربت
+function setLang(lang){
+  if(!LANG_CYCLE.includes(lang)) lang = 'ar';
+  try{ localStorage.setItem('nakhlaguard-lang', lang); }catch(e){}
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.body.classList.toggle('rtl', lang !== 'en');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
+  });
+  document.querySelectorAll('[data-en-ph]').forEach(el => {
+    el.placeholder = el.getAttribute('data-' + lang + '-ph') ?? el.getAttribute('data-en-ph');
+  });
+  const btn = document.getElementById('langToggle');
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
+}
+function toggleLang(){ setLang(LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length]); }
+setLang(getLang());
+
+
+
+var EXP = {"inspect": {"en": "Inspection and diagnosis", "ar": "فحص وتشخيص النخلة", "ur": "کھجور کی جانچ اور تشخیص"}, "treat": {"en": "Weevil treatment and control", "ar": "علاج ومكافحة سوسة النخيل", "ur": "ویول کا علاج اور کنٹرول"}, "remove": {"en": "Removing an infested palm", "ar": "إزالة نخلة مصابة", "ur": "متاثرہ کھجور ہٹانا"}, "prune": {"en": "Pruning and upkeep", "ar": "تقليم وصيانة", "ur": "کٹائی اور دیکھ بھال"}, "general": {"en": "General palm care", "ar": "رعاية عامة للنخيل", "ur": "کھجور کی عمومی دیکھ بھال"}};
+var TX = {
+  ar: {none:'لا يوجد مزارع متاح لهذا التصنيف الآن. جرّب تصنيفًا آخر أو عُد لاحقًا.', fail:'تعذّر تحميل المزارعين. حدّث الصفحة.', ver:'مرخّص • راجعنا ترخيصه', ask:'اطلب زيارة', to:'طلب زيارة من ', toSub:'يصلك اسمه ورقمه بعد الإرسال لتتواصل معه مباشرة، والاتفاق على موعد الزيارة والأجر يكون بينك وبينه.', need:'أكمل الاسم والرقم والموقع ووافق على الشرط.', badp:'تحقق من رقم الجوال.', rate:'طلبات كثيرة. حاول لاحقًا.', gone:'هذا المزارع لم يعد متاحًا. حدّث الصفحة.', net:'تعذّر الإرسال. حاول مرة أخرى.', sent:'تواصل مع ', sentSub:' مباشرة، فهو الآن يعرف أن طلبك وصل لك.', call:'اتصال', wa:'واتساب', mine:'تواصل مع ', st:{sent:'أُرسل', accepted:'مقبول', open:'مفتوح'}, waMsg:'السلام عليكم، أنا صاحب نخلة عبر NakhlaGuard وأحتاج زيارة لنخلتي.'},
+  en: {none:'No farmer is available in this category right now. Try another category or check back later.', fail:'Could not load farmers. Refresh the page.', ver:'Licensed • license reviewed', ask:'Request a visit', to:'Visit request to ', toSub:'You get his name and number after sending, to contact him directly. The visit time and fee are agreed between you and him.', need:'Fill in your name, number and location, and tick the consent box.', badp:'Check the mobile number.', rate:'Too many requests. Try later.', gone:'This farmer is no longer available. Refresh the page.', net:'Could not send. Please try again.', sent:'Contact ', sentSub:' directly. He now knows your request was sent.', call:'Call', wa:'WhatsApp', mine:'Contact ', st:{sent:'Sent', accepted:'Accepted', open:'Open'}, waMsg:'Hello, I am a NakhlaGuard palm owner and need a visit to my palm.'},
+  ur: {none:'اس زمرے میں فی الحال کوئی کسان دستیاب نہیں۔ دوسرا زمرہ آزمائیں یا بعد میں دیکھیں۔', fail:'کسان لوڈ نہیں ہو سکے۔ صفحہ ریفریش کریں۔', ver:'لائسنس یافتہ • لائسنس جانچا گیا', ask:'زیارت کی درخواست', to:'زیارت کی درخواست بنام ', toSub:'بھیجنے کے بعد آپ کو اس کا نام اور نمبر مل جاتا ہے تاکہ براہِ راست رابطہ کریں۔ زیارت کا وقت اور اجرت آپ کے اور اس کے درمیان طے ہوتی ہے۔', need:'نام، نمبر اور مقام بھریں اور رضامندی پر نشان لگائیں۔', badp:'موبائل نمبر چیک کریں۔', rate:'بہت زیادہ درخواستیں۔ بعد میں کوشش کریں۔', gone:'یہ کسان اب دستیاب نہیں۔ صفحہ ریفریش کریں۔', net:'بھیجا نہیں جا سکا۔ دوبارہ کوشش کریں۔', sent:'رابطہ کریں: ', sentSub:' سے براہِ راست۔ اسے اب معلوم ہے کہ آپ کی درخواست بھیج دی گئی ہے۔', call:'کال', wa:'واٹس ایپ', mine:'رابطہ کریں: ', st:{sent:'بھیجی گئی', accepted:'قبول', open:'کھلی'}, waMsg:'السلام علیکم، میں NakhlaGuard کا کھجور مالک ہوں اور اپنی کھجور کے لیے زیارت چاہتا ہوں۔'}
+};
+function L(){ var l = document.documentElement.lang; return (l === 'ar' || l === 'ur') ? l : 'en'; }
+function t(k){ return TX[L()][k]; }
+function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function waNum(p){ var d = String(p).replace(/\D/g, ''); if (d.indexOf('00') === 0) d = d.slice(2); if (d.charAt(0) === '0') d = '966' + d.slice(1); return d; }
+function contactButtons(box, name, phone){
+  box.textContent = '';
+  var a = el('a', 'btn btn-dark', t('call') + ' ' + phone); a.href = 'tel:' + String(phone).replace(/[^\d+]/g, ''); a.dir = 'ltr'; box.appendChild(a);
+  var w = el('a', 'btn btn-fill', t('wa')); w.href = 'https://wa.me/' + waNum(phone) + '?text=' + encodeURIComponent(t('waMsg')); w.target = '_blank'; w.rel = 'noopener'; box.appendChild(w);
+}
+var farmers = null, filter = 'all', cur = null;
+function load(){
+  fetch('/helpers', {credentials:'same-origin'}).then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(j){ farmers = j.helpers || []; render(); }).catch(function(){ farmers = null; render(); });
+}
+function render(){
+  var box = document.getElementById('list'); box.textContent = '';
+  if (farmers === null) { box.appendChild(el('div', 'empty', t('fail'))); return; }
+  var aq = document.getElementById('areaQ').value.trim().toLowerCase();
+  var items = farmers.filter(function(f){ return (filter === 'all' || f.expertise.indexOf(filter) >= 0) && (!aq || (f.area || '').toLowerCase().indexOf(aq) >= 0); });
+  if (!items.length) { box.appendChild(el('div', 'empty', t('none'))); return; }
+  items.forEach(function(f){
+    var c = el('div', 'fcard'), h = el('h3'); h.appendChild(document.createTextNode(f.name)); h.appendChild(el('span', 'vbadge', t('ver'))); c.appendChild(h);
+    c.appendChild(el('div', 'area', '📍 ' + f.area));
+    var tg = el('div', 'tags'); f.expertise.forEach(function(k){ if (EXP[k]) tg.appendChild(el('span', 'tag', EXP[k][L()])); }); c.appendChild(tg);
+    if (f.note) c.appendChild(el('div', 'fnote', f.note));
+    var b = el('button', 'btn btn-fill', t('ask')); b.type = 'button'; b.addEventListener('click', function(){ openForm(f); }); c.appendChild(b);
+    box.appendChild(c);
+  });
+}
+document.getElementById('flt').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-f]'); if (!b) return;
+  filter = b.getAttribute('data-f');
+  Array.prototype.forEach.call(this.children, function(x){ x.classList.toggle('on', x === b); });
+  render();
+});
+document.getElementById('areaQ').addEventListener('input', render);
+new MutationObserver(function(){ render(); loadMine(); if (cur && !document.getElementById('formView').hidden) setTitle(); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+
+var qp = new URLSearchParams(location.search);
+function setTitle(){ document.getElementById('mTitle').textContent = t('to') + cur.name; document.getElementById('mSub').textContent = t('toSub'); }
+function openForm(f){
+  cur = f; setTitle();
+  document.getElementById('formView').hidden = false; document.getElementById('doneView').hidden = true;
+  document.getElementById('rMsg').hidden = true;
+  try { document.getElementById('rName').value = localStorage.getItem('nk_req_name') || ''; document.getElementById('rPhone').value = localStorage.getItem('nk_req_phone') || ''; } catch (e) {}
+  if (!document.getElementById('rArea').value) document.getElementById('rArea').value = qp.get('area') || f.area || '';
+  if (qp.get('palm')) document.getElementById('rPalm').value = qp.get('palm').slice(0, 60);
+  document.getElementById('modal').hidden = false;
+}
+function closeModal(){ document.getElementById('modal').hidden = true; }
+document.getElementById('rCancel').addEventListener('click', closeModal);
+document.getElementById('dClose').addEventListener('click', function(){ closeModal(); loadMine(); });
+document.getElementById('modal').addEventListener('click', function(e){ if (e.target === this) closeModal(); });
+function err(k){ var m = document.getElementById('rMsg'); m.hidden = false; m.textContent = t(k); }
+document.getElementById('reqForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  var g = function(id){ return document.getElementById(id).value.trim(); };
+  if (!g('rName') || !g('rPhone') || !g('rArea') || !document.getElementById('rConsent').checked) return err('need');
+  var fd = new FormData();
+  fd.append('area', g('rArea')); fd.append('requester_name', g('rName')); fd.append('requester_phone', g('rPhone'));
+  fd.append('palm_id', g('rPalm')); fd.append('details', g('rDetails')); fd.append('severity', qp.get('severity') || '');
+  fd.append('when_needed', g('rWhen')); fd.append('purpose', g('rPurpose')); fd.append('target_helper_id', String(cur.id)); fd.append('consent', 'yes');
+  var btn = document.getElementById('rGo'); btn.disabled = true;
+  try {
+    var r = await fetch('/visit-requests', {method:'POST', body:fd, credentials:'same-origin'});
+    var j = await r.json().catch(function(){ return {}; });
+    if (r.status === 429) err('rate'); else if (r.status === 404) err('gone'); else if (!r.ok) err('badp');
+    else {
+      try { localStorage.setItem('nk_req_name', g('rName')); localStorage.setItem('nk_req_phone', g('rPhone')); } catch (x) {}
+      document.getElementById('formView').hidden = true; document.getElementById('doneView').hidden = false;
+      document.getElementById('dSub').textContent = t('sent') + j.helper.name + t('sentSub');
+      contactButtons(document.getElementById('dContact'), j.helper.name, j.helper.phone);
+    }
+  } catch (x) { err('net'); }
+  btn.disabled = false;
+});
+function loadMine(){
+  var ph = ''; try { ph = localStorage.getItem('nk_req_phone') || ''; } catch (e) {}
+  var box = document.getElementById('mineBox'); if (!ph) { box.hidden = true; return; }
+  fetch('/visit-requests/mine?phone=' + encodeURIComponent(ph), {credentials:'same-origin'}).then(function(r){ return r.ok ? r.json() : {requests:[]}; }).then(function(j){
+    var list = document.getElementById('mine'); list.textContent = '';
+    var rs = j.requests || []; box.hidden = !rs.length;
+    rs.forEach(function(r){
+      var d = el('div', 'req'); var top = el('div'); top.appendChild(el('b', '', (r.palm_id ? r.palm_id + ' — ' : '') + r.area)); top.appendChild(document.createTextNode('  ·  ' + (t('st')[r.status] || r.status)));
+      d.appendChild(top);
+      if (r.helper) { var cb = el('div', 'contact'); d.appendChild(el('div', '', t('mine') + r.helper.name)); contactButtons(cb, r.helper.name, r.helper.phone); d.appendChild(cb); }
+      list.appendChild(d);
+    });
+  }).catch(function(){ box.hidden = true; });
+}
+fetch('/palms', {credentials:'same-origin'}).then(function(r){ return r.ok ? r.json() : {palms:[]}; }).then(function(j){
+  var dl = document.getElementById('palmList'); (j.palms || []).forEach(function(p){ var o = document.createElement('option'); o.value = p.palm_id; dl.appendChild(o); });
+}).catch(function(){});
+load(); loadMine();
+
+</script>
+<script src="/nav.js" defer></script>
+</body>
+</html>

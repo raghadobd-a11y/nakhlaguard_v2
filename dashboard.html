@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NakhlaGuard — Farmer Alert Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2;
@@ -49,6 +49,16 @@
   body.rtl .alert-card.advanced{border-left-color:var(--advanced)}
   @keyframes slideIn{from{opacity:0; transform:translateY(-8px)} to{opacity:1; transform:translateY(0)}}
 
+  .alert-map{ margin-top:10px; border-top:1px dashed #d9cfb8; padding-top:8px }
+  .alert-map-title{ font-weight:700; color:#123A2E; font-size:.92rem; margin-bottom:4px }
+  .alert-map-note{ font-size:.8rem; line-height:1.7; border-radius:8px; padding:6px 10px; margin-bottom:6px; background:#EEF3EF; color:#2F4A3F }
+  .alert-map-note.demo{ background:#FAECE7; color:#7A2E1A }
+  .alert-frame{ width:100%; height:340px; border:0; border-radius:10px; background:#fff }
+  .ask-farmer{ display:flex; align-items:center; justify-content:center; gap:8px; margin-top:10px; padding:11px 14px; border-radius:10px; background:#123A2E; color:#fff; text-decoration:none; font-weight:700; font-size:.9rem; text-align:center }
+  .ask-farmer:hover{ background:#1F5C4A }
+  .device-status{font-size:.84rem; line-height:1.8; border-radius:10px; padding:8px 12px; margin:0 0 14px; background:#EEF3EF; color:#2F4A3F; border:1px solid #d9cfb8}
+  .device-status.on{background:#E4F1E8; color:#14522F}
+  .device-status.off{background:#FAECE7; color:#7A2E1A}
   .alert-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px}
   .badge{padding:4px 12px; border-radius:20px; font-weight:700; font-size:.78rem; color:#fff}
   .badge.moderate{background:var(--moderate)} .badge.advanced{background:var(--advanced)}
@@ -99,31 +109,38 @@
     margin-top:8px; padding-top:8px; border-top:1px dashed var(--sand-deep);
     font-size:.78rem; color:var(--ink-soft);
   }
+
+  /* ---- Urdu (اردو): Noto Nastaliq Urdu, tall line-height, RTL ---- */
+  body.lang-ur, body.lang-ur *:not(code):not(.repro){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 }
+  body.lang-ur h1, body.lang-ur h2, body.lang-ur h3, body.lang-ur h4{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea, body.lang-ur .nk-tab{ line-height:1.8 }
 </style>
 </head>
 <body>
 <button id="langToggle" onclick="toggleLang()">العربية</button>
 <div class="wrap">
-  <a href="/index.html" class="back" data-en="← Back to overview" data-ar="← رجوع للصفحة الرئيسية">← Back to overview</a>
+  <a href="/index.html" class="back" data-en="← Back to overview" data-ar="← رجوع للصفحة الرئيسية" data-ur="← جائزے پر واپس">← Back to overview</a>
   <header>
-    <h1 data-en="🔔 Farmer alert dashboard" data-ar="🔔 لوحة إشعارات المزارع">🔔 Farmer alert dashboard</h1>
-    <div class="status"><span class="dot" id="statusDot"></span><span id="statusText" data-en="Connecting…" data-ar="جاري الاتصال…">Connecting…</span></div>
+    <h1 data-en="🔔 Farmer alert dashboard" data-ar="🔔 لوحة إشعارات المزارع" data-ur="🔔 کسان الرٹس ڈیش بورڈ">🔔 Farmer alert dashboard</h1>
+    <div class="status"><span class="dot" id="statusDot"></span><span id="statusText" data-en="Connecting…" data-ar="جارٍ الاتصال…" data-ur="رابطہ ہو رہا ہے…">Connecting…</span></div>
   </header>
+  <div id="deviceStatus" class="device-status idle"></div>
 
-  <button id="enableSound" data-en="Enable sound &amp; browser notifications" data-ar="فعّل الصوت وإشعارات المتصفح">Enable sound &amp; browser notifications</button>
+  <button id="enableSound" data-en="Enable sound &amp; browser notifications" data-ar="فعّل الصوت وإشعارات المتصفح" data-ur="آواز اور براؤزر نوٹیفکیشن فعال کریں">Enable sound &amp; browser notifications</button>
 
   <details class="contact-box">
     <summary>
-      <span data-en="📞 Backup contact" data-ar="📞 جهة اتصال احتياطية">📞 Backup contact</span>
+      <span data-en="📞 Backup contact" data-ar="📞 جهة اتصال احتياطية" data-ur="📞 متبادل رابطہ">📞 Backup contact</span>
       <span id="contactSummary" style="font-weight:400; font-size:.78rem"></span>
     </summary>
     <div class="cbody">
-      <p style="font-size:.78rem; color:var(--ink-soft); margin-bottom:10px" data-en="Set someone to contact if you're unavailable (traveling, out of the country) — shown automatically on every risk alert." data-ar="حدّد شخصًا يُتواصل معه إذا كنت غير متوفر (مسافر، خارج البلد) — يظهر تلقائيًا مع كل تنبيه خطر.">Set someone to contact if you're unavailable (traveling, out of the country) — shown automatically on every risk alert.</p>
+      <p style="font-size:.78rem; color:var(--ink-soft); margin-bottom:10px" data-en="Set someone to contact if you're unavailable (traveling, out of the country) — shown automatically on every risk alert." data-ar="حدّد شخصًا يمكن التواصل معه إذا كنت غير متوفر (مسافرًا أو خارج البلاد)؛ يظهر تلقائيًا مع كل تنبيه خطر." data-ur="کسی ایسے شخص کو مقرر کریں جس سے آپ کی عدم موجودگی (سفر، ملک سے باہر) میں رابطہ کیا جا سکے — یہ ہر خطرے کے الرٹ پر خود بخود دکھایا جاتا ہے۔">Set someone to contact if you're unavailable (traveling, out of the country) — shown automatically on every risk alert.</p>
       <div class="contact-row">
-        <input type="text" id="contactName" data-en-ph="Contact name" data-ar-ph="اسم جهة الاتصال" placeholder="Contact name">
-        <input type="tel" id="contactPhone" data-en-ph="Phone number" data-ar-ph="رقم الجوال" placeholder="Phone number">
+        <input type="text" id="contactName" data-en-ph="Contact name" data-ar-ph="اسم جهة الاتصال" data-ur-ph="رابطہ کا نام" placeholder="Contact name">
+        <input type="tel" id="contactPhone" data-en-ph="Phone number" data-ar-ph="رقم الهاتف" data-ur-ph="فون نمبر" placeholder="Phone number">
       </div>
-      <button id="contactSaveBtn" onclick="saveFarmContact()" data-en="Save" data-ar="حفظ">Save</button>
+      <button id="contactSaveBtn" onclick="saveFarmContact()" data-en="Save" data-ar="حفظ" data-ur="محفوظ کریں">Save</button>
       <div id="contactStatus"></div>
     </div>
   </details>
@@ -131,10 +148,11 @@
   <div id="recheckBanner"></div>
 
   <div id="alertsContainer">
-    <div class="empty" id="emptyState" data-en="No alerts yet — all monitored palms are healthy ✅" data-ar="لا توجد إشعارات حتى الآن — كل النخيل المراقَبة سليمة ✅">No alerts yet — all monitored palms are healthy ✅</div>
+    <div class="empty" id="emptyState" data-en="No alerts yet — all monitored palms are healthy ✅" data-ar="لا توجد إشعارات حتى الآن — كل النخيل المراقَبة سليمة ✅" data-ur="ابھی تک کوئی الرٹ نہیں — تمام زیرِ نگرانی کھجوریں صحت مند ہیں ✅">No alerts yet — all monitored palms are healthy ✅</div>
   </div>
-  <a href="/agent.html" class="nav-link" data-en="Ask the AI Assistant →" data-ar="اسأل المساعد الذكي ←">Ask the AI Assistant →</a>
-  <a href="/palms.html" class="nav-link" data-en="View full palm registry →" data-ar="عرض سجل النخيل كامل ←">View full palm registry →</a>
+  <a href="/agent.html" class="nav-link" data-en="Ask the AI Assistant →" data-ar="اسأل المساعد الذكي ←" data-ur="AI اسسٹنٹ سے پوچھیں ←">Ask the AI Assistant →</a>
+  <a href="/palms.html" class="nav-link" data-en="View full palm registry →" data-ar="عرض سجل النخيل كاملًا ←" data-ur="کھجوروں کا مکمل ریکارڈ دیکھیں ←">View full palm registry →</a>
+  <a href="/locate.html" class="nav-link" data-en="Mark visible signs on a photo →" data-ar="تحديد العلامات الظاهرة بالصورة ←" data-ur="تصویر پر نظر آنے والی علامات نشان زد کریں ←">Mark visible signs on a photo →</a>
 </div>
 
 <script>
@@ -144,6 +162,7 @@ const CLASS_MAP = { "سليم":"healthy","مبكرة":"early","متوسطة":"mo
 const CLASS_LABEL = {
   en: { healthy:"Healthy", early:"Early stage", moderate:"Moderate", advanced:"Advanced" },
   ar: { healthy:"سليم", early:"مبكرة", moderate:"متوسطة", advanced:"متقدمة" },
+  ur: { healthy:"صحت مند", early:"ابتدائی مرحلہ", moderate:"درمیانہ", advanced:"شدید" },
 };
 const UI_TEXT = {
   en: { enabled:"✅ Notifications enabled", connected:"Connected — waiting for alerts",
@@ -156,14 +175,23 @@ const UI_TEXT = {
         contactSaveFail:"Could not save. Is the server running?",
         alertContact:(name,phone)=>`📞 If unavailable, contact: ${name} — ${phone}` },
   ar: { enabled:"✅ الإشعارات مفعّلة", connected:"متصل — بانتظار الإشعارات",
-        disconnected:"انقطع الاتصال — جاري إعادة المحاولة…", risk:"نسبة الخطورة:",
+        disconnected:"انقطع الاتصال — جارٍ إعادة المحاولة…", risk:"نسبة الخطورة:",
         alertTitle: (id) => `⚠️ تنبيه NakhlaGuard: ${id}`,
         alertBody: (sev) => `الشدة: ${sev} — يُنصح بالتدخل`,
         recheckTitle:"🔔 نخيل تحتاج فحصًا دوريًا (مضى عليها 30 يومًا فأكثر)",
-        recheckNever:"ما انفحصت أبدًا", recheckDays:(n)=>`قبل ${n} يوم`,
-        contactNotSet:"غير محدّدة", contactSaved:"✓ تم الحفظ", contactNeedBoth:"أدخل الاسم ورقم الجوال.",
-        contactSaveFail:"تعذّر الحفظ. هل السيرفر شغّال؟",
+        recheckNever:"لم تُفحص قط", recheckDays:(n)=> n===1 ? "منذ يوم واحد" : n===2 ? "منذ يومين" : (n>=3 && n<=10) ? `منذ ${n} أيام` : `منذ ${n} يومًا`,
+        contactNotSet:"غير محدّدة", contactSaved:"✓ تم الحفظ", contactNeedBoth:"أدخل الاسم ورقم الهاتف.",
+        contactSaveFail:"تعذّر الحفظ. هل الخادم يعمل؟",
         alertContact:(name,phone)=>`📞 إذا كنت غير متوفر، تواصل مع: ${name} — ${phone}` },
+  ur: { enabled:"✅ نوٹیفکیشن فعال ہیں", connected:"منسلک — الرٹس کے انتظار میں",
+        disconnected:"رابطہ منقطع — دوبارہ کوشش جاری ہے…", risk:"خطرے کا اسکور:",
+        alertTitle: (id) => `⚠️ NakhlaGuard الرٹ: ${id}`,
+        alertBody: (sev) => `شدت: ${sev} — کارروائی تجویز کی جاتی ہے`,
+        recheckTitle:"🔔 وہ کھجوریں جن کی دورانی جانچ کا وقت ہو گیا (آخری جانچ کو 30 دن یا زیادہ ہو چکے)",
+        recheckNever:"کبھی جانچ نہیں ہوئی", recheckDays:(n)=>`${n} دن پہلے`,
+        contactNotSet:"مقرر نہیں", contactSaved:"✓ محفوظ ہو گیا", contactNeedBoth:"نام اور فون نمبر دونوں درج کریں۔",
+        contactSaveFail:"محفوظ نہیں ہو سکا۔ کیا سرور چل رہا ہے؟",
+        alertContact:(name,phone)=>`📞 اگر آپ دستیاب نہ ہوں تو رابطہ کریں: ${name} — ${phone}` },
 };
 
 // ---------- تذكير الفحص الدوري (وقائي عام، يتحدّث كل ما الصفحة مفتوحة) ----------
@@ -231,6 +259,35 @@ document.getElementById('enableSound').onclick = async () => {
   document.getElementById('enableSound').textContent = UI_TEXT[getLang()].enabled;
 };
 
+Object.assign(UI_TEXT.en, {
+  mapTitle:"📍 Estimated vibration-source position on the trunk (3D)",
+  mapDemo:"Demonstration: no sensor readings arrived, so this point is simulated to illustrate the idea. It is not a measurement.",
+  mapLive:"Estimated from the three sensors, not calibrated: accuracy unknown. It is the position of the vibration source, not a confirmed larva position.",
+  mapCal:(e)=>`Estimated from the three sensors, calibrated, approx. error ± ${e} cm. It is the position of the vibration source, not a confirmed larva position.`,
+  mapNone:"No sensor position arrived with this alert.",
+  askFarmer:"🧑‍🌾 Not on the farm? Request a farmer to visit this palm" });
+Object.assign(UI_TEXT.ar, {
+  mapTitle:"📍 موضع مصدر الاهتزاز المقدَّر على الجذع (ثلاثي الأبعاد)",
+  mapDemo:"عرض توضيحي: لم تصل قراءات من مستشعرات، فالنقطة محاكاة لتوضيح الفكرة وليست قياسًا.",
+  mapLive:"تقدير من المستشعرات الثلاثة غير معايَر: دقته غير معروفة. وهو موضع مصدر الاهتزاز لا موضع اليرقة المؤكد.",
+  mapCal:(e)=>`تقدير من المستشعرات الثلاثة بعد المعايرة، بخطأ تقريبي ± ${e} سم. وهو موضع مصدر الاهتزاز لا موضع اليرقة المؤكد.`,
+  mapNone:"لم يصل موضع من المستشعرات مع هذا التنبيه.",
+  askFarmer:"🧑‍🌾 لست في المزرعة؟ اطلب مزارعًا يزور هذه النخلة" });
+Object.assign(UI_TEXT.ur, {
+  mapTitle:"📍 تنے پر کمپن کے ماخذ کا تخمینی مقام (تھری ڈی)",
+  mapDemo:"نمائشی مثال: سینسرز سے کوئی ریڈنگ نہیں آئی، اس لیے یہ نقطہ خیال واضح کرنے کے لیے مصنوعی ہے۔ یہ پیمائش نہیں ہے۔",
+  mapLive:"تین سینسرز سے تخمینہ، کیلیبریٹ نہیں: درستگی معلوم نہیں۔ یہ کمپن کے ماخذ کا مقام ہے، لاروے کا تصدیق شدہ مقام نہیں۔",
+  mapCal:(e)=>`تین سینسرز سے تخمینہ، کیلیبریٹ شدہ، تقریباً ± ${e} سینٹی میٹر غلطی۔ یہ کمپن کے ماخذ کا مقام ہے، لاروے کا تصدیق شدہ مقام نہیں۔`,
+  mapNone:"اس الرٹ کے ساتھ سینسرز سے کوئی مقام نہیں آیا۔",
+  askFarmer:"🧑‍🌾 باغ میں نہیں ہیں؟ اس کھجور کے لیے کسان کے دورے کی درخواست کریں" });
+function alertMapHtml(data, lang){
+  const t = UI_TEXT[lang], hs = data.sensor_location;
+  const mode = hs ? (hs.mode || 'live') : 'none';
+  const note = mode === 'demo' ? t.mapDemo : mode === 'cal' ? t.mapCal(hs.err || 0) : mode === 'live' ? t.mapLive : t.mapNone;
+  const src = `/locate.html?embed=1&view=3d&lang=${lang}&palm=${encodeURIComponent(data.palm_id)}` + (hs ? `&hot=${hs.x},${hs.y}&mode=${mode}&err=${hs.err || 0}` : '');
+  return `<div class="alert-map"><div class="alert-map-title">${t.mapTitle}</div><div class="alert-map-note ${mode === 'demo' ? 'demo' : ''}">${note}</div><iframe class="alert-frame" src="${src}" title="trunk 3D map" loading="lazy"></iframe></div>`;
+}
+window.addEventListener('message', e => { if (e.data && e.data.type === 'nk-embed-height') document.querySelectorAll('.alert-frame').forEach(f => { if (f.contentWindow === e.source) f.style.height = Math.max(300, e.data.h + 8) + 'px'; }); });
 function playBeep(){
   try{
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -242,7 +299,9 @@ function playBeep(){
   }catch(e){}
 }
 
-function prettyRec(t){
+function urWeekDay(t){ return getLang() === 'ur' ? t.replace(/^(\s*)Week\s+(\d+)/gim, '$1ہفتہ $2').replace(/^(\s*)Day\s+(\d+)/gim, '$1دن $2') : t; }
+function prettyRec(t){ return urWeekDay(prettyRecBase(t)); }
+function prettyRecBase(t){
   return String(t)
     .replace(/^\s*((?:Week|الأسبوع)\s*\d+)\s*\|\s*([^|]+?)\s*(?:\|\s*(.+))?$/gim, (m, a, b, c) => a + ' — ' + b + (c ? ': ' + c : ''))
     .replace(/^\s*((?:Day|اليوم)\s*\d+)\s*\|\s*(.+)$/gim, '     $1: $2');
@@ -255,7 +314,7 @@ function addAlertCard(data){
   const severityLabel = CLASS_LABEL[lang][severityKey] || data.severity;
   const card = document.createElement('div');
   card.className = `alert-card ${severityKey}`;
-  const time = new Date(data.timestamp).toLocaleString(lang === 'ar' ? 'ar-SA' : 'en-US');
+  const time = new Date(data.timestamp).toLocaleString(LOCALES[lang]);
   card.innerHTML = `
     <div class="alert-top">
       <span class="palm-id">🌴 ${data.palm_id}</span>
@@ -265,6 +324,8 @@ function addAlertCard(data){
     <div class="time">${time} — ${UI_TEXT[lang].risk} ${(data.score*100).toFixed(0)}%</div>
     <div class="rec">${prettyRec(data.recommendation)}</div>
     ${data.farm_contact && data.farm_contact.contact_name ? `<div class="alert-contact">${UI_TEXT[lang].alertContact(data.farm_contact.contact_name, data.farm_contact.contact_phone)}</div>` : ''}
+    <a class="ask-farmer" href="/farmers.html?palm=${encodeURIComponent(data.palm_id)}&severity=${encodeURIComponent(severityLabel)}${data.location ? '&area=' + encodeURIComponent(data.location) : ''}">${UI_TEXT[lang].askFarmer}</a>
+    ${alertMapHtml(data, lang)}
   `;
   container.prepend(card);
 
@@ -298,27 +359,34 @@ function connect(){
 }
 
 connect();
+window.addEventListener('load', () => { if (window.nkDeviceStatus) window.nkDeviceStatus('deviceStatus'); });
 
-// ---------- تبديل اللغة (عربي/إنجليزي) - مشترك عبر كل صفحات الموقع ----------
-function getLang(){ return localStorage.getItem('nakhlaguard-lang') || 'en'; }
+// ---------- تبديل اللغة (عربي / English / اردو) - مشترك عبر كل صفحات الموقع ----------
+var LANG_CYCLE = ['ar', 'en', 'ur'];
+var LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+var LOCALES = { ar: 'ar-SA', en: 'en-US', ur: 'ur-PK' };
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return (l === 'ar' || l === 'en' || l === 'ur') ? l : 'ar'; }   // لا يعتمد على ثوابت معرَّفة لاحقًا، لأن بعض الصفحات تناديه قبل نهاية السكربت
 function setLang(lang){
-  localStorage.setItem('nakhlaguard-lang', lang);
+  if(!LANG_CYCLE.includes(lang)) lang = 'ar';
+  try{ localStorage.setItem('nakhlaguard-lang', lang); }catch(e){}
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.body.classList.toggle('rtl', lang === 'ar');
+  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.body.classList.toggle('rtl', lang !== 'en');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
   document.querySelectorAll('[data-en]').forEach(el => {
-    el.innerHTML = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    el.innerHTML = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
   });
   document.querySelectorAll('[data-en-ph]').forEach(el => {
-    el.placeholder = lang === 'ar' ? el.getAttribute('data-ar-ph') : el.getAttribute('data-en-ph');
+    el.placeholder = el.getAttribute('data-' + lang + '-ph') ?? el.getAttribute('data-en-ph');
   });
   const btn = document.getElementById('langToggle');
-  if(btn) btn.textContent = lang === 'ar' ? 'English' : 'العربية';
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
   if(typeof loadRecheckReminder === 'function') loadRecheckReminder();
   if(typeof loadFarmContact === 'function') loadFarmContact();
 }
-function toggleLang(){ setLang(getLang() === 'ar' ? 'en' : 'ar'); }
+function toggleLang(){ setLang(LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length]); }
 setLang(getLang());
 </script>
+<script src="/nav.js" defer></script>
 </body>
 </html>

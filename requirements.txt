@@ -8,3 +8,4 @@ joblib
 httpx
 pyserial
 requests
+pillow

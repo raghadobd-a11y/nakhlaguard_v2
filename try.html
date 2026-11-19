@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NakhlaGuard — جرّب الجهاز</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2; --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --card:#FBF9F3; --warn:#B3342d; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{ font-family:'Tajawal','IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink); min-height:100vh; line-height:1.8 }
+  html[lang=en] body{ font-family:'IBM Plex Sans',sans-serif }
+  #langToggle{ position:fixed; top:14px; left:14px; z-index:5; background:var(--palm-deep); color:#fff; border:1px solid #fff3; border-radius:999px; padding:6px 14px; cursor:pointer; font:inherit }
+  .wrap{ max-width:980px; margin:0 auto; padding:0 16px }
+  .hero{ background:linear-gradient(160deg,#1c5a47,#102f26); color:var(--sand); padding:30px 0 34px }
+  .hero h1{ font-size:clamp(1.5rem,4vw,2.1rem); line-height:1.5; margin-bottom:6px }
+  .hero p{ color:#CBD9D3; max-width:660px }
+  .badge{ display:inline-block; font-size:.72rem; font-weight:600; border:1px solid rgba(237,230,214,.45); border-radius:999px; padding:2px 11px; margin-bottom:10px; color:var(--sand) }
+  h2{ font-size:1.2rem; color:var(--palm-deep); margin:0 0 10px }
+  .card{ background:var(--card); border-radius:16px; padding:18px; margin-top:16px; border-top:3px solid var(--palm) }
+  .step{ font-size:.78rem; font-weight:700; color:var(--date); margin-bottom:2px }
+  .modes{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px }
+  @media(max-width:620px){ .modes{ grid-template-columns:1fr } }
+  .mode{ font:inherit; cursor:pointer; background:#fff; border:1.5px solid var(--sand-deep); border-radius:14px; padding:12px; text-align:center; color:var(--palm-deep); font-weight:700 }
+  .mode .ic{ display:block; font-size:1.6rem; line-height:1.3 }
+  .mode small{ display:block; font-weight:400; color:var(--ink-soft); font-size:.78rem }
+  .mode.on{ border-color:var(--palm); background:#EAF3EE; box-shadow:0 0 0 2px var(--palm) inset }
+  .pane{ display:none } .pane.on{ display:block }
+  .drop{ border:2px dashed var(--date); border-radius:14px; padding:26px 14px; text-align:center; background:#fff; cursor:pointer; color:var(--ink-soft) }
+  .drop.over{ background:#FFF6E8; border-color:var(--palm) }
+  .samples{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px }
+  @media(min-width:620px){ .samples{ grid-template-columns:repeat(4,1fr) } }
+  .samples button, .btn{ font:inherit; font-weight:700; cursor:pointer; color:var(--palm-deep); background:#fff; border:1.5px solid var(--palm); border-radius:10px; padding:10px 8px }
+  .samples button:hover, .btn:hover{ background:var(--palm); color:#fff }
+  .btn.fill{ background:var(--palm); color:#fff } .btn.fill:hover{ background:var(--palm-deep) }
+  .btn:disabled, .samples button:disabled{ opacity:.55; cursor:wait }
+  .rec{ text-align:center }
+  .recbtn{ width:92px; height:92px; border-radius:50%; border:0; cursor:pointer; background:var(--warn); color:#fff; font-size:2rem; box-shadow:0 0 0 6px #b3342d33 }
+  .recbtn.live{ animation:pulse 1s infinite }
+  @keyframes pulse{ 0%{ box-shadow:0 0 0 0 #b3342d88 } 100%{ box-shadow:0 0 0 22px #b3342d00 } }
+  .recbar{ height:8px; border-radius:6px; background:var(--sand-deep); margin:12px auto 0; max-width:320px; overflow:hidden; display:none }
+  .recbar.on{ display:block } .recbar i{ display:block; height:100%; width:0; background:var(--warn) }
+  .recmsg{ margin-top:10px; color:var(--ink-soft); min-height:1.8em }
+  .wavebox{ position:relative; margin-top:14px; background:#102F26; border-radius:12px; overflow:hidden; display:none }
+  .wavebox.on{ display:block }
+  .wavebox canvas{ width:100%; height:120px; display:block }
+  .scan{ position:absolute; top:0; bottom:0; width:3px; background:#D9A441; box-shadow:0 0 14px 4px #D9A44199; left:0; display:none }
+  .scan.go{ display:block; animation:scan 1.3s linear infinite }
+  @keyframes scan{ from{ left:0 } to{ left:100% } }
+  .wavemeta{ font-size:.8rem; color:#9FB5AB; padding:6px 12px; background:#0c231c }
+  .wavemeta b{ color:#ff8f7e }
+  .verdict{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center; border-radius:14px; padding:14px 16px; color:#fff }
+  .verdict .vi{ font-size:2.2rem } .verdict h3{ font-size:1.25rem; line-height:1.4 } .verdict p{ font-size:.92rem; opacity:.95 }
+  .v-inc{ background:#5d6b64 } .v-healthy{ background:#2e7d4f } .v-early{ background:#a8861a } .v-moderate{ background:#c0651a } .v-advanced{ background:#b3342d }
+  .res-grid{ display:grid; grid-template-columns:1.2fr 1fr; gap:16px; margin-top:14px; align-items:start }
+  @media(max-width:720px){ .res-grid{ grid-template-columns:1fr } }
+  .ptitle{ font-size:.82rem; font-weight:700; color:var(--ink-soft); margin-bottom:2px }
+  .pb{ display:grid; grid-template-columns:96px 1fr 44px; gap:8px; align-items:center; font-size:.86rem; margin:6px 0; color:var(--ink-soft) }
+  .pb i{ display:block; height:10px; border-radius:6px; background:var(--sand-deep); overflow:hidden } .pb i b{ display:block; height:100%; background:var(--date); transition:width .7s }
+  .pb.top{ color:var(--ink); font-weight:700 } .pb.top i b{ background:var(--palm) }
+  .gauge{ text-align:center } .gauge svg{ width:100%; max-width:240px } .gauge .gl{ font-size:.85rem; color:var(--ink-soft) }
+  .evid{ margin-top:14px; background:#fff; border:1.5px solid var(--sand-deep); border-radius:12px; padding:10px 14px; font-size:.92rem }
+  .evid b{ color:var(--palm-deep) }
+  .veto{ margin-top:10px; background:#EAF3EE; border-radius:10px; padding:9px 13px; font-size:.88rem; color:var(--palm-deep); line-height:1.9 }
+  .note{ font-size:.82rem; color:#7a2e1a; background:#faece7; border-radius:10px; padding:8px 12px; margin-top:12px; line-height:1.8 }
+  .soft{ font-size:.82rem; color:var(--ink-soft); margin-top:10px }
+  .trunk{ margin-top:14px } .trunk iframe{ width:100%; height:520px; border:0; border-radius:12px; background:#fff }
+  /* test sounds for the judges */
+  .tsounds{ margin-top:16px; background:#FFF6E8; border:1.5px solid #E9CFA1; border-radius:14px; padding:12px 14px }
+  .tsounds h3{ font-size:1rem; color:var(--palm-deep); margin-bottom:2px }
+  .ts{ display:grid; grid-template-columns:1fr auto auto auto; gap:8px; align-items:center; background:#fff; border-radius:10px; padding:8px 10px; margin-top:8px }
+  .ts small{ display:block; color:var(--ink-soft); font-size:.78rem; line-height:1.5 }
+  .ts button, .ts a{ font:inherit; font-size:.84rem; font-weight:700; text-decoration:none; cursor:pointer; color:var(--palm-deep); background:#fff; border:1.5px solid var(--palm); border-radius:9px; padding:6px 10px }
+  .ts button.on, .ts button.go{ background:var(--palm); color:#fff }
+  @media(max-width:520px){ .ts{ grid-template-columns:1fr 1fr } .ts > div, .ts button.go{ grid-column:1 / -1 } }
+  .howto{ margin-top:10px; font-size:.88rem; line-height:1.9 } .howto ol{ padding-inline-start:22px }
+  /* report: headings that open */
+  .rhead{ margin-top:12px; font-size:1rem; font-weight:700; color:var(--palm-deep); line-height:1.8 }
+  .src{ display:inline-block; font-size:.74rem; font-weight:600; border-radius:999px; padding:1px 10px; margin-top:6px; background:#EAF3EE; color:var(--palm-deep) } .src.tpl{ background:#FFF6E8; color:#8a5a1a }
+  .rtools{ margin-top:10px; display:flex; justify-content:space-between; align-items:center; gap:8px }
+  .rtools .lnk{ font:inherit; font-size:.82rem; background:none; border:0; color:var(--palm); cursor:pointer; text-decoration:underline }
+  .gtitle{ font-size:.95rem; font-weight:700; color:var(--date); margin:16px 0 0 }
+  .acc{ border:1.5px solid var(--sand-deep); border-radius:12px; background:#fff; margin-top:8px; overflow:hidden }
+  .acc.open{ border-color:var(--palm) }
+  .acc-h{ width:100%; display:flex; align-items:center; gap:10px; font:inherit; background:none; border:0; padding:11px 14px; cursor:pointer; text-align:start; color:var(--palm-deep); font-weight:700 }
+  .acc-h .tt{ flex:1 } .acc-h small{ display:block; font-weight:400; color:var(--ink-soft); font-size:.82rem; line-height:1.5 }
+  .acc-h .no{ flex:none; width:28px; height:28px; border-radius:50%; background:var(--palm); color:#fff; display:grid; place-items:center; font-size:.85rem }
+  .acc-t{ flex:none; font-size:.8rem; border:1.5px solid var(--palm); border-radius:999px; padding:2px 12px; color:var(--palm); font-weight:600 }
+  .acc.open .acc-t{ background:var(--palm); color:#fff }
+  .acc-b{ padding:0 16px 12px; line-height:1.95; font-size:.95rem } .acc-b ul{ padding-inline-start:22px }
+  .wgoal{ margin:2px 0 8px; color:var(--palm-deep); font-weight:600 } .wcheck{ margin:10px 0 4px; background:#EAF3EE; border-radius:10px; padding:8px 12px; font-size:.9rem }
+  .askbtn{ display:inline-block; margin-top:8px; font:inherit; font-size:.86rem; font-weight:700; text-decoration:none; color:var(--palm-deep); background:#fff; border:1.5px solid var(--palm); border-radius:999px; padding:5px 14px } .askbtn:hover{ background:var(--palm); color:#fff }
+  .askall{ text-align:center; margin-top:14px }
+  .rnote{ margin-top:12px; font-size:.8rem; color:var(--ink-soft) }
+  .cta{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px }
+  .cta a{ text-decoration:none; display:inline-block } .cta a.btn{ padding:10px 16px }
+  .hide{ display:none !important }
+  .spin{ display:inline-block; width:16px; height:16px; border:3px solid #1F5C4A33; border-top-color:var(--palm); border-radius:50%; animation:sp .8s linear infinite; vertical-align:middle; margin-inline-end:8px }
+  @keyframes sp{ to{ transform:rotate(360deg) } }
+  #result, #result .card, #trunkCard{ scroll-margin-top:70px }
+  /* Urdu */
+  body.lang-ur, body.lang-ur *:not(code){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 } body.lang-ur h1, body.lang-ur h2, body.lang-ur h3, body.lang-ur h4{ line-height:2 }
+  body.lang-ur button, body.lang-ur .nk-tab{ line-height:1.8 }
+</style>
+</head>
+<body>
+<button id="langToggle" onclick="toggleLang()">English</button>
+
+<div class="hero"><div class="wrap">
+  <span class="badge" id="badge"></span>
+  <h1 id="h1"></h1>
+  <p id="sub"></p>
+</div></div>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="step" id="s1"></div>
+    <h2 id="h_in"></h2>
+    <div class="modes" role="tablist">
+      <button type="button" class="mode on" data-m="upload"><span class="ic">📁</span><span class="mt"></span><small class="ms"></small></button>
+      <button type="button" class="mode" data-m="mic"><span class="ic">🎤</span><span class="mt"></span><small class="ms"></small></button>
+      <button type="button" class="mode" data-m="sample"><span class="ic">🎧</span><span class="mt"></span><small class="ms"></small></button>
+    </div>
+
+    <div class="pane on" id="p_upload">
+      <div class="drop" id="drop" tabindex="0" role="button"><div style="font-size:1.8rem">⬆️</div><div id="dropT"></div><div class="soft" id="dropS"></div></div>
+      <input type="file" id="file" accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm,.aac,.flac" class="hide">
+    </div>
+    <div class="pane" id="p_mic">
+      <div class="rec"><button type="button" class="recbtn" id="recbtn" aria-label="record">🎤</button><div class="recbar" id="recbar"><i id="recfill"></i></div><div class="recmsg" id="recmsg"></div></div>
+    </div>
+    <div class="pane" id="p_sample">
+      <div class="samples" id="samples"></div>
+      <div class="tsounds">
+        <h3 id="ts_h"></h3>
+        <div class="soft" style="margin-top:0" id="ts_s"></div>
+        <div id="tslist"></div>
+      </div>
+    </div>
+
+    <div class="wavebox" id="wavebox">
+      <canvas id="wave" width="900" height="120"></canvas><div class="scan" id="scan"></div>
+      <div class="wavemeta" id="wavemeta"></div>
+    </div>
+    <div class="soft" id="status"></div>
+  </div>
+
+  <div id="result" class="hide">
+    <div class="card" style="border-top-color:var(--date)">
+      <div class="step" id="s2"></div>
+      <h2 id="h_res"></h2>
+      <div id="verdict"></div>
+      <div id="veto" class="veto hide"></div>
+      <div class="res-grid" id="resGrid">
+        <div><div class="ptitle" id="ptitle"></div><div id="bars"></div><div id="nf" class="soft"></div></div>
+        <div class="gauge" id="gauge"></div>
+      </div>
+      <div class="evid" id="evid"></div>
+      <div class="soft" id="tapnote"></div>
+      <div class="note" id="honest"></div>
+    </div>
+
+    <div class="card hide" id="trunkCard" style="border-top-color:#1F618D">
+      <div class="step" id="s3"></div>
+      <h2 id="h_trunk"></h2>
+      <div class="soft" id="trunkSub"></div>
+      <div class="trunk"><iframe id="trunkFrame" title="3D trunk" loading="lazy"></iframe></div>
+      <div class="note" id="trunkNote"></div>
+    </div>
+
+    <div class="card" id="repCard" style="border-top-color:var(--palm-deep)">
+      <div class="step" id="s4"></div>
+      <h2 id="h_rep"></h2>
+      <div class="soft" id="repSub"></div>
+      <div style="margin-top:10px"><button type="button" class="btn fill" id="repBtn"></button></div>
+      <div id="report"></div>
+    </div>
+
+    <div class="cta">
+      <a class="btn fill" href="/assistant.html" id="c1"></a>
+      <a class="btn" href="/owner.html" id="c2"></a>
+      <a class="btn" href="/evidence.html" id="c3"></a>
+    </div>
+  </div>
+</div>
+<div style="height:110px"></div>
+
+<script>
+/* ===== texts ===== */
+const T = {
+  ar: { badge:"نموذج أولي", h1:"جرّب الجهاز بنفسك", sub:"ارفع تسجيلك أو سجّل بالميكروفون أو اختر صوتًا جاهزًا. يحلّل الذكاء الاصطناعي الصوت ويبحث عن نبضات اليرقات، ثم يعرض النتيجة والموضع على الجذع ويكتب لك خطة علاج لشهر كامل.",
+    s1:"الخطوة 1", h_in:"أعطِ الجهاز صوتًا",
+    m_upload:"ارفع تسجيلًا", m_upload_s:"ملف من جهازك", m_mic:"سجّل الآن", m_mic_s:"حتى 15 ثانية", m_sample:"صوت جاهز", m_sample_s:"عينات وأصوات للتجربة",
+    dropT:"اسحب ملفًا صوتيًا هنا، أو اضغط للاختيار", dropS:"wav · mp3 · m4a · ogg … حتى 25 ميغابايت. نحلّل حتى 15 ثانية من التسجيل.",
+    rec_idle:"اضغط للتسجيل (حتى 15 ثانية، وأقلها 3 ثوانٍ). قرّب الميكروفون من مصدر الصوت.", rec_go:s=>`جارٍ التسجيل… ${s} ث · اضغط للإيقاف`, rec_denied:"لم نستطع استعمال الميكروفون. اسمح به من المتصفح أو جرّب رفع ملف.", rec_unsup:"متصفحك لا يدعم التسجيل. جرّب رفع ملف.", rec_short:"التسجيل قصير. سجّل 3 ثوانٍ على الأقل.",
+    samples:{healthy:"نخلة سليمة", early:"مرحلة مبكرة", moderate:"مرحلة متوسطة", advanced:"مرحلة متقدمة"},
+    ts_h:"🔊 أصوات للتجربة أمام المحكم", ts_s:"أصوات محاكاة صنعناها بأنفسنا، وليست تسجيلًا من نخلة حقيقية. شغّلها من جوالك قرب ميكروفون الجهاز، أو حمّلها وارفعها.",
+    ts:{dense:["نبضات كثيفة","إصابة واضحة: يجب أن يقول إصابة"], sparse:["نبضات قليلة","بداية إصابة: يجب أن يقول إصابة"], air:["هواء فقط","للمقارنة: يجب أن يقول لا مؤشرات"]}, play:"▶ شغّل", stop:"⏹ أوقف", an:"🔬 حلّل", dl:"⬇ حمّل",
+    decoding:"جارٍ قراءة التسجيل…", analyzing:"يُصغي ويحلّل بالذكاء الاصطناعي…", bad:"تعذّر قراءة هذا التسجيل. جرّب ملفًا آخر.", toobig:"الملف كبير. اختر ملفًا أصغر من 25 ميغابايت.", err:"تعذّر التحليل الآن. حاول بعد قليل.", limit:"طلبات كثيرة. حاول بعد قليل.", off:"التجربة العامة متوقفة حاليًا.",
+    meta:(d,p)=>`المدة ${d} ثانية · نحلّل حتى 15 ثانية · العلامات الحمراء = نبضات سمعناها (${p})`,
+    s2:"الخطوة 2", h_res:"ماذا سمع الذكاء الاصطناعي؟", ptitle:"رأي النموذج",
+    stage:{healthy:"سليمة", early:"مبكرة", moderate:"متوسطة", advanced:"متقدمة"},
+    v:{healthy:["✅","لا مؤشرات إصابة في هذا الصوت","استمر في الفحص الدوري."], early:["⚠️","مؤشرات إصابة مبكرة","يُنصح بفحص ميداني قريبًا لتأكيد النتيجة."], moderate:["🟠","إصابة متوسطة محتملة","تحتاج انتباهًا قريبًا. اطلب فحصًا ميدانيًا."], advanced:["🚨","إصابة متقدمة محتملة","تحتاج تدخلًا عاجلًا بعد تأكيدها ميدانيًا."]},
+    conf:"الثقة", risk:"مؤشر الخطورة", norisk:"لا يوجد مؤشر خطورة لهذا الصوت", nf:"مرشّح الضجيج: ", nf_on:"حجب إنذارًا لأن الصوت لا يشبه نشاط اليرقات.", nf_off:"لم يحجب شيئًا.",
+    ev:(n,d,need)=>`🔎 فحص النبضات: سمعنا <b>${n}</b> نبضة قصيرة في ${d} ثانية. نحتاج ${need} على الأقل لنعدّها نشاطًا.`, ev_sus:" الصوت متواصل أكثر من اللازم، وليس نبضات متفرقة.", ev_silent:"🔎 فحص النبضات: التسجيل صامت تقريبًا. قرّب الميكروفون من مصدر الصوت.",
+    veto:m=>`رجّح النموذج «${m}»، لكن فحص النبضات لم يسمع نبضات كافية، فاعتمدنا «لا مؤشرات». هذا لا يعني أن الصوت من نخلة، فالفحص يبحث عن نبضات اليرقات فقط.`,
+    inc_h:"ما قدرنا نحكم على هذا التسجيل", inc_air:"سمعنا هواءً أو صوتًا منخفضًا قويًا على الميكروفون، وهذا يغطي على أي نبضات. لا نقول «سليمة» ولا «مصابة» من تسجيل كهذا.", inc_silent:"التسجيل صامت تقريبًا، فلا شيء نحكم عليه.", inc_clip:"الميكروفون امتلأ بصوت عالٍ جدًا (نفخ أو قرب شديد)، فتشوّه الصوت.",
+    inc_tips_h:"أعد التسجيل هكذا:", inc_tips:["أبعد الميكروفون عن فمك وعن المروحة والتكييف، ولا تنفخ عليه.","غطِّه من جهة الهواء بقطعة قماش خفيفة أو سجّل في مكان ساكن.","قرّب مصدر الصوت (سماعة الجوال مثلًا) نحو 5 إلى 10 سم من الميكروفون، وسجّل 10 إلى 12 ثانية."],
+    tapnote:"تنبيه صادق: نقر الطاولة أو لوحة المفاتيح أو سقوط شيء هي أيضًا نبضات قصيرة، وقد لا يميّزها الفحص عن نبضات اليرقة. سجّل في مكان هادئ دون لمس الطاولة. هذا فحص أولي وليس تشخيصًا.",
+    honest_sample:"هذه تسجيلات مُحاكاة بالحاسوب، وليست من نخلة حقيقية. النتيجة الجيدة هنا لا تثبت عمل الجهاز على نخلة حقيقية: انظر صفحة الأدلة.",
+    honest_own:"النموذج تدرّب على تسجيلات مُحاكاة ولم يُختبر على نخيل حقيقي، فنتيجة تسجيلك للتجربة فقط وليست تشخيصًا. لا نزعم أنه يشخّص نخلتك.",
+    s3:"الخطوة 3", h_trunk:"أين يُفحص الجذع؟", trunkSub:"جذع النخلة بثلاثة أبعاد مع نقطة تقريبية لمصدر الاهتزاز. يمكنك تدويره.", trunkNote:"عرض توضيحي: النقطة محاكاة وليست قياسًا، ولا تُظهر موضع يرقة حقيقية.",
+    s4:"الخطوة 4", h_rep:"تقرير «حارس» للعلاج", repSub:"«حارس» هو الذكاء الاصطناعي في نخلة قارد. يقرأ نتيجتك ويكتب لك معناها وما تفعله اليوم، ثم خطة شهر كامل أسبوعًا بأسبوع، وفي كل أسبوع ما تفعله يومًا بيوم وما تتحقق منه في آخره. اضغط أي عنوان لتفتحه، وفي كل أسبوع زر تسأل منه «حارس» عن تفاصيله. التقرير تقديري ويحتاج تأكيد مختص.", repBtn:"✨ اطلب التقرير من حارس", repWait:"حارس يكتب التقرير…", repAgain:"أعد كتابة التقرير",
+    show:"اعرض", hide:"أخفِ", openAll:"افتح الكل", closeAll:"أغلق الكل", src_ai:"كتبه حارس الآن (ذكاء اصطناعي)", src_tpl:"نسخة جاهزة من حارس، لأن الاتصال بالذكاء الاصطناعي غير متاح الآن", src_quick:"نسخة جاهزة تقرؤها الآن، و«حارس» يكتب نسخة مفصّلة لحالتك…",
+    c1:"🤖 اسأل «حارس» عن مزرعتك", c2:"🔑 عندك الجهاز؟ ادخل موقعك الخاص", c3:"📚 الأدلة والمصادر" },
+  en: { badge:"Prototype", h1:"Try the device yourself", sub:"Upload your own recording, record with the microphone, or pick a ready sound. The AI analyzes the sound and looks for larva pulses, then shows the result and the position on the trunk and writes you a full one-month treatment plan.",
+    s1:"Step 1", h_in:"Give the device a sound",
+    m_upload:"Upload a recording", m_upload_s:"a file from your device", m_mic:"Record now", m_mic_s:"up to 15 seconds", m_sample:"Ready sound", m_sample_s:"samples and test sounds",
+    dropT:"Drop an audio file here, or click to choose", dropS:"wav · mp3 · m4a · ogg … up to 25 MB. We analyze up to 15 seconds.",
+    rec_idle:"Press to record (up to 15 seconds, at least 3). Hold the microphone close to the sound source.", rec_go:s=>`Recording… ${s} s · press to stop`, rec_denied:"Could not use the microphone. Allow it in the browser, or upload a file.", rec_unsup:"Your browser cannot record. Try uploading a file.", rec_short:"The recording is too short. Record at least 3 seconds.",
+    samples:{healthy:"Healthy palm", early:"Early stage", moderate:"Moderate stage", advanced:"Advanced stage"},
+    ts_h:"🔊 Test sounds for the judges", ts_s:"Simulated sounds we made ourselves, not a recording from a real palm. Play them from your phone near the device's microphone, or download and upload them.",
+    ts:{dense:["Many pulses","Clear infestation: it should say infested"], sparse:["Few pulses","The start of an infestation: it should say infested"], air:["Air only","For comparison: it should say no sign"]}, play:"▶ Play", stop:"⏹ Stop", an:"🔬 Analyze", dl:"⬇ Download",
+    decoding:"Reading the recording…", analyzing:"Listening and analyzing with AI…", bad:"Could not read this recording. Try another file.", toobig:"The file is large. Choose one under 25 MB.", err:"Could not analyze right now. Please try again shortly.", limit:"Too many requests. Try again shortly.", off:"The public demo is switched off for now.",
+    meta:(d,p)=>`Length ${d} s · analyzing up to 15 s · red marks = pulses we heard (${p})`,
+    s2:"Step 2", h_res:"What did the AI hear?", ptitle:"The model's opinion",
+    stage:{healthy:"Healthy", early:"Early", moderate:"Moderate", advanced:"Advanced"},
+    v:{healthy:["✅","No sign of infestation in this sound","Keep up the regular checks."], early:["⚠️","Early signs of infestation","A field inspection soon is advised to confirm."], moderate:["🟠","Moderate infestation possible","Needs attention soon. Ask for a field inspection."], advanced:["🚨","Advanced infestation possible","Needs urgent action once confirmed in the field."]},
+    conf:"confidence", risk:"Risk level", norisk:"No risk level for this sound", nf:"Noise filter: ", nf_on:"it suppressed an alarm because the sound does not look like larval activity.", nf_off:"it suppressed nothing.",
+    ev:(n,d,need)=>`🔎 Pulse check: we heard <b>${n}</b> short pulses in ${d} seconds. We need at least ${need} to count it as activity.`, ev_sus:" The sound is too continuous to be separate pulses.", ev_silent:"🔎 Pulse check: the recording is almost silent. Hold the microphone closer to the sound source.",
+    veto:m=>`The model leaned to “${m}”, but the pulse check did not hear enough pulses, so we kept “no sign”. This does not mean the sound is from a palm: the check only looks for larva pulses.`,
+    inc_h:"We could not judge this recording", inc_air:"We heard air or strong low-frequency sound on the microphone, which covers up any pulses. We do not say “healthy” or “infested” from a recording like this.", inc_silent:"The recording is almost silent, so there is nothing to judge.", inc_clip:"The microphone was overloaded by a very loud sound (blowing or very close), so the sound is distorted.",
+    inc_tips_h:"Record again like this:", inc_tips:["Keep the microphone away from your mouth, the fan and the air conditioner, and do not blow on it.","Cover it on the windward side with a light cloth, or record in a still place.","Hold the sound source (a phone speaker, say) about 5 to 10 cm from the microphone and record 10 to 12 seconds."],
+    tapnote:"An honest warning: tapping the table, a keyboard or a dropped object are also short pulses, and the check may not tell them from larva pulses. Record in a quiet place without touching the table. This is a first screening, not a diagnosis.",
+    honest_sample:"These are recordings made by computer simulation, not from a real palm. A good result here does not prove the device works on a real palm: see the Evidence page.",
+    honest_own:"The model was trained on simulated recordings and has not been tested on real palms, so the result for your own recording is for trying only, not a diagnosis. We do not claim it diagnoses your palm.",
+    s3:"Step 3", h_trunk:"Where on the trunk?", trunkSub:"A 3D palm trunk with an approximate point for the vibration source. You can rotate it.", trunkNote:"Demonstration: the point is simulated, not a measurement, and does not show where a real larva is.",
+    s4:"Step 4", h_rep:"Haris's treatment report", repSub:"Haris is NakhlaGuard's AI. It reads your result and writes what it means and what to do today, then a full one-month plan, week by week, with what to do day by day and what to check at the end of each week. Tap any heading to open it; each week has a button to ask Haris for more detail. The report is approximate and needs a specialist's confirmation.", repBtn:"✨ Ask Haris for the report", repWait:"Haris is writing the report…", repAgain:"Write the report again",
+    show:"Show", hide:"Hide", openAll:"Open all", closeAll:"Close all", src_ai:"Written by Haris just now (AI)", src_tpl:"A ready-made version from Haris, because the AI is not reachable right now", src_quick:"A ready-made version to read now, while Haris writes a detailed one for your case…",
+    c1:"🤖 Ask Haris about your farm", c2:"🔑 Have the device? Enter your private site", c3:"📚 Evidence and sources" },
+  ur: { badge:"ابتدائی نمونہ", h1:"ڈیوائس خود آزمائیں", sub:"اپنی ریکارڈنگ اپ لوڈ کریں، مائیکروفون سے ریکارڈ کریں، یا تیار آواز چنیں۔ AI آواز کا تجزیہ کر کے سنڈی کی پلس تلاش کرتی ہے، پھر نتیجہ اور تنے پر مقام دکھاتی ہے اور پورے مہینے کا علاج کا منصوبہ لکھتی ہے۔",
+    s1:"مرحلہ 1", h_in:"ڈیوائس کو آواز دیں",
+    m_upload:"ریکارڈنگ اپ لوڈ کریں", m_upload_s:"آپ کے آلے سے فائل", m_mic:"ابھی ریکارڈ کریں", m_mic_s:"15 سیکنڈ تک", m_sample:"تیار آواز", m_sample_s:"نمونے اور آزمائشی آوازیں",
+    dropT:"آڈیو فائل یہاں کھینچیں، یا چننے کے لیے دبائیں", dropS:"wav · mp3 · m4a · ogg … 25 ایم بی تک۔ ہم 15 سیکنڈ تک کا تجزیہ کرتے ہیں۔",
+    rec_idle:"ریکارڈ کرنے کے لیے دبائیں (15 سیکنڈ تک، کم از کم 3)۔ مائیکروفون آواز کے ماخذ کے قریب رکھیں۔", rec_go:s=>`ریکارڈ ہو رہا ہے… ${s} سیکنڈ · روکنے کے لیے دبائیں`, rec_denied:"مائیکروفون استعمال نہیں ہو سکا۔ براؤزر میں اجازت دیں یا فائل اپ لوڈ کریں۔", rec_unsup:"آپ کا براؤزر ریکارڈنگ سپورٹ نہیں کرتا۔ فائل اپ لوڈ کریں۔", rec_short:"ریکارڈنگ چھوٹی ہے۔ کم از کم 3 سیکنڈ ریکارڈ کریں۔",
+    samples:{healthy:"صحت مند کھجور", early:"ابتدائی مرحلہ", moderate:"درمیانہ مرحلہ", advanced:"شدید مرحلہ"},
+    ts_h:"🔊 ججوں کے سامنے آزمانے کی آوازیں", ts_s:"یہ ہماری بنائی ہوئی سمولیشن آوازیں ہیں، حقیقی کھجور کی ریکارڈنگ نہیں۔ انہیں اپنے فون سے ڈیوائس کے مائیکروفون کے قریب چلائیں، یا ڈاؤن لوڈ کر کے اپ لوڈ کریں۔",
+    ts:{dense:["زیادہ پلس","واضح حملہ: اسے حملہ کہنا چاہیے"], sparse:["کم پلس","حملے کی ابتدا: اسے حملہ کہنا چاہیے"], air:["صرف ہوا","موازنے کے لیے: اسے کوئی علامت نہیں کہنا چاہیے"]}, play:"▶ چلائیں", stop:"⏹ روکیں", an:"🔬 تجزیہ کریں", dl:"⬇ ڈاؤن لوڈ",
+    decoding:"ریکارڈنگ پڑھی جا رہی ہے…", analyzing:"سن رہا ہے اور AI سے تجزیہ کر رہا ہے…", bad:"یہ ریکارڈنگ پڑھی نہیں جا سکی۔ دوسری فائل آزمائیں۔", toobig:"فائل بڑی ہے۔ 25 ایم بی سے چھوٹی چنیں۔", err:"ابھی تجزیہ نہیں ہو سکا۔ تھوڑی دیر بعد کوشش کریں۔", limit:"بہت زیادہ درخواستیں۔ تھوڑی دیر بعد کوشش کریں۔", off:"عوامی ڈیمو فی الحال بند ہے۔",
+    meta:(d,p)=>`دورانیہ ${d} سیکنڈ · 15 سیکنڈ تک کا تجزیہ · سرخ نشان = سنی ہوئی پلس (${p})`,
+    s2:"مرحلہ 2", h_res:"AI نے کیا سنا؟", ptitle:"ماڈل کی رائے",
+    stage:{healthy:"صحت مند", early:"ابتدائی", moderate:"درمیانہ", advanced:"شدید"},
+    v:{healthy:["✅","اس آواز میں حملے کی علامت نہیں","باقاعدہ جانچ جاری رکھیں۔"], early:["⚠️","حملے کی ابتدائی علامات","تصدیق کے لیے جلد میدانی معائنہ کریں۔"], moderate:["🟠","درمیانے حملے کا امکان","جلد توجہ چاہیے۔ میدانی معائنہ کروائیں۔"], advanced:["🚨","شدید حملے کا امکان","میدان میں تصدیق کے بعد فوری کارروائی چاہیے۔"]},
+    conf:"اعتماد", risk:"خطرے کی سطح", norisk:"اس آواز کے لیے خطرے کی سطح نہیں", nf:"شور فلٹر: ", nf_on:"اس نے الارم روکا کیونکہ آواز سنڈی کی سرگرمی جیسی نہیں۔", nf_off:"اس نے کچھ نہیں روکا۔",
+    ev:(n,d,need)=>`🔎 پلس کی جانچ: ہم نے ${d} سیکنڈ میں <b>${n}</b> مختصر پلس سنیں۔ سرگرمی شمار کرنے کے لیے کم از کم ${need} چاہییں۔`, ev_sus:" آواز اتنی مسلسل ہے کہ الگ الگ پلس نہیں لگتیں۔", ev_silent:"🔎 پلس کی جانچ: ریکارڈنگ تقریباً خاموش ہے۔ مائیکروفون کو آواز کے ماخذ کے قریب لائیں۔",
+    veto:m=>`ماڈل «${m}» کی طرف مائل تھا، لیکن پلس کی جانچ نے کافی پلس نہیں سنیں، اس لیے ہم نے «کوئی علامت نہیں» رکھا۔ اس کا مطلب یہ نہیں کہ آواز کھجور کی ہے: جانچ صرف سنڈی کی پلس تلاش کرتی ہے۔`,
+    inc_h:"ہم اس ریکارڈنگ کا فیصلہ نہیں کر سکے", inc_air:"مائیکروفون پر ہوا یا تیز کم تعدد آواز سنائی دی، جو کسی بھی پلس کو ڈھانپ دیتی ہے۔ ایسی ریکارڈنگ سے ہم نہ «صحت مند» کہتے ہیں نہ «حملہ»۔", inc_silent:"ریکارڈنگ تقریباً خاموش ہے، اس لیے فیصلے کے لیے کچھ نہیں۔", inc_clip:"مائیکروفون بہت تیز آواز سے بھر گیا (پھونک یا بہت قریب)، اس لیے آواز بگڑ گئی۔",
+    inc_tips_h:"اس طرح دوبارہ ریکارڈ کریں:", inc_tips:["مائیکروفون کو منہ، پنکھے اور اے سی سے دور رکھیں اور اس پر پھونک نہ ماریں۔","ہوا کی طرف سے ہلکے کپڑے سے ڈھانپیں یا پرسکون جگہ ریکارڈ کریں۔","آواز کا ماخذ (مثلاً فون کا اسپیکر) مائیکروفون سے تقریباً 5 سے 10 سینٹی میٹر پر رکھیں اور 10 سے 12 سیکنڈ ریکارڈ کریں۔"],
+    tapnote:"ایمانداری سے ایک انتباہ: میز پر ٹھک ٹھکانا، کی بورڈ یا کسی چیز کا گرنا بھی مختصر پلس ہیں، اور جانچ انہیں سنڈی کی پلس سے ہمیشہ الگ نہیں کر پاتی۔ پرسکون جگہ ریکارڈ کریں اور میز کو نہ چھوئیں۔ یہ ابتدائی جانچ ہے، تشخیص نہیں۔",
+    honest_sample:"یہ کمپیوٹر سمولیشن سے بنی ریکارڈنگز ہیں، حقیقی کھجور کی نہیں۔ یہاں اچھا نتیجہ ثابت نہیں کرتا کہ ڈیوائس حقیقی کھجور پر کام کرتی ہے: ثبوت کا صفحہ دیکھیں۔",
+    honest_own:"ماڈل سمولیشن ریکارڈنگز پر تربیت یافتہ ہے اور حقیقی کھجوروں پر آزمایا نہیں گیا، اس لیے آپ کی اپنی ریکارڈنگ کا نتیجہ صرف آزمائش کے لیے ہے، تشخیص نہیں۔ ہم دعویٰ نہیں کرتے کہ یہ آپ کی کھجور کی تشخیص کرتا ہے۔",
+    s3:"مرحلہ 3", h_trunk:"تنے پر کہاں؟", trunkSub:"کھجور کا تھری ڈی تنا، کمپن کے ماخذ کے تقریبی نقطے کے ساتھ۔ آپ اسے گھما سکتے ہیں۔", trunkNote:"وضاحتی نمونہ: نقطہ سمولیشن ہے، پیمائش نہیں، اور حقیقی سنڈی کا مقام نہیں بتاتا۔",
+    s4:"مرحلہ 4", h_rep:"«حارس» کی علاج رپورٹ", repSub:"«حارس» نخلہ گارڈ کی AI ہے۔ وہ آپ کا نتیجہ پڑھ کر اس کا مطلب اور آج کیا کرنا ہے لکھتی ہے، پھر پورے مہینے کا منصوبہ، ہفتہ بہ ہفتہ، جس میں دن بہ دن کام اور ہر ہفتے کے آخر میں جانچنے کی باتیں ہیں۔ کسی بھی عنوان پر دبا کر کھولیں؛ ہر ہفتے میں «حارس» سے مزید تفصیل پوچھنے کا بٹن ہے۔ رپورٹ تقریبی ہے اور ماہر کی تصدیق چاہتی ہے۔", repBtn:"✨ حارس سے رپورٹ مانگیں", repWait:"حارس رپورٹ لکھ رہی ہے…", repAgain:"رپورٹ دوبارہ لکھیں",
+    show:"کھولیں", hide:"بند کریں", openAll:"سب کھولیں", closeAll:"سب بند کریں", src_ai:"ابھی حارس نے لکھی (AI)", src_tpl:"حارس کی طرف سے تیار نسخہ، کیونکہ AI سے ابھی رابطہ نہیں ہو سکا", src_quick:"ابھی پڑھنے کے لیے تیار نسخہ، جبکہ «حارس» آپ کے کیس کے لیے تفصیلی نسخہ لکھ رہی ہے…",
+    c1:"🤖 «حارس» سے اپنے باغ کے بارے میں پوچھیں", c2:"🔑 ڈیوائس ہے؟ اپنی نجی سائٹ میں جائیں", c3:"📚 ثبوت اور ذرائع" }
+};
+
+/* ===== state and helpers ===== */
+const $ = id => document.getElementById(id);
+const STAGES = ['healthy','early','moderate','advanced'], SR = 4000, WIN = 15, MAXREC = 15, MINREC = 3;
+const WAVS = {healthy:'1_healthy.wav', early:'2_early.wav', moderate:'3_moderate.wav', advanced:'4_advanced.wav'};
+const TESTS = [['dense','weevil_dense_sim.wav'], ['sparse','weevil_sparse_sim.wav'], ['air','air_noise_sim.wav']];
+let wavClipped = false, wavBlob = null, lastRes = null, source = 'sample', busy = false, lastWaveData = null, lastDur = 0, recording = false, playing = null, lastReport = null;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return ['ar','en','ur'].includes(l) ? l : 'ar'; }
+function setLang(l){
+  try{ localStorage.setItem('nakhlaguard-lang', l); }catch(e){}
+  document.documentElement.lang = l; document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl'; document.body.classList.toggle('lang-ur', l === 'ur');
+  const b = $('langToggle'); if(b) b.textContent = {ar:'English', en:'اردو', ur:'العربية'}[l];
+  paint();
+}
+function toggleLang(){ const c = ['ar','en','ur']; setLang(c[(c.indexOf(getLang()) + 1) % c.length]); }
+
+function paint(){
+  const l = getLang(), t = T[l];
+  $('badge').textContent = t.badge; $('h1').textContent = t.h1; $('sub').textContent = t.sub; $('s1').textContent = t.s1; $('h_in').textContent = t.h_in;
+  document.querySelectorAll('.mode').forEach(b => { const k = b.dataset.m; b.querySelector('.mt').textContent = t['m_' + k]; b.querySelector('.ms').textContent = t['m_' + k + '_s']; });
+  $('dropT').textContent = t.dropT; $('dropS').textContent = t.dropS;
+  if(!recording) $('recmsg').textContent = t.rec_idle;
+  $('samples').innerHTML = STAGES.map(k => `<button type="button" data-s="${k}">${esc(t.samples[k])}</button>`).join('');
+  $('samples').querySelectorAll('button').forEach(b => b.addEventListener('click', () => loadSample(b.dataset.s)));
+  $('ts_h').textContent = t.ts_h; $('ts_s').textContent = t.ts_s;
+  $('tslist').innerHTML = TESTS.map(([k, f]) => `<div class="ts"><div><b>${esc(t.ts[k][0])}</b><small>${esc(t.ts[k][1])}</small></div><button type="button" data-a="${f}" class="go">${esc(t.an)}</button><button type="button" data-p="${f}" class="${playing === f ? 'on' : ''}">${esc(playing === f ? t.stop : t.play)}</button><a href="/demo-wav/${f}" download="${f}">${esc(t.dl)}</a></div>`).join('');
+  $('tslist').querySelectorAll('button[data-p]').forEach(b => b.addEventListener('click', () => togglePlay(b.dataset.p)));
+  $('tslist').querySelectorAll('button[data-a]').forEach(b => b.addEventListener('click', () => loadWav(b.dataset.a)));
+  $('s2').textContent = t.s2; $('h_res').textContent = t.h_res; $('ptitle').textContent = t.ptitle; $('s3').textContent = t.s3; $('h_trunk').textContent = t.h_trunk; $('trunkSub').textContent = t.trunkSub; $('trunkNote').textContent = t.trunkNote;
+  $('s4').textContent = t.s4; $('h_rep').textContent = t.h_rep; $('repSub').textContent = t.repSub; if(!$('repBtn').disabled) $('repBtn').textContent = lastReport ? t.repAgain : t.repBtn;
+  $('c1').textContent = t.c1; $('c2').textContent = t.c2; $('c3').textContent = t.c3;
+  if(lastWaveData) $('wavemeta').innerHTML = metaHtml();
+  if(lastRes) showResult(lastRes, false);
+  if(lastReport) renderReport(lastReport, true);
+}
+function metaHtml(){ const t = T[getLang()], p = lastRes && lastRes.evidence ? lastRes.evidence.pulses : '…'; return esc(t.meta(lastDur, p)).replace(/\((\d+|…)\)/, '(<b>$1</b>)'); }
+
+/* ===== test sounds: play in the page ===== */
+let audioEl = null;
+function togglePlay(f){
+  if(audioEl){ audioEl.pause(); audioEl = null; }
+  if(playing === f){ playing = null; paint(); return; }
+  playing = f; audioEl = new Audio('/demo-wav/' + f); audioEl.onended = () => { playing = null; audioEl = null; paint(); };
+  audioEl.play().catch(() => { playing = null; paint(); }); paint();
+}
+
+/* ===== audio: decode -> (trim) -> loudest 15 s -> 4 kHz mono -> WAV ===== */
+async function toWav(arrayBuffer, trimStart){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AC();
+  let buf;
+  try { buf = await new Promise((res, rej) => { const p = ctx.decodeAudioData(arrayBuffer.slice(0), res, rej); if(p && p.then) p.then(res, rej); }); }
+  finally { try{ ctx.close(); }catch(e){} }
+  const dur = buf.duration;
+  const off = new OfflineAudioContext(1, Math.max(1, Math.ceil(dur * SR)), SR);
+  const src = off.createBufferSource(); src.buffer = buf; src.connect(off.destination); src.start();
+  const raw = buf.getChannelData(0); let clipRun = 0, clipN = 0;                // overloaded microphone: flat tops, seen before the small 4 kHz copy hides them
+  for(let i = 1; i < raw.length - 1; i += 1){ if(Math.abs(raw[i]) >= 0.985 && Math.abs(raw[i-1]) >= 0.985 && Math.abs(raw[i+1]) >= 0.985) clipRun++; clipN++; }
+  wavClipped = clipN > 0 && clipRun / clipN > 0.002;
+  const rendered = await off.startRendering();
+  let x = rendered.getChannelData(0);
+  if(trimStart){ const cut = Math.min(Math.floor(trimStart * SR), Math.max(0, x.length - SR)); x = x.slice(cut); }   // drop the button click at the start of a microphone recording
+  const n = Math.min(x.length, WIN * SR);
+  let bestStart = 0;
+  if(x.length > n){                                   // choose the loudest 15 s window (step 0.5 s)
+    const step = SR / 2; let best = -1;
+    for(let s = 0; s + n <= x.length; s += step){ let e = 0; for(let i = s; i < s + n; i += 8) e += x[i] * x[i]; if(e > best){ best = e; bestStart = s; } }
+  }
+  const seg = x.slice(bestStart, bestStart + n);
+  return { wav: encodeWav(seg, SR), seg, dur: Math.round(x.length / SR * 10) / 10 };
+}
+function encodeWav(samples, sr){
+  const buf = new ArrayBuffer(44 + samples.length * 2), v = new DataView(buf);
+  const w = (o, s) => { for(let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + samples.length * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, samples.length * 2, true);
+  for(let i = 0; i < samples.length; i++){ const s = Math.max(-1, Math.min(1, samples[i])); v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7FFF, true); }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+function drawWave(seg, times){
+  const c = $('wave'), g = c.getContext('2d'), W = c.width, H = c.height; g.clearRect(0, 0, W, H);
+  const bars = 180, per = Math.max(1, Math.floor(seg.length / bars)); let peak = 1e-6;
+  const vals = []; for(let b = 0; b < bars; b++){ let m = 0; for(let i = b * per; i < Math.min(seg.length, (b + 1) * per); i++) m = Math.max(m, Math.abs(seg[i])); vals.push(m); peak = Math.max(peak, m); }
+  g.fillStyle = '#D9A441'; const bw = W / bars;
+  vals.forEach((m, b) => { const h = Math.max(2, (m / peak) * (H - 12)); g.fillRect(b * bw + 1, (H - h) / 2, Math.max(1, bw - 2), h); });
+  if(times && times.length){                           // the pulses the check heard: a red line and a dot
+    const total = seg.length / SR;
+    g.strokeStyle = '#ff6b57'; g.fillStyle = '#ff6b57'; g.lineWidth = 2;
+    times.forEach(tm => { const x = Math.max(2, Math.min(W - 2, (tm / total) * W)); g.beginPath(); g.moveTo(x, 8); g.lineTo(x, H - 4); g.stroke(); g.beginPath(); g.arc(x, 7, 4, 0, 6.3); g.fill(); });
+  }
+}
+
+/* ===== input flows ===== */
+async function useAudio(ab, src, trimStart){
+  if(busy) return; busy = true; source = src; setStatus(T[getLang()].decoding); lockUI(true);
+  try {
+    const { wav, seg, dur } = await toWav(ab, trimStart || 0);
+    wavBlob = wav; lastWaveData = seg; lastDur = dur; lastRes = null;
+    $('wavebox').classList.add('on'); drawWave(seg, null); $('wavemeta').innerHTML = metaHtml();
+    await analyze();
+  } catch(e){ setStatus(T[getLang()].bad); }
+  busy = false; lockUI(false);
+}
+function setStatus(m, spin){ $('status').innerHTML = (spin ? '<span class="spin"></span>' : '') + esc(m || ''); }
+function lockUI(b){ document.querySelectorAll('.samples button, .mode').forEach(x => x.disabled = b); }
+async function loadWav(f){                           // a ready sound: press once, the page takes the file and analyzes it
+  try { const r = await fetch('/demo-wav/' + f); if(!r.ok) throw 0; await useAudio(await r.arrayBuffer(), 'sample'); }
+  catch(e){ setStatus(T[getLang()].err); }
+}
+function loadSample(k){ return loadWav(WAVS[k]); }
+async function onFile(f){
+  if(!f) return;
+  if(f.size > 25 * 1024 * 1024){ setStatus(T[getLang()].toobig); return; }
+  await useAudio(await f.arrayBuffer(), /^(1_|2_|3_|4_|weevil_|air_noise_)/.test(f.name) ? 'sample' : 'upload');
+}
+async function analyze(){
+  const t = T[getLang()]; setStatus(t.analyzing, true); $('scan').classList.add('go');
+  const fd = new FormData(); fd.append('audio', wavBlob, 'clip.wav'); fd.append('clipped', wavClipped ? '1' : '0');
+  try {
+    const r = await fetch('/demo/analyze', { method: 'POST', body: fd }); const j = await r.json().catch(() => ({}));
+    if(!r.ok){ setStatus(r.status === 429 ? t.limit : r.status === 403 ? t.off : r.status === 422 ? t.bad : t.err); return; }
+    lastRes = j; lastReport = null; reportSeq++; $('repBtn').disabled = false; $('repBtn').textContent = T[getLang()].repBtn; $('report').innerHTML = ''; setStatus('');
+    drawWave(lastWaveData, j.evidence ? j.evidence.times_s : null); $('wavemeta').innerHTML = metaHtml();
+    showResult(j, true);
+  } catch(e){ setStatus(t.err); }
+  finally { $('scan').classList.remove('go'); }
+}
+
+/* ===== result ===== */
+function gaugeSvg(p){
+  const a = Math.PI * (1 - p), cx = 120, cy = 110, r = 90, x = cx + r * Math.cos(a), y = cy - r * Math.sin(a);
+  const col = p < .25 ? '#2e7d4f' : p < .5 ? '#a8861a' : p < .75 ? '#c0651a' : '#b3342d';
+  return `<svg viewBox="0 0 240 135"><path d="M30 110 A90 90 0 0 1 210 110" fill="none" stroke="#E1D8C2" stroke-width="16" stroke-linecap="round"/>
+  <path d="M30 110 A90 90 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)}" fill="none" stroke="${col}" stroke-width="16" stroke-linecap="round"/>
+  <text x="120" y="104" text-anchor="middle" font-size="34" font-weight="700" fill="#14201B">${Math.round(p * 100)}%</text></svg>`;
+}
+function showResult(j, scroll){
+  const l = getLang(), t = T[l], k = j.stage, v = t.v[k], ev = j.evidence || {}, inc = !!j.inconclusive;
+  $('result').classList.remove('hide');
+  $('resGrid').classList.toggle('hide', inc); $('repCard').classList.toggle('hide', inc); $('evid').classList.toggle('hide', inc);
+  if(inc){                                           // the recording itself is the problem (air / rumble / overload / silence): say so, do not say "healthy" or "infested"
+    const why = ev.silent || j.reason === 'silent' ? t.inc_silent : (ev.clipped && !ev.air_on_mic ? t.inc_clip : t.inc_air);
+    $('verdict').innerHTML = `<div class="verdict v-inc"><div class="vi">🔁</div><div><h3>${esc(t.inc_h)}</h3><p>${esc(why)}</p></div></div>`;
+    $('veto').classList.remove('hide'); $('veto').innerHTML = `<b>${esc(t.inc_tips_h)}</b><ul style="padding-inline-start:22px">` + t.inc_tips.map(x => `<li>${esc(x)}</li>`).join('') + '</ul>';
+    $('tapnote').textContent = t.tapnote; $('honest').textContent = source === 'sample' ? t.honest_sample : t.honest_own;
+    $('trunkCard').classList.add('hide');
+    if(scroll) $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  $('tapnote').textContent = source === 'sample' ? '' : t.tapnote;
+  $('verdict').innerHTML = `<div class="verdict v-${k}"><div class="vi">${v[0]}</div><div><h3>${esc(v[1])}</h3><p>${esc(v[2])}</p></div></div>`;
+  $('veto').classList.toggle('hide', !j.vetoed); if(j.vetoed) $('veto').textContent = t.veto(t.stage[j.model_stage] || j.model_stage);
+  const pr = {}; STAGES.forEach(s => pr[s] = (j.probabilities && j.probabilities[s]) || 0);
+  const topKey = j.model_stage || k;
+  $('bars').innerHTML = STAGES.map(s => `<div class="pb ${s === topKey ? 'top' : ''}"><span>${esc(t.stage[s])}</span><i><b style="width:${Math.round(pr[s] * 100)}%"></b></i><bdi dir="ltr">${Math.round(pr[s] * 100)}%</bdi></div>`).join('') +
+    (j.confidence != null ? `<div class="soft">${esc(t.conf)}: <bdi dir="ltr">${Math.round(j.confidence * 100)}%</bdi></div>` : '');
+  $('nf').textContent = j.noise_filter ? t.nf + (j.noise_filter.suppressed ? t.nf_on : t.nf_off) : '';
+  $('gauge').innerHTML = j.risk != null ? gaugeSvg(Math.max(0, Math.min(1, j.risk))) + `<div class="gl">${esc(t.risk)}</div>` : `<div class="gl" style="padding:18px 6px">${esc(t.norisk)}</div>`;
+  $('evid').innerHTML = ev.silent ? t.ev_silent : t.ev(ev.pulses || 0, ev.duration_s || 0, ev.needed || 2) + (ev.sustained && !ev.pulses ? esc(t.ev_sus) : '');
+  $('honest').textContent = source === 'sample' ? t.honest_sample : t.honest_own;
+  const sl = j.sensor_location;
+  $('trunkCard').classList.toggle('hide', !sl);
+  if(sl){ const src = `/locate.html?embed=1&lang=${l}&hot=${sl.x},${sl.y}&mode=${sl.mode || 'demo'}&err=${sl.err || 0}&view=3d`; if($('trunkFrame').dataset.src !== src){ $('trunkFrame').dataset.src = src; $('trunkFrame').src = src; } }
+  if(scroll) $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+window.addEventListener('message', e => { if(e.data && e.data.type === 'nk-embed-height'){ $('trunkFrame').style.height = Math.max(380, Math.min(720, e.data.h + 8)) + 'px'; } });
+
+/* ===== AI report: headings that open ===== */
+function listHtml(items){ return '<ul>' + (items || []).map(x => `<li>${esc(x)}</li>`).join('') + '</ul>'; }
+function renderReport(r, keepOpen){
+  const t = T[getLang()], openIds = keepOpen ? [...document.querySelectorAll('#report .acc.open')].map(a => a.dataset.id) : [];
+  const srcTxt = r.source === 'ai' ? t.src_ai : r.source === 'quick' ? t.src_quick : t.src_tpl;
+  let html = `<div class="rhead">${esc(r.headline)}</div><span class="src ${r.source === 'ai' ? '' : 'tpl'}">${r.source === 'quick' ? '<span class="spin"></span>' : ''}${esc(srcTxt)}</span>`;
+  html += `<div class="rtools"><span></span><button type="button" class="lnk" id="allBtn">${esc(t.openAll)}</button></div>`;
+  const lb = r.labels || {};
+  const body = c => (c.goal ? `<p class="wgoal">${esc(lb.goal || '')}: ${esc(c.goal)}</p>` : '') + listHtml(c.items) + (c.check ? `<div class="wcheck">✅ <b>${esc(lb.check || '')}:</b> ${esc(c.check)}</div>` : '') + (c.ask ? `<a class="askbtn" href="/assistant.html?q=${encodeURIComponent(c.ask)}">🤖 ${esc(lb.ask_btn || '')}</a>` : '');
+  const card = (c, n) => `<div class="acc ${openIds.includes(c.id) ? 'open' : ''}" data-id="${c.id}"><button type="button" class="acc-h" aria-expanded="${openIds.includes(c.id)}">${n ? `<span class="no">${n}</span>` : ''}<span class="tt">${esc(c.title)}${c.focus ? `<small>${esc(c.focus)}</small>` : ''}</span><span class="acc-t">${esc(openIds.includes(c.id) ? t.hide : t.show)}</span></button><div class="acc-b" ${openIds.includes(c.id) ? '' : 'hidden'}>${body(c)}</div></div>`;
+  const cards = r.cards || [], plan = cards.filter(c => c.group === 'plan');
+  html += cards.filter(c => c.id === 'meaning' || c.id === 'today').map(c => card(c)).join('');
+  html += `<div class="gtitle">${esc(r.plan_title || '')}</div>` + plan.map((c, i) => card(c, i + 1)).join('');
+  html += cards.filter(c => c.id === 'cost' || c.id === 'watch').map(c => card(c)).join('');
+  html += `<div class="rnote">${esc(r.note || '')}</div>`;
+  if(r.ask_all) html += `<div class="askall"><a class="askbtn" href="/assistant.html?q=${encodeURIComponent(r.ask_all)}">🤖 ${esc(lb.ask_all || '')}</a></div>`;
+  $('report').innerHTML = html;
+  $('report').querySelectorAll('.acc-h').forEach(b => b.addEventListener('click', () => toggleAcc(b.parentElement)));
+  $('allBtn').addEventListener('click', () => { const all = document.querySelectorAll('#report .acc'), anyClosed = [...all].some(a => !a.classList.contains('open')); all.forEach(a => setAcc(a, anyClosed)); $('allBtn').textContent = anyClosed ? t.closeAll : t.openAll; });
+}
+function setAcc(a, open){ const t = T[getLang()]; a.classList.toggle('open', open); a.querySelector('.acc-b').hidden = !open; a.querySelector('.acc-h').setAttribute('aria-expanded', open); a.querySelector('.acc-t').textContent = open ? t.hide : t.show; }
+function toggleAcc(a){ setAcc(a, !a.classList.contains('open')); }
+let reportSeq = 0;
+function reportForm(l, mode){ const fd = new FormData(); fd.append('audio', wavBlob, 'clip.wav'); fd.append('language', l); fd.append('clipped', wavClipped ? '1' : '0'); fd.append('mode', mode); return fd; }
+async function writeReport(){
+  if(!wavBlob) return; const l = getLang(), t = T[l], btn = $('repBtn'), seq = ++reportSeq;
+  btn.disabled = true; btn.textContent = t.repWait; $('report').innerHTML = '<div class="soft"><span class="spin"></span>' + esc(t.repWait) + '</div>'; lastReport = null;
+  // step 1: the ready-made version appears at once (no AI, no waiting); step 2: Haris's own version replaces it when it arrives
+  try {
+    const r = await fetch('/demo/report', { method: 'POST', body: reportForm(l, 'ready') }); const j = await r.json().catch(() => ({}));
+    if(seq !== reportSeq) return;
+    if(!r.ok || !j.report){ $('report').innerHTML = `<div class="note">${esc(r.status === 403 ? t.off : r.status === 422 ? t.bad : r.status === 409 ? t.inc_h : t.err)}</div>`; btn.disabled = false; btn.textContent = t.repBtn; return; }
+    lastReport = j.report; renderReport(j.report, false);
+  } catch(e){ if(seq === reportSeq){ $('report').innerHTML = `<div class="note">${esc(t.err)}</div>`; btn.disabled = false; btn.textContent = t.repBtn; } return; }
+  const ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null, kill = setTimeout(() => { try{ ctl && ctl.abort(); }catch(e){} }, 90000);
+  try {
+    const r = await fetch('/demo/report', { method: 'POST', body: reportForm(l, 'full'), signal: ctl ? ctl.signal : undefined }); const j = await r.json().catch(() => ({}));
+    if(seq !== reportSeq) return;
+    if(r.ok && j.report){ lastReport = j.report; renderReport(j.report, true); }
+    else if(lastReport){ renderReport({ ...lastReport, source: 'template' }, true); }
+  } catch(e){ if(seq === reportSeq && lastReport){ renderReport({ ...lastReport, source: 'template' }, true); } }
+  clearTimeout(kill);
+  if(seq === reportSeq){ btn.disabled = false; btn.textContent = lastReport ? t.repAgain : t.repBtn; }
+}
+$('repBtn').addEventListener('click', writeReport);
+
+/* ===== mic: up to 15 s, press again to stop ===== */
+let recTimer = null;
+$('recbtn').addEventListener('click', async () => {
+  const t = T[getLang()];
+  if(recording){ if(window._mr && window._mr.state !== 'inactive') window._mr.stop(); return; }
+  if(busy) return;
+  if(!navigator.mediaDevices || !window.MediaRecorder){ $('recmsg').textContent = t.rec_unsup; return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } }); }
+  catch(e){ $('recmsg').textContent = t.rec_denied; return; }
+  const chunks = [], mr = new MediaRecorder(stream); window._mr = mr; recording = true; $('recbtn').classList.add('live'); $('recbar').classList.add('on');
+  const t0 = Date.now(); $('recfill').style.transition = 'none'; $('recfill').style.width = '0'; requestAnimationFrame(() => { $('recfill').style.transition = `width ${MAXREC}s linear`; $('recfill').style.width = '100%'; });
+  mr.ondataavailable = e => { if(e.data.size) chunks.push(e.data); };
+  mr.onstop = async () => {
+    clearInterval(recTimer); stream.getTracks().forEach(x => x.stop()); recording = false; $('recbtn').classList.remove('live'); $('recbar').classList.remove('on');
+    const secs = (Date.now() - t0) / 1000; $('recmsg').textContent = T[getLang()].rec_idle;
+    if(secs < MINREC){ $('recmsg').textContent = T[getLang()].rec_short; return; }
+    await useAudio(await new Blob(chunks, { type: mr.mimeType || 'audio/webm' }).arrayBuffer(), 'upload', 0.4);
+  };
+  mr.start(); $('recmsg').textContent = T[getLang()].rec_go(0);
+  recTimer = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $('recmsg').textContent = T[getLang()].rec_go(s); if(s >= MAXREC && mr.state !== 'inactive') mr.stop(); }, 500);
+});
+
+/* ===== wiring ===== */
+document.querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.mode').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === 'p_' + b.dataset.m));
+}));
+const drop = $('drop'), file = $('file');
+drop.addEventListener('click', () => file.click()); drop.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); file.click(); } });
+file.addEventListener('change', () => { onFile(file.files[0]); file.value = ''; });
+['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => onFile(e.dataTransfer.files[0]));
+setLang(getLang());
+</script>
+<script src="/nav.js" defer></script>
+</body>
+</html>

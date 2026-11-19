@@ -1,0 +1,597 @@
+{
+  "updated": "2026-11-17",
+  "kinds": {
+    "measured_sim": {
+      "ar": "مقيس بالمحاكاة (يُعاد حسابه)",
+      "en": "Measured on simulation (recomputable)",
+      "ur": "سمولیشن پر ناپا گیا (دوبارہ حساب ممکن)"
+    },
+    "measured_real": {
+      "ar": "مقيس على تسجيلات حقيقية عامة (يُعاد حسابه)",
+      "en": "Measured on real public recordings (recomputable)",
+      "ur": "عوامی حقیقی ریکارڈنگز پر ناپا گیا (دوبارہ حساب ممکن)"
+    },
+    "literature": {
+      "ar": "من مرجع منشور (افتح الرابط)",
+      "en": "From a published source (open the link)",
+      "ur": "شائع شدہ ذریعے سے (لنک کھولیں)"
+    },
+    "not_claimed": {
+      "ar": "لا نزعمه",
+      "en": "Not claimed",
+      "ur": "ہم دعویٰ نہیں کرتے"
+    }
+  },
+  "references": [
+    {
+      "id": "R1",
+      "cite": "Mankin RW, Al-Ayedh HY, Aldryhim Y, Rohde B (2016). Acoustic detection of Rhynchophorus ferrugineus (Coleoptera: Dryophthoridae) and Oryctes elegans (Coleoptera: Scarabaeidae) in Phoenix dactylifera (Arecales: Arecacae) trees and offshoots in Saudi Arabian orchards. Journal of Economic Entomology 109(2): 622-628. doi:10.1093/jee/tov398",
+      "url": "https://www.ars.usda.gov/ARSUserFiles/3559/publications/redpalmweevil16jee.pdf",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "Re-read on 14 Nov 2026: 120 s recordings at 44.1 kHz, April 2014, two Saudi farms; infestation status checked by dissecting the recording site afterwards; burst definition (at least 7 and fewer than 200 impulses, gaps under 25 ms) and the rate thresholds (0.02 and 0.06 per second) match L3 and L4; the 6.5-20 kHz band is described there as earlier work.",
+      "note_ar": "أُعيدت قراءتها في 14 نوفمبر 2026: تسجيلات 120 ثانية بمعدل 44.1 كيلوهرتز، أبريل 2014، مزرعتان سعوديتان؛ وتحدّدت حالة الإصابة بتشريح موضع التسجيل بعد ذلك؛ وتعريف الدفعة (7 نبضات فأكثر وأقل من 200، وفواصل أقل من 25 مللي ثانية) وعتبتا المعدل (0.02 و0.06 بالثانية) تطابقان L3 وL4؛ أما نطاق 6.5 إلى 20 كيلوهرتز فتصفه الورقة بأنه من أعمال سابقة.",
+      "note_ur": "14 نومبر 2026 کو دوبارہ پڑھا گیا: 44.1 kHz پر 120 سیکنڈ کی ریکارڈنگز، اپریل 2014، سعودی عرب کے دو فارم؛ حملے کی حالت بعد میں ریکارڈنگ والی جگہ کو چیر کر جانچی گئی؛ برسٹ کی تعریف (کم از کم 7 اور 200 سے کم امپلس، وقفے 25 ms سے کم) اور شرح کی حدیں (0.02 اور 0.06 فی سیکنڈ) L3 اور L4 سے مطابقت رکھتی ہیں؛ 6.5 سے 20 kHz کا بینڈ وہاں پچھلے کاموں کے طور پر بیان ہوا ہے۔"
+    },
+    {
+      "id": "R2",
+      "cite": "Martínez Rach M, Migallón Gomis H, López Granado O, Perez Malumbres M, Martí Campoy A, Serrano Martín JJ (2013). On the design of a bioacoustic sensor for the early detection of the red palm weevil. Sensors 13(2): 1706-1729. doi:10.3390/s130201706",
+      "url": "https://www.mdpi.com/1424-8220/13/2/1706",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "It quotes the 800-2500 Hz band from Siriwardena et al. (2010); it does not give a larval peak frequency of its own.",
+      "note_ar": "تنقل هذه الدراسة نطاق 800 إلى 2500 هرتز عن Siriwardena وآخرين (2010)، ولا تذكر تردّدًا قمّيًا خاصًا بها لصوت اليرقات.",
+      "note_ur": "یہ مقالہ 800 سے 2500 Hz کا بینڈ Siriwardena وغیرہ (2010) سے نقل کرتا ہے؛ لاروے کی آواز کی اپنی کوئی چوٹی فریکوئنسی نہیں بتاتا۔"
+    },
+    {
+      "id": "R3",
+      "cite": "Gutiérrez A, Ruiz-Martínez V, Moltó E, Tapia G, Téllez-Navarro MM (2010). Development of a bioacoustic sensor for the early detection of Red Palm Weevil (Rhynchophorus ferrugineus Olivier). Crop Protection 29(7): 671-676. doi:10.1016/j.cropro.2010.02.001",
+      "url": "https://doi.org/10.1016/j.cropro.2010.02.001",
+      "verified": "partial",
+      "checked": "2026-11-14",
+      "note_en": "Title, authors and pages confirmed from a university repository record; the publisher page was not opened, and no claim in this register depends on its content.",
+      "note_ar": "العنوان والمؤلفون والصفحات مؤكدة من سجل مستودع جامعي، ولم تُفتح صفحة الناشر، ولا يعتمد أي ادعاء في هذا السجل على محتواها.",
+      "note_ur": "عنوان، مصنفین اور صفحات ایک جامعاتی ریپوزٹری کے ریکارڈ سے تصدیق شدہ ہیں؛ ناشر کا صفحہ نہیں کھولا گیا، اور اس رجسٹر کا کوئی دعویٰ اس کے مواد پر منحصر نہیں۔"
+    },
+    {
+      "id": "R4",
+      "cite": "Hetzroni A, Soroker V, Cohen Y (2016). Toward practical acoustic red palm weevil detection. Computers and Electronics in Agriculture 124: 100-106. doi:10.1016/j.compag.2016.03.018",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0168169916300874",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "Abstract re-read: sensitivity 75% (human) and 80% (machine) on average; 39% and 33% in the early phase; young date and Canary palms; confirmed by dissection.",
+      "note_ar": "أُعيدت قراءة الملخص: الحساسية بالمتوسط 75% (بشري) و80% (آلي)، و39% و33% في المرحلة المبكرة؛ نخيل التمر والكناري الصغير؛ التأكد بالتشريح.",
+      "note_ur": "خلاصہ دوبارہ پڑھا گیا: اوسط حساسیت 75% (انسان) اور 80% (مشین)، ابتدائی مرحلے میں 39% اور 33%؛ کم عمر کھجور اور کینری پام؛ تصدیق چیر پھاڑ سے۔"
+    },
+    {
+      "id": "R5",
+      "cite": "Hussein WB, Hussein MA, Becker T (2010). Detection of the Red Palm Weevil Rhynchophorus ferrugineus using its bioacoustics features. Bioacoustics 19(3): 177-194.",
+      "url": "https://bioacoustics.info/article/detection-red-palm-weevil-rhynchophorus-ferrugineus-using-its-bioacoustics-features",
+      "verified": "full",
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "R6",
+      "cite": "Ashry I, Mao Y, Al-Fehaid Y, Al-Shawaf A, Al-Bagshi M, Al-Brahim S, Ng TK, Ooi BS (2020). Early detection of red palm weevil using distributed optical sensor. Scientific Reports 10: 3155. doi:10.1038/s41598-020-60171-7",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7035322",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "Re-read on 14 Nov 2026: KAUST with the Date Palm Center (Ministry of Environment, Water and Agriculture), Al-Hassa. One artificially infested palm against one healthy palm, in a closed room, 2 hours; 97 alarms against 9; larvae as young as 12 days; larval sound mostly below about 800 Hz. The authors list open-field testing as future work.",
+      "note_ar": "أُعيدت قراءتها في 14 نوفمبر 2026: جامعة الملك عبدالله للعلوم والتقنية مع مركز النخيل والتمور (وزارة البيئة والمياه والزراعة) بالأحساء. نخلة مصابة صناعيًا مقابل نخلة سليمة، في غرفة مغلقة، لمدة ساعتين؛ 97 إنذارًا مقابل 9؛ يرقات بعمر 12 يومًا؛ وصوت اليرقات أغلبه دون 800 هرتز تقريبًا. وتذكر الدراسة أن الاختبار في الحقل المفتوح عمل مستقبلي.",
+      "note_ur": "14 نومبر 2026 کو دوبارہ پڑھا گیا: KAUST اور کھجور و کھجور کے مرکز (وزارتِ ماحولیات، آب و زراعت)، الاحساء۔ ایک مصنوعی طور پر متاثرہ کھجور اور ایک صحت مند کھجور، بند کمرے میں، 2 گھنٹے؛ 97 الارم بمقابلہ 9؛ 12 دن کے لاروے؛ لاروے کی آواز زیادہ تر تقریباً 800 Hz سے نیچے۔ مصنفین کھلے میدان میں جانچ کو مستقبل کا کام بتاتے ہیں۔"
+    },
+    {
+      "id": "R7",
+      "cite": "Rigakis I, Potamitis I, Tatlas N-A, Potirakis SM, Ntalampiras S (2021). TreeVibes: Modern tools for global monitoring of trees for borers. Smart Cities 4(1): 271-285. doi:10.3390/smartcities4010017. Data: kaggle.com/potamitis/treevibes",
+      "url": "https://www.mdpi.com/2624-6511/4/1/17",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "Dataset description re-read: 33 folders from 35 trees, mainly Xylotrechus chinensis in mulberry trees; red palm weevil appears only in the discussion.",
+      "note_ar": "أُعيدت قراءة وصف قاعدة البيانات: 33 مجلدًا من 35 شجرة، أغلبها Xylotrechus chinensis في أشجار التوت؛ وسوسة النخيل الحمراء مذكورة في المناقشة فقط.",
+      "note_ur": "ڈیٹا سیٹ کی تفصیل دوبارہ پڑھی گئی: 35 درختوں کے 33 فولڈر، زیادہ تر شہتوت میں Xylotrechus chinensis؛ ریڈ پام ویول کا ذکر صرف بحث میں ہے۔"
+    },
+    {
+      "id": "R8",
+      "cite": "Potamitis I, Rigakis I (2024). Automated vibroacoustic monitoring of trees for borer infestation. Sensors 24(10): 3074. doi:10.3390/s24103074",
+      "url": "https://www.mdpi.com/1424-8220/24/10/3074",
+      "verified": "full",
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "R9",
+      "cite": "Piczak KJ (2015). ESC: Dataset for Environmental Sound Classification. Proceedings of the ACM International Conference on Multimedia (MM '15). doi:10.1145/2733373.2806390. License: Creative Commons Attribution-NonCommercial.",
+      "url": "https://github.com/karolpiczak/ESC-50",
+      "verified": "partial",
+      "checked": "2026-11-14",
+      "note_en": "Dataset size, license and DOI re-read on a copy of the README; the page numbers (1015-1018) were not re-checked in this pass.",
+      "note_ar": "أُعيدت قراءة حجم قاعدة البيانات والترخيص وDOI من نسخة من ملف README؛ ولم تُراجَع أرقام الصفحات (1015-1018) في هذه الجولة.",
+      "note_ur": "ڈیٹا سیٹ کا سائز، لائسنس اور DOI README کی ایک کاپی سے دوبارہ پڑھے گئے؛ صفحات کے نمبر (1015-1018) اس بار دوبارہ نہیں دیکھے گئے۔"
+    },
+    {
+      "id": "R10",
+      "cite": "Jiang W, Chen Z, Zhang H (2024). A time-frequency domain mixed attention-based approach for classifying wood-boring insect feeding vibration signals using a deep learning model. Insects 15(4): 282. doi:10.3390/insects15040282",
+      "url": "https://www.mdpi.com/2075-4450/15/4/282",
+      "verified": "full",
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "R12",
+      "cite": "Fonseca Nunes L, Cristaldo PF, Silva PS, Felix LB, Ribeiro DM, DeSouza O (2019). Dataset on substrate-borne vibrations of Constrictotermes cyphergaster (Blattodea: Isoptera) termites. Data 4(2): 87. doi:10.3390/data4020087",
+      "url": "https://mdpi.com/2306-5729/4/2/87",
+      "verified": "full",
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "R13",
+      "cite": "Costa C, Marti T, De Salis E, Brambilla L, Carrino S (2025). A dataset of acoustics emissions recordings of woodboring insects on wood and cultural objects, context images and remarks. Zenodo, version 1.0, 22 July 2025. doi:10.5281/zenodo.16315621",
+      "url": "https://zenodo.org/records/16315621",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "The Zenodo record lists no related journal article, so none is cited.",
+      "note_ar": "سجل Zenodo لا يذكر بحثًا منشورًا مرتبطًا به، لذلك لا نذكر أي مقال.",
+      "note_ur": "Zenodo کے ریکارڈ میں کوئی متعلقہ جریدے کا مقالہ درج نہیں، اس لیے کوئی مقالہ نقل نہیں کیا گیا۔"
+    },
+    {
+      "id": "R14",
+      "cite": "Zaid A, de Wet PF, Djerbi M, Oihabi A (2002). Diseases and pests of date palm (chapter XII). In: Zaid A (ed.) Date Palm Cultivation. FAO Plant Production and Protection Paper 156 Rev. 1, Rome.",
+      "url": "https://www.fao.org/4/y4360e/y4360e0g.htm",
+      "verified": "full",
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "R15",
+      "cite": "El Bouhssini M, Faleiro JR (2018). Date palm pests and diseases: integrated management guide. ICARDA, Lebanon.",
+      "url": "https://repo.mel.cgiar.org/handle/20.500.11766/8914",
+      "verified": "full",
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "R16",
+      "cite": "Arab News (17 April 2025). Saudi Arabia's date exports rise 15.9% in 2024, reaching $451m (data from the National Center for Palms and Dates: SR1.695 billion; over 33 million palm trees, approximately 27% of the world's total; around 123,000 palm agricultural holdings).",
+      "url": "https://www.arabnews.pk/node/2597432",
+      "verified": "full",
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "R17",
+      "cite": "Saudipedia. Palm trees in Saudi Arabia: 34 million palm trees (27% of the world's), 123,000 agricultural holdings, palm and date sector SAR 7.5 billion = 12% of agricultural output and 0.4% of non-oil output.",
+      "url": "https://saudipedia.com/en/article/1362/economy-and-business/palm-trees-in-saudi-arabia",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "Gives 34 million palms, while Arab News (R16) says over 33 million: we quote both.",
+      "note_ar": "تذكر 34 مليون نخلة، بينما تقول Arab News (R16) أكثر من 33 مليونًا: نذكر الرقمين.",
+      "note_ur": "یہ 34 ملین کھجوریں بتاتا ہے، جبکہ Arab News (R16) کہتا ہے 33 ملین سے زیادہ: ہم دونوں اعداد دیتے ہیں۔"
+    },
+    {
+      "id": "R19",
+      "cite": "Hamill-Stewart C (1 December 2025). Gulf turns to AI to control costly date tree pests. AGBI (Arabian Gulf Business Insight): red palm weevil detected on 53% of Saudi date palm farms in 2022, with losses that year exceeding $400 million.",
+      "url": "https://www.agbi.com/analysis/agriculture/2025/12/gulf-turns-to-ai-to-control-costly-date-tree-pests/",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "A news article, not a peer-reviewed study.",
+      "note_ar": "مقال صحفي وليس دراسة محكَّمة.",
+      "note_ur": "یہ ایک خبری مضمون ہے، تحکیم شدہ تحقیق نہیں۔"
+    },
+    {
+      "id": "R20",
+      "cite": "Ashry I, Wang B, Mao Y, Sait M, Guo Y, Al-Fehaid Y, Al-Shawaf A, Ng TK, Ooi BS (2022). CNN-aided optical fiber distributed acoustic sensing for early detection of red palm weevil: a field experiment. Sensors 22(17): 6491. doi:10.3390/s22176491",
+      "url": "https://mdpi.com/1424-8220/22/17/6491",
+      "verified": "full",
+      "checked": "2026-11-14",
+      "note_en": "Abstract re-read: larvae under three weeks old; a closed room (4 palms per experiment) and an outdoor farm of 19 palms (2 artificially infested, 17 healthy); about 97% classification accuracy; wind was the main source of false alarms.",
+      "note_ar": "أُعيدت قراءة الملخص: يرقات أقل من ثلاثة أسابيع؛ غرفة مغلقة (4 نخلات في كل تجربة) ومزرعة مفتوحة فيها 19 نخلة (2 مصابتان صناعيًا و17 سليمة)؛ دقة تصنيف نحو 97%؛ والرياح أهم مصدر للإنذارات الكاذبة.",
+      "note_ur": "خلاصہ دوبارہ پڑھا گیا: تین ہفتے سے کم عمر لاروے؛ بند کمرہ (ہر تجربے میں 4 کھجوریں) اور 19 کھجوروں کا کھلا فارم (2 مصنوعی طور پر متاثرہ، 17 صحت مند)؛ درجہ بندی کی درستگی تقریباً 97%؛ ہوا غلط الارم کی سب سے بڑی وجہ تھی۔"
+    }
+  ],
+  "claims": [
+    {
+      "id": "M1",
+      "kind": "measured_sim",
+      "ar": "دقة تصنيف المراحل الأربع على 60 تسجيلًا محاكيًا محجوزًا للاختبار: نحو 93%.",
+      "en": "4-stage accuracy on 60 held-out SIMULATED recordings: about 93%.",
+      "metric": "sim.accuracy",
+      "expect": [
+        0.88,
+        0.96
+      ],
+      "shown": "93%",
+      "reproduce": "python train_model.py",
+      "poster": [
+        "93%"
+      ],
+      "note_ar": "الرقم يتغير قليلًا حسب نسخة scikit-learn على الجهاز (اختبرته 91.7% و93.3%).",
+      "note_en": "Varies slightly with the scikit-learn version (91.7% and 93.3% were seen).",
+      "ur": "4 مراحل کی درستگی 60 الگ رکھی گئی (تربیت میں شامل نہ ہونے والی) فرضی (سمولیٹڈ) ریکارڈنگز پر: تقریباً 93%۔",
+      "note_ur": "scikit-learn کے ورژن کے ساتھ تھوڑی مختلف ہوتی ہے (91.7% اور 93.3% دیکھے گئے)۔"
+    },
+    {
+      "id": "M2",
+      "kind": "measured_sim",
+      "ar": "كشف الإصابة (المراحل الثلاث مجتمعة) على المحاكاة: 43 من 45، وإنذار كاذب 1 من 15.",
+      "en": "Infestation detection (3 infested stages combined) on simulation: 43 of 45, one false alarm in 15.",
+      "metric": "sim.detection",
+      "expect": [
+        0.9,
+        1.0
+      ],
+      "shown": "43/45",
+      "reproduce": "python train_model.py",
+      "poster": [
+        "43"
+      ],
+      "ur": "سمولیشن پر حملے کی شناخت (تینوں متاثرہ مراحل ملا کر): 45 میں سے 43، اور 15 میں سے ایک جھوٹا الارم۔"
+    },
+    {
+      "id": "M3",
+      "kind": "measured_sim",
+      "ar": "إنذار كاذب على السليم بالمحاكاة: مقطع واحد من 15.",
+      "en": "False alarms on healthy simulation clips: one in 15.",
+      "metric": "sim.false_alarm",
+      "expect": [
+        0.0,
+        0.14
+      ],
+      "shown": "1/15",
+      "reproduce": "python train_model.py",
+      "ur": "صحت مند سمولیشن کلپس پر جھوٹے الارم: 15 میں سے ایک۔"
+    },
+    {
+      "id": "M4",
+      "kind": "measured_sim",
+      "ar": "استرجاع المرحلة المبكرة على المحاكاة: نحو 80%. تنبيه: دراسة ميدانية فحصت المرحلة المبكرة وجدت حساسية أقل بكثير (انظر L2)، فهذا الرقم لا يُقارَن بالواقع.",
+      "en": "Early-stage recall on simulation: about 80%. Warning: a field study of the early phase found much lower sensitivity (see L2), so this number does not transfer to reality.",
+      "metric": "sim.early_recall",
+      "expect": [
+        0.7,
+        0.9
+      ],
+      "shown": "80%",
+      "reproduce": "python train_model.py",
+      "ur": "سمولیشن پر ابتدائی مرحلے کی شناخت (ریکال): تقریباً 80%۔ انتباہ: ابتدائی مرحلے کے ایک میدانی مطالعے میں حساسیت بہت کم ملی (دیکھیں L2)، اس لیے یہ عدد حقیقت پر منتقل نہیں ہوتا۔"
+    },
+    {
+      "id": "M5",
+      "kind": "measured_sim",
+      "ar": "كاشف بعتبة واحدة (ميزة واحدة) يكشف 42 من 45 بلا إنذار كاذب، ودقته بالمراحل 85%.",
+      "en": "A one-feature threshold detects 42 of 45 with no false alarm; stage accuracy 85%.",
+      "metric": "baseline.detection",
+      "expect": [
+        0.88,
+        1.0
+      ],
+      "shown": "42/45",
+      "reproduce": "python baseline_check.py",
+      "poster": [
+        "85%"
+      ],
+      "ur": "ایک خصوصیت پر مبنی حد (threshold) 45 میں سے 42 کو بغیر کسی جھوٹے الارم کے پہچانتی ہے؛ مراحل کی درستگی 85%۔"
+    },
+    {
+      "id": "M6",
+      "kind": "measured_sim",
+      "ar": "تحديد موقع المصدر على الجذع بالمحاكاة: يُسترجع الموقع المعروف بخطأ لا يتجاوز سنتيمترًا بلا ضجيج.",
+      "en": "Source location on the trunk in simulation: a known position is recovered within 1 cm without noise.",
+      "metric": "locator.max_error_cm_noise_free",
+      "expect": [
+        0.0,
+        1.0
+      ],
+      "shown": "<= 1 cm",
+      "reproduce": "python verify_all.py",
+      "ur": "سمولیشن میں تنے پر ماخذ کا مقام: شور کے بغیر معلوم مقام 1 سم کے اندر واپس مل جاتا ہے۔"
+    },
+    {
+      "id": "M7",
+      "kind": "measured_sim",
+      "ar": "تحديد الموقع بالمحاكاة مع ضجيج 5% بقراءات المستشعرات: وسيط الخطأ (يُقاس ويُعرض كما هو).",
+      "en": "Location in simulation with 5% sensor noise: median error (measured and reported as it is).",
+      "metric": "locator.median_error_cm_5pct_noise",
+      "expect": null,
+      "shown": "reported",
+      "reproduce": "python verify_all.py",
+      "note_ar": "محاكاة فقط: على خشب حقيقي ستختلف النتيجة وتحتاج معايرة.",
+      "note_en": "Simulation only: real wood will differ and needs calibration.",
+      "ur": "سمولیشن میں 5% سینسر شور کے ساتھ مقام: درمیانی غلطی (جیسی ناپی گئی ویسی ہی بیان کی گئی)۔",
+      "note_ur": "صرف سمولیشن: حقیقی لکڑی مختلف ہوگی اور کیلیبریشن کی ضرورت ہے۔"
+    },
+    {
+      "id": "D1",
+      "kind": "measured_real",
+      "ar": "النموذج القديم (المدرَّب على محاكاة) على تسجيلات TreeVibes الحقيقية: كشف الإصابة نحو 96% لكن إنذارات كاذبة نحو 68%.",
+      "en": "The old model (trained on simulation) on real TreeVibes recordings: detection about 96% but false alarms about 68%.",
+      "metric": "tv_old.detection",
+      "expect": [
+        0.9,
+        1.0
+      ],
+      "shown": "95.8%",
+      "reproduce": "python verify_all.py --treevibes \"G:\\TreeVibes\"",
+      "needs": "treevibes",
+      "ur": "پرانا ماڈل (سمولیشن پر تربیت یافتہ) حقیقی TreeVibes ریکارڈنگز پر: شناخت تقریباً 96% لیکن جھوٹے الارم تقریباً 68%۔"
+    },
+    {
+      "id": "D2",
+      "kind": "measured_real",
+      "ar": "مرشّح الضجيج على أشجار TreeVibes لم يرها: كشف 59%، إنذار كاذب 32%، ROC AUC نحو 0.65 (تمييز متواضع).",
+      "en": "The noise filter on TreeVibes trees it never saw: detection 59%, false alarm 32%, ROC AUC about 0.65 (modest discrimination).",
+      "metric": "tv_filter.auc",
+      "expect": [
+        0.6,
+        0.7
+      ],
+      "shown": "0.65",
+      "reproduce": "python verify_all.py --treevibes \"G:\\TreeVibes\" --esc \"G:\\ESC50\\ESC-50-master\"",
+      "needs": "treevibes+esc",
+      "ur": "شور فلٹر ان TreeVibes درختوں پر جو اس نے کبھی نہیں دیکھے: شناخت 59%، جھوٹا الارم 32%، ROC AUC تقریباً 0.65 (معمولی امتیاز)۔"
+    },
+    {
+      "id": "D3",
+      "kind": "measured_real",
+      "ar": "على مقاطع رياح وحشرات (ESC-50) حُجزت من التدريب لم يُصنَّف أي منها إصابة (0 من 80).",
+      "en": "On wind and insect clips (ESC-50) held out of training, none was flagged as infested (0 of 80).",
+      "metric": "esc.flagged_fraction",
+      "expect": [
+        0.0,
+        0.05
+      ],
+      "shown": "0/80",
+      "reproduce": "python verify_all.py --treevibes \"G:\\TreeVibes\" --esc \"G:\\ESC50\\ESC-50-master\"",
+      "needs": "treevibes+esc",
+      "note_ar": "مقاطع ESC-50 مسجّلة بميكروفون هوائي؛ قد يميّز النموذج نوع الميكروفون لا الصوت (انظر الحدود).",
+      "note_en": "ESC-50 clips are air-microphone recordings; the model may recognise the microphone type, not the sound (see limits).",
+      "ur": "ہوا اور کیڑوں کی کلپس (ESC-50) پر جو تربیت سے الگ رکھی گئیں، کسی کو بھی متاثرہ قرار نہیں دیا گیا (80 میں سے 0)۔",
+      "note_ur": "ESC-50 کی کلپس ہوا میں لگے مائیکروفون کی ریکارڈنگز ہیں؛ ممکن ہے ماڈل آواز کے بجائے مائیکروفون کی قسم پہچان رہا ہو (حدود دیکھیں)۔"
+    },
+    {
+      "id": "L1",
+      "kind": "literature",
+      "ar": "يمكن رصد نشاط يرقات سوسة النخيل داخل الجذع صوتيًا، وجرى التحقق منه بتشريح مواضع التسجيل: في بساتين سعودية (حُلّل 32 جذعًا) صُنّفت 26 من 29 نخلة مصابة باحتمال متوسط أو عالٍ (22 عالٍ)، وصُنّفت النخلات الثلاث غير المصابة باحتمال منخفض (P=0.0048). وفي تجربة منفصلة على نخيل صغير بلغت حساسية الكشف الآلي 80% في المتوسط (و33% في المرحلة المبكرة، انظر L2).",
+      "en": "RPW larval activity inside the trunk can be detected acoustically and was checked by dissecting the recording sites: in Saudi orchards (32 trunks analysed) 26 of 29 infested palms were rated medium or high likelihood (22 high) and the 3 uninfested palms low (P=0.0048). A separate experiment on young palms: machine detection sensitivity averaged 80% (but 33% in the early phase, see L2).",
+      "refs": [
+        "R1",
+        "R4"
+      ],
+      "ur": "تنے کے اندر RPW لاروے کی سرگرمی صوتی طریقے سے پہچانی جا سکتی ہے، اور ریکارڈنگ کی جگہوں کو چیر کر اس کی جانچ کی گئی: سعودی باغات میں (32 تنوں کا تجزیہ) 29 متاثرہ کھجوروں میں سے 26 کو درمیانے یا زیادہ امکان میں رکھا گیا (22 زیادہ) اور 3 غیر متاثرہ کو کم امکان میں (P=0.0048)۔ نوجوان کھجوروں پر ایک الگ تجربے میں مشین کی حساسیت اوسطاً 80% رہی (مگر ابتدائی مرحلے میں 33%، دیکھیں L2)۔"
+    },
+    {
+      "id": "L2",
+      "kind": "literature",
+      "ar": "الحساسية في المرحلة المبكرة للإصابة أقل بكثير: نحو 33% (آليًا) و39% (بشريًا)، مقابل 80% و75% في المتوسط على امتداد التجربة كلها؛ على نخيل تمر وكناري صغير، وبتأكيد التشريح؛ وتتحسن مع نمو اليرقات.",
+      "en": "Sensitivity in the early phase of infestation is much lower: about 33% (machine) and 39% (human), against 80% and 75% on average over the whole experiment; young date and Canary palms, confirmed by dissection; it improves as larvae grow.",
+      "refs": [
+        "R4"
+      ],
+      "ur": "حملے کے ابتدائی مرحلے میں حساسیت بہت کم ہوتی ہے: تقریباً 33% (مشین) اور 39% (انسان)، جبکہ پورے تجربے میں اوسط بالترتیب 80% اور 75% تھا؛ کم عمر کھجور اور کینری پام، تصدیق چیر پھاڑ سے؛ لاروے کے بڑے ہونے کے ساتھ بہتر ہوتی ہے۔"
+    },
+    {
+      "id": "L3",
+      "kind": "literature",
+      "ar": "بصمة النشاط الحشري: قطارات نبضات قصيرة (3 إلى 30 مللي ثانية). الدفعة الصوتية: 7 نبضات فأكثر وأقل من 200 بفواصل أقل من 25 مللي ثانية. القطارات الأطول من 200 نبضة غالبًا رياح (احتكاك السعف) وتُعد ضجيجًا.",
+      "en": "Signature of insect activity: trains of short impulses (3 to 30 ms). An insect sound burst: at least 7 and fewer than 200 impulses separated by under 25 ms. Trains of more than 200 impulses are mostly wind (fronds tapping) and are treated as noise.",
+      "refs": [
+        "R1"
+      ],
+      "ur": "کیڑوں کی سرگرمی کی پہچان: مختصر جھٹکوں (impulses) کی لڑیاں (3 سے 30 ملی سیکنڈ)۔ کیڑے کی آواز کا ایک برسٹ: کم از کم 7 اور 200 سے کم جھٹکے جن کے درمیان وقفہ 25 ملی سیکنڈ سے کم ہو۔ 200 سے زیادہ جھٹکوں کی لڑیاں زیادہ تر ہوا (پتوں کے ٹکرانے) کی ہوتی ہیں اور انہیں شور شمار کیا جاتا ہے۔"
+    },
+    {
+      "id": "L4",
+      "kind": "literature",
+      "ar": "معدل الدفعات بالثانية مؤشر لاحتمال الإصابة: منخفض أقل من 0.02، متوسط من 0.02 إلى 0.06، عالٍ 0.06 فأكثر (المعيار المستعمل بالدراسة السعودية).",
+      "en": "The burst rate per second indicates infestation likelihood: low below 0.02, medium 0.02 to 0.06, high 0.06 or more (criterion used in the Saudi study).",
+      "refs": [
+        "R1"
+      ],
+      "ur": "فی سیکنڈ برسٹ کی شرح حملے کے امکان کو ظاہر کرتی ہے: 0.02 سے کم ہو تو کم، 0.02 سے 0.06 درمیانی، 0.06 یا زیادہ ہو تو زیادہ (سعودی مطالعے میں استعمال شدہ معیار)۔"
+    },
+    {
+      "id": "L5",
+      "kind": "literature",
+      "ar": "تختلف النطاقات الترددية المنشورة باختلاف المستشعر والجذع: من 800 إلى 2500 هرتز (نطاق استخدمته دراسة Siriwardena وآخرين 2010 كما نقلتها دراسة Martínez Rach وآخرين 2013)؛ وطاقة قصوى بين 6.5 و20 كيلوهرتز في أعمال سابقة أوردتها دراسة Mankin وآخرين 2016، بينما ضجيج الخلفية دون 3.5 كيلوهرتز؛ وأغلبها دون 800 هرتز تقريبًا في دراسة الألياف الضوئية (Ashry وآخرون 2020). لذلك لا نُثبّت نطاقًا واحدًا، بل نقيس بأنفسنا.",
+      "en": "Published frequency bands differ with sensor and trunk: 800 to 2500 Hz (a band used by Siriwardena et al. 2010, as cited by Martínez Rach et al. 2013); peak energy between 6.5 and 20 kHz in earlier work cited by Mankin et al. 2016, with background noise below 3.5 kHz; and mostly below about 800 Hz in a fibre-optic study (Ashry et al. 2020). So we do not fix one band and measure it ourselves.",
+      "refs": [
+        "R2",
+        "R1",
+        "R6"
+      ],
+      "ur": "شائع شدہ فریکوئنسی بینڈ سینسر اور تنے کے مطابق مختلف ہیں: 800 سے 2500 Hz (یہ بینڈ Siriwardena وغیرہ 2010 نے استعمال کیا، جیسا کہ Martínez Rach وغیرہ 2013 نے نقل کیا)؛ 6.5 سے 20 kHz کے درمیان چوٹی کی توانائی پچھلے کاموں میں جنہیں Mankin وغیرہ 2016 نے بیان کیا، جبکہ پس منظر کا شور 3.5 kHz سے نیچے؛ اور فائبر آپٹک مطالعے میں (Ashry وغیرہ 2020) زیادہ تر تقریباً 800 Hz سے نیچے۔ اس لیے ہم ایک ہی بینڈ طے نہیں کرتے بلکہ خود ناپتے ہیں۔"
+    },
+    {
+      "id": "L6",
+      "kind": "literature",
+      "ar": "حشرة أخرى تعيش بنفس مزارع السعودية، Oryctes elegans، ترصد صوتيًا أيضًا، لكن لا تُفصل عن السوسة بالطيف وحده. الفرق بالنمط الزمني: نبضات لكل دفعة 44.4 مقابل 18.3 (P=0.016) ومعدل النبضات 11.5 مقابل 2.5 بالثانية (P=0.001)، بعينة صغيرة (21 مقابل 7 فسائل).",
+      "en": "Another insect living in the same Saudi orchards, Oryctes elegans, is also detectable, but cannot be separated from the weevil by spectrum alone. The difference is in temporal pattern: impulses per burst 44.4 vs 18.3 (P=0.016) and impulse rate 11.5 vs 2.5 per second (P=0.001), with a small sample (21 vs 7 offshoots).",
+      "refs": [
+        "R1"
+      ],
+      "ur": "انہی سعودی باغات میں رہنے والا ایک اور کیڑا، Oryctes elegans، بھی پہچانا جا سکتا ہے، لیکن اسے صرف اسپیکٹرم سے ویول سے الگ نہیں کیا جا سکتا۔ فرق وقتی انداز میں ہے: فی برسٹ جھٹکے 44.4 بمقابلہ 18.3 (P=0.016) اور جھٹکوں کی شرح 11.5 بمقابلہ 2.5 فی سیکنڈ (P=0.001)، چھوٹے نمونے کے ساتھ (21 بمقابلہ 7 کونپلیں/offshoots)۔"
+    },
+    {
+      "id": "L7",
+      "kind": "literature",
+      "ar": "حشرات حافرة أخرى (خنافس طويلة القرون، حفارات الغابات، النمل الأبيض...) لها دراسات وقواعد بيانات اهتزازية، لكنها ليست بالنخيل ولا موسومة بالأنواع على نطاق واسع.",
+      "en": "Other borers (longhorn beetles, forest borers, termites...) have vibration studies and datasets, but not in palms and not widely labelled by species.",
+      "refs": [
+        "R7",
+        "R10",
+        "R12",
+        "R13"
+      ],
+      "ur": "دیگر سوراخ کرنے والے کیڑوں (لانگ ہارن بیٹلز، جنگلی بورر، دیمک…) پر کمپن کے مطالعات اور ڈیٹا سیٹس موجود ہیں، لیکن کھجور میں نہیں اور نہ ہی انواع کے لحاظ سے وسیع پیمانے پر لیبل شدہ۔"
+    },
+    {
+      "id": "L8",
+      "kind": "literature",
+      "ar": "TreeVibes: 33 مجلدًا من التسجيلات لـ 35 شجرة، أغلبها لخنفساء طويلة القرون الآسيوية (Xylotrechus chinensis) في أشجار التوت، مع أشجار سليمة (صنوبر صغير ومشمش وبرتقال) للمقارنة. وهي ليست لسوسة النخيل الحمراء ولا لأشجار النخيل؛ استخدمناها فقط لاختبار فكرة الكشف على تسجيلات حقيقية.",
+      "en": "TreeVibes: 33 folders of recordings from 35 trees, mainly the Asian longhorn beetle (Xylotrechus chinensis) in mulberry trees, with healthy trees (a young pine, an apricot, an orange) as controls. It is not red palm weevil and not palms; we used it only to test the detection idea on real recordings.",
+      "refs": [
+        "R7",
+        "R8"
+      ],
+      "ur": "TreeVibes: 35 درختوں کی ریکارڈنگز کے 33 فولڈر، زیادہ تر ایشیائی لانگ ہارن بیٹل (Xylotrechus chinensis) شہتوت کے درختوں میں، اور موازنے کے لیے صحت مند درخت (ایک نوجوان صنوبر، خوبانی، سنترہ)۔ یہ ریڈ پام ویول نہیں اور کھجور بھی نہیں؛ ہم نے اسے صرف حقیقی ریکارڈنگز پر شناخت کے خیال کو جانچنے کے لیے استعمال کیا۔"
+    },
+    {
+      "id": "L9",
+      "kind": "literature",
+      "ar": "ESC-50: 2000 مقطع، 50 صنفًا، 40 مقطعًا للصنف، 5 ثوانٍ، ترخيص Creative Commons غير تجاري.",
+      "en": "ESC-50: 2000 clips, 50 classes, 40 clips per class, 5 seconds, Creative Commons non-commercial license.",
+      "refs": [
+        "R9"
+      ],
+      "ur": "ESC-50: 2000 کلپس، 50 زمرے، فی زمرہ 40 کلپس، 5 سیکنڈ، کریئیٹو کامنز غیر تجارتی لائسنس۔"
+    },
+    {
+      "id": "K1",
+      "kind": "literature",
+      "ar": "أكثر من 33 مليون نخلة في المملكة (حسب Arab News 2025؛ وتذكر سعوديبيديا 34 مليونًا)، أي نحو 27% من نخيل العالم، ونحو 123,000 حيازة زراعية للنخيل.",
+      "en": "More than 33 million palms in the Kingdom (Arab News 2025; Saudipedia gives 34 million), about 27% of the world's, and about 123,000 palm holdings.",
+      "refs": [
+        "R16",
+        "R17"
+      ],
+      "poster": [
+        "33"
+      ],
+      "ur": "مملکت میں 33 ملین سے زیادہ کھجوریں (Arab News 2025 کے مطابق؛ سعودی پیڈیا 34 ملین بتاتا ہے)، جو دنیا کے تقریباً 27% ہیں، اور تقریباً 123,000 کھجور کی زرعی ملکیتیں۔"
+    },
+    {
+      "id": "K2",
+      "kind": "literature",
+      "ar": "قطاع النخيل والتمور نحو 7.5 مليار ريال (نحو 12% من الناتج الزراعي).",
+      "en": "The palm and date sector is about SAR 7.5 billion (about 12% of agricultural output).",
+      "refs": [
+        "R17"
+      ],
+      "poster": [
+        "7.5"
+      ],
+      "ur": "کھجور اور کھجوروں کا شعبہ تقریباً 7.5 ارب ریال کا ہے (زرعی پیداوار کا تقریباً 12%)۔"
+    },
+    {
+      "id": "K3",
+      "kind": "literature",
+      "ar": "صادرات التمور 2024: نحو 1.695 مليار ريال (+15.9%). الملصق يذكر 2023 (نحو 1.5 مليار) وهو رقم مشتق؛ الأفضل استبداله بهذا الرقم المنشور مباشرة.",
+      "en": "Date exports in 2024: about SAR 1.695 billion (+15.9%). The poster shows 2023 (about 1.5 billion), a derived figure; better replace it with this directly published number.",
+      "refs": [
+        "R16"
+      ],
+      "ur": "2024 میں کھجوروں کی برآمدات: تقریباً 1.695 ارب ریال (+15.9%)۔ پوسٹر میں 2023 کا عدد (تقریباً 1.5 ارب) دکھایا گیا ہے، جو ایک اخذ کردہ عدد ہے؛ بہتر ہے اسے اس براہِ راست شائع شدہ عدد سے بدل دیا جائے۔"
+    },
+    {
+      "id": "K4",
+      "kind": "literature",
+      "refs": [
+        "R19"
+      ],
+      "en": "Red palm weevil losses in Saudi Arabia exceeded USD 400 million in 2022, and the weevil was detected on 53% of Saudi date farms that year (a news report, not a peer-reviewed study).",
+      "ar": "تجاوزت خسائر سوسة النخيل الحمراء في السعودية 400 مليون دولار عام 2022، ورُصدت الحشرة في 53% من مزارع النخيل السعودية في ذلك العام (تقرير صحفي وليس دراسة محكَّمة).",
+      "ur": "سعودی عرب میں ریڈ پام ویول سے 2022 میں نقصانات 400 ملین ڈالر سے زیادہ رہے، اور اس سال یہ کیڑا 53% سعودی کھجور فارموں میں پایا گیا (یہ ایک خبری رپورٹ ہے، تحکیم شدہ تحقیق نہیں)۔"
+    },
+    {
+      "id": "L10",
+      "kind": "literature",
+      "ar": "أمراض وآفات النخيل الأخرى (البيوض، الدوباس، التعفنات...) موصوفة في مراجع منظمة الأغذية والزراعة وإيكاردا. تطبيق شامل لصحة النخلة يبني على هذه المراجع ويُنسب إليها، ولا يشخّص من الصوت.",
+      "en": "Other date palm diseases and pests (bayoud, dubas bug, rots...) are described in FAO and ICARDA references. A general palm-health app should build on and cite them, not diagnose from sound.",
+      "refs": [
+        "R14",
+        "R15"
+      ],
+      "ur": "کھجور کی دیگر بیماریاں اور کیڑے (بیاض/Bayoud، دوباس بگ، سڑن…) FAO اور ICARDA کے حوالوں میں بیان کیے گئے ہیں۔ کھجور کی صحت کی ایک عمومی ایپ کو انہی پر بنیاد رکھنی اور انہی کا حوالہ دینا چاہیے، آواز سے تشخیص نہیں کرنی چاہیے۔"
+    },
+    {
+      "id": "L11",
+      "kind": "literature",
+      "refs": [
+        "R3",
+        "R5",
+        "R6"
+      ],
+      "en": "Detecting the weevil by sound or vibration inside the palm is an established research line, not our invention: bioacoustic sensors (2010), and fibre-optic distributed sensing by KAUST with the Ministry's Date Palm Center in Al-Hassa (Scientific Reports, 2020), which detected larvae as young as 12 days in one artificially infested trunk in a closed room (97 alarms against 9 for a healthy palm); open-field testing was left as future work. Our contribution is a low-cost combination with a farmer-facing interface, not a new detection principle.",
+      "ar": "كشف السوسة بالصوت أو الاهتزاز داخل النخلة خط بحثي راسخ وليس من ابتكارنا: مستشعرات صوتية حيوية (2010)، ثم الاستشعار الضوئي الموزَّع بالألياف الذي أجرته جامعة الملك عبدالله للعلوم والتقنية مع مركز النخيل والتمور بالأحساء (Scientific Reports، 2020)، وقد رصد يرقات بعمر 12 يومًا في جذع واحد مُصاب صناعيًا داخل غرفة مغلقة (97 إنذارًا مقابل 9 لنخلة سليمة)، وتُرك الاختبار في الحقل المفتوح عملًا مستقبليًا. إسهامنا تركيب منخفض التكلفة مع واجهة موجَّهة للمزارع، وليس مبدأ كشف جديدًا.",
+      "ur": "کھجور کے اندر ریڈ پام ویول کو آواز یا ارتعاش سے پہچاننا ایک قائم شدہ تحقیقی سلسلہ ہے، ہماری ایجاد نہیں: بایو صوتی سینسر (2010)، اور KAUST کا فائبر آپٹک تقسیم شدہ سینسنگ، الاحساء کے کھجور مرکز کے ساتھ (Scientific Reports، 2020)، جس نے بند کمرے میں ایک مصنوعی طور پر متاثرہ تنے میں 12 دن کے لاروے پہچانے (صحت مند کھجور کے 9 کے مقابلے 97 الارم)؛ کھلے میدان میں جانچ مستقبل کا کام چھوڑی گئی۔ ہمارا حصہ کم لاگت امتزاج اور کسان کے لیے آسان انٹرفیس ہے، کوئی نیا شناختی اصول نہیں۔"
+    },
+    {
+      "id": "L12",
+      "kind": "literature",
+      "refs": [
+        "R20",
+        "R6"
+      ],
+      "en": "The most advanced published tests of acoustic detection of the weevil used fibre-optic sensing: a closed room and then an outdoor farm of 19 palms (2 artificially infested, 17 healthy), about 97% classification accuracy; wind was the main cause of false alarms (Ashry et al. 2022). These are sparse tests on artificially infested palms, so field performance in real orchards is still an open question for everyone, including us.",
+      "ar": "أكثر الاختبارات المنشورة تقدمًا في الكشف الصوتي عن السوسة استخدمت الاستشعار بالألياف الضوئية: غرفة مغلقة ثم مزرعة مفتوحة فيها 19 نخلة (2 مصابتان صناعيًا و17 سليمة)، بدقة تصنيف نحو 97%؛ وكانت الرياح أهم سبب للإنذارات الكاذبة (Ashry وآخرون 2022). وهي اختبارات محدودة على نخيل مصاب صناعيًا، فأداؤها في البساتين الحقيقية مسألة مفتوحة للجميع، ونحن منهم.",
+      "ur": "ریڈ پام ویول کی صوتی شناخت کے سب سے آگے کے شائع شدہ تجربوں میں فائبر آپٹک سینسنگ استعمال ہوئی: پہلے بند کمرہ اور پھر 19 کھجوروں کا کھلا فارم (2 مصنوعی طور پر متاثرہ، 17 صحت مند)، درجہ بندی کی درستگی تقریباً 97%؛ ہوا غلط الارم کی بڑی وجہ تھی (Ashry وغیرہ 2022)۔ یہ مصنوعی طور پر متاثرہ کھجوروں پر محدود تجربے ہیں، اس لیے حقیقی باغات میں کارکردگی سب کے لیے، ہمارے لیے بھی، کھلا سوال ہے۔"
+    },
+    {
+      "id": "N1",
+      "kind": "not_claimed",
+      "ar": "لا نزعم أداءً ميدانيًا على نخيل حقيقي مصاب: لم نختبر بعد.",
+      "en": "We do not claim field performance on real infested palms: not tested yet.",
+      "ur": "ہم حقیقی متاثرہ کھجوروں پر میدانی کارکردگی کا دعویٰ نہیں کرتے: ابھی جانچی نہیں گئی۔"
+    },
+    {
+      "id": "N2",
+      "kind": "not_claimed",
+      "ar": "لا نزعم أن الكاميرا ترى اليرقات أو تحدد موضعها داخل الجذع؛ تعلّم علامات ظاهرة على السطح فقط، ودقتها غير مقيسة.",
+      "en": "We do not claim the camera sees larvae or locates them inside the trunk; it only marks visible surface signs, and its accuracy is not measured.",
+      "reproduce": "python eval_locate.py \"photos folder\"",
+      "ur": "ہم یہ دعویٰ نہیں کرتے کہ کیمرا لاروے کو دیکھتا ہے یا تنے کے اندر ان کا مقام بتاتا ہے؛ یہ صرف سطح پر نظر آنے والی علامات نشان زد کرتا ہے، اور اس کی درستگی ناپی نہیں گئی۔"
+    },
+    {
+      "id": "N3",
+      "kind": "not_claimed",
+      "ar": "لا نزعم التمييز بين أنواع الحشرات من الصوت: لا توجد لدينا بيانات موسومة بالأنواع على النخيل.",
+      "en": "We do not claim to tell insect species apart from sound: we have no species-labelled palm data.",
+      "ur": "ہم آواز سے کیڑوں کی انواع کو الگ پہچاننے کا دعویٰ نہیں کرتے: ہمارے پاس انواع کے لیبل والا کھجور کا ڈیٹا نہیں ہے۔"
+    },
+    {
+      "id": "N4",
+      "kind": "not_claimed",
+      "ar": "لا نذكر سعرًا للجهاز: لم يُقَس.",
+      "en": "We state no device price: it has not been measured.",
+      "ur": "ہم ڈیوائس کی کوئی قیمت نہیں بتاتے: وہ ناپی نہیں گئی۔"
+    },
+    {
+      "id": "N5",
+      "kind": "not_claimed",
+      "ar": "موقع المصدر من المستشعرات الثلاثة غير معايَر على خشب حقيقي.",
+      "en": "The source location from the three sensors is not calibrated on real wood.",
+      "ur": "تین سینسرز سے ماخذ کا مقام حقیقی لکڑی پر کیلیبریٹ نہیں کیا گیا۔"
+    },
+    {
+      "id": "N6",
+      "kind": "not_claimed",
+      "ar": "لا نزعم أن جهازنا الحالي يلتقط كل ترددات صوت اليرقة: يقيس 4000 قراءة بالثانية (أي حتى 2 كيلوهرتز)، بينما تذكر دراسات طاقة حتى 20 كيلوهرتز. هذا حد فعلي لنا؛ يمكن اختبار أثره بخيار --sr على بيانات حقيقية.",
+      "en": "We do not claim our current device captures all the frequencies of larval sound: it records 4000 samples per second (up to 2 kHz), while studies report energy up to 20 kHz. This is a real limit of ours; its effect can be tested with the --sr option on real data.",
+      "refs": [
+        "R1",
+        "R2"
+      ],
+      "reproduce": "python train_treevibes.py cv \"G:\\TreeVibes\" --sr 16000",
+      "ur": "ہم یہ دعویٰ نہیں کرتے کہ ہمارا موجودہ آلہ لاروے کی آواز کی تمام فریکوئنسیز پکڑتا ہے: یہ 4000 نمونے فی سیکنڈ ریکارڈ کرتا ہے (2 kHz تک)، جبکہ مطالعات 20 kHz تک توانائی بتاتے ہیں۔ یہ ہماری ایک حقیقی حد ہے؛ اس کا اثر حقیقی ڈیٹا پر --sr آپشن سے جانچا جا سکتا ہے۔"
+    },
+    {
+      "id": "N7",
+      "kind": "not_claimed",
+      "en": "When no sensors are connected (for example, an uploaded sample recording at the exhibition), the point drawn on the 3D trunk is a simulation labelled \"demonstration\"; it is not a measurement and does not show where a larva really is. With sensors connected it is an estimate of the vibration source, not a confirmed larva position.",
+      "ar": "عند عدم توصيل مستشعرات (كتسجيل جاهز يُرفع في المعرض)، تكون النقطة المرسومة على الجذع ثلاثي الأبعاد محاكاة موسومة بعبارة «عرض توضيحي»؛ فهي ليست قياسًا ولا تُظهر موضع يرقة حقيقية. وعند توصيل المستشعرات تكون تقديرًا لمصدر الاهتزاز، لا موضعًا مؤكدًا لليرقة.",
+      "ur": "جب کوئی سینسر جڑا نہ ہو (مثلاً نمائش میں اپ لوڈ کی گئی نمونہ ریکارڈنگ)، تو تھری ڈی تنے پر بنایا گیا نقطہ «نمائشی مثال» کے لیبل والی سمولیشن ہوتا ہے؛ یہ پیمائش نہیں اور نہ یہ دکھاتا ہے کہ لاروا حقیقت میں کہاں ہے۔ سینسر جڑے ہوں تو یہ کمپن کے ماخذ کا تخمینہ ہے، لاروے کا تصدیق شدہ مقام نہیں۔"
+    },
+    {
+      "id": "N8",
+      "kind": "not_claimed",
+      "en": "The farmers network (farmers.html, owner site only) is a prototype. A farmer appears only after applying with a license number and after we reviewed the license by hand; the review is manual, with no automatic link to Absher, Nama or GOV.SA. We do not claim that an approved farmer exists in every area, how fast anyone responds, or the quality of anyone's work. Phone numbers and license numbers are kept as plain text in the server database (nakhla.db), so use the system with test data only until proper accounts and encryption are added.",
+      "ar": "شبكة المزارعين (farmers.html، في موقع المالك فقط) نموذج أولي. لا يظهر مزارع إلا بعد أن يقدّم طلبًا برقم ترخيصه ونراجع الترخيص يدويًا؛ والمراجعة يدوية ولا يوجد ربط آلي مع أبشر أو نما أو GOV.SA. لا نزعم وجود مزارع معتمد في كل منطقة، ولا سرعة استجابة أحد، ولا جودة عمل أحد. وتُحفظ أرقام الجوال وأرقام التراخيص نصًا صريحًا في قاعدة بيانات الخادم (nakhla.db)، فيُستعمل النظام ببيانات تجريبية فقط إلى أن تُضاف حسابات وتشفير مناسبان.",
+      "ur": "کسانوں کا نیٹ ورک (farmers.html، صرف مالک کی سائٹ پر) ایک ابتدائی نمونہ ہے۔ کسان صرف تب نظر آتا ہے جب وہ لائسنس نمبر کے ساتھ درخواست دے اور ہم لائسنس ہاتھ سے جانچ لیں؛ جانچ دستی ہے اور ابشر، نما یا GOV.SA سے کوئی خودکار ربط نہیں۔ ہم یہ دعویٰ نہیں کرتے کہ ہر علاقے میں منظور شدہ کسان موجود ہے، نہ کسی کے جلد پہنچنے کا، نہ کسی کے کام کے معیار کا۔ موبائل نمبر اور لائسنس نمبر سرور کے ڈیٹا بیس (nakhla.db) میں سادہ متن کی شکل میں رکھے جاتے ہیں، اس لیے مناسب اکاؤنٹس اور انکرپشن شامل ہونے تک صرف تجرباتی ڈیٹا استعمال کریں۔"
+    },
+    {
+      "id": "N9",
+      "kind": "not_claimed",
+      "ar": "فحص النبضات في صفحة «جرّب» قاعدة إشارة بسيطة تخفّض الإنذار فقط ولا ترفعه أبدًا. لا يُعدّ الصوت نبضة يرقة إلا إذا ارتفع فوق الخلفية، وقصر، وبدأ فجأة، وعاد بعده إلى الهدوء، وكانت طاقته في نطاق 150 إلى 1800 هرتز لا في نطاق الطرق المنخفض. وإن غلب على التسجيل هواء أو دمدمة منخفضة على الميكروفون فلا تُقال «سليمة» ولا «مصابة»، بل «ما قدرنا نحكم، أعد التسجيل». قِسناها بالأمر python verify_noise.py على أصوات مصطنعة من صنعنا (هواء، رياح على الميكروفون، تنفس، مروحة، طنين، كلام، زحمة، حفيف، ضجيج مرور) لا على تسجيلات حقيقية: النموذج وحده عدّ نحو 78٪ منها إصابة، ومع الفحص بقي إنذار كاذب واحد أو لا شيء من 570 صوتًا، وسُمعت كل مقاطع السوسة المحاكاة (240 من 240، منها ما شُغّل عبر مكبر جوال وصدى غرفة). حدّها الصريح: النقر على الطاولة ولوحة المفاتيح وسقوط الأشياء نبضات قصيرة حقيقية، والفحص لا يميّزها من نبضات اليرقة (مرّت 90 من 120 في اختبارنا)؛ وضبطنا العتبات أثناء الاختبار على أصوات صنعناها نحن، فالرقم أفضل من الواقع غالبًا؛ ولم نجرّبها على ميكروفونات ولا نخيل حقيقية. وهي لا تُثبت أن الصوت من نخلة.",
+      "en": "The pulse check on the Try page is a simple signal rule that can only lower an alarm, never raise one. A sound only counts as a larva-like pulse if it rises above the background, is short, starts abruptly, falls back to quiet afterwards, and its energy sits in the 150-1800 Hz band rather than the low thump band. If air or low rumble on the microphone dominates the recording, the page says neither \"healthy\" nor \"infested\" but \"could not judge, record again\". We measured it with python verify_noise.py on made-up sounds we generated (air, wind on the microphone, breath, fan, hum, speech, crowd, rustle, traffic), not on real recordings: the model alone called about 78% of them infested; with the check, 1 or 0 false alarms remained out of 570 sounds, and all simulated weevil clips were still heard (240 of 240, including ones played through a phone speaker with room echo). Its stated limits: tapping a table or keyboard and dropped objects are real short pulses, and the check cannot tell them from larva pulses (90 of 120 passed in our test); we tuned the thresholds while testing on sounds we generated ourselves, so the figure is probably better than reality; and it was not tried on real microphones or real palms. It does not prove the sound came from a palm.",
+      "ur": "«آزمائیں» صفحے کی پلس جانچ ایک سادہ سگنل اصول ہے جو صرف الارم کم کر سکتا ہے، کبھی بڑھاتا نہیں۔ آواز سنڈی کی پلس تب شمار ہوتی ہے جب وہ پس منظر سے اونچی ہو، مختصر ہو، اچانک شروع ہو، اس کے بعد خاموشی کی طرف لوٹ آئے، اور اس کی توانائی 150 سے 1800 ہرٹز میں ہو، نہ کہ کم تعدد کی ٹھپ والی پٹی میں۔ اگر ریکارڈنگ پر مائیکروفون پر ہوا یا کم تعدد کی گڑگڑاہٹ غالب ہو تو صفحہ نہ «صحت مند» کہتا ہے نہ «حملہ»، بلکہ «فیصلہ نہ ہو سکا، دوبارہ ریکارڈ کریں» کہتا ہے۔ ہم نے اسے python verify_noise.py سے اپنی بنائی ہوئی مصنوعی آوازوں (ہوا، مائیکروفون پر ہوا، سانس، پنکھا، گونج، گفتگو، ہجوم، سرسراہٹ، ٹریفک) پر ناپا، حقیقی ریکارڈنگز پر نہیں: اکیلے ماڈل نے ان میں سے تقریباً 78٪ کو حملہ کہا؛ جانچ کے ساتھ 570 آوازوں میں ایک یا کوئی غلط الارم نہیں رہا، اور تمام مصنوعی سنڈی کلپس سنائی دیے (240 میں سے 240، جن میں فون کے اسپیکر اور کمرے کی گونج سے چلائے گئے بھی ہیں)۔ اس کی صاف حدیں: میز یا کی بورڈ پر ٹھک ٹھکانا اور چیزوں کا گرنا حقیقی مختصر پلس ہیں اور جانچ انہیں سنڈی کی پلس سے الگ نہیں کر سکتی (ہمارے ٹیسٹ میں 120 میں سے 90 گزر گئیں)؛ ہم نے حدیں اپنی بنائی آوازوں پر آزماتے ہوئے ٹھیک کیں اس لیے عدد حقیقت سے شاید بہتر ہے؛ اور اسے حقیقی مائیکروفونز یا کھجوروں پر نہیں آزمایا گیا۔ یہ ثابت نہیں کرتی کہ آواز کھجور سے آئی۔",
+      "refs": [
+        "R1"
+      ],
+      "reproduce": "python train_model.py && python verify_noise.py"
+    }
+  ]
+}

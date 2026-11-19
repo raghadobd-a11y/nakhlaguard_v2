@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>NakhlaGuard — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2; --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --date-light:#D99A55; --alert:#A63D40; --card:#FBF9F3; --ok:#1F6B45 }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink); line-height:1.65; font-size:16px}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif; letter-spacing:-0.01em}
+  body.rtl{font-family:'Tajawal',sans-serif; direction:rtl}
+  body.rtl h1, body.rtl h2, body.rtl h3{font-family:'Tajawal',sans-serif; letter-spacing:0}
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px}
+  a{color:inherit}
+  #langToggle{position:fixed; top:14px; right:14px; z-index:1000; background:var(--ink); border:1px solid rgba(237,230,214,.35); color:var(--sand); padding:7px 16px; border-radius:20px; font-size:.78rem; cursor:pointer; font-family:inherit}
+  .phero{background:radial-gradient(ellipse at 30% -10%, var(--palm) 0%, var(--palm-deep) 60%, var(--ink) 100%); color:var(--sand); padding:44px 0 36px}
+  .phero h1{font-size:2rem; line-height:1.2; margin-bottom:10px}
+  .phero p{color:#D8E2DC; max-width:560px; font-size:1rem}
+  .badge{display:inline-block; font-size:.72rem; font-weight:600; color:var(--sand); border:1px solid rgba(237,230,214,.45); border-radius:999px; padding:2px 11px; margin-bottom:12px}
+  main{padding:30px 0 40px}
+  .card{background:var(--card); border-radius:14px; padding:22px; margin-bottom:18px}
+  .card h2{font-size:1.2rem; color:var(--palm-deep); margin-bottom:10px}
+  .card p{color:var(--ink-soft); font-size:.92rem}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 22px; border-radius:8px; font-weight:600; font-size:.92rem; text-decoration:none; border:1.5px solid transparent; cursor:pointer; font-family:inherit}
+  .btn-fill{background:var(--date); color:var(--ink)} .btn-fill:hover{background:var(--date-light)}
+  .btn-line{border-color:var(--palm); color:var(--palm-deep); background:transparent}
+  .btn-dark{background:var(--palm-deep); color:var(--sand)}
+  .btn[disabled]{opacity:.55; cursor:not-allowed}
+  label.f{display:block; font-weight:600; font-size:.88rem; margin:14px 0 5px; color:var(--palm-deep)}
+  input[type=text],input[type=tel],input[type=password],select,textarea{width:100%; padding:11px 12px; border:1.5px solid var(--sand-deep); border-radius:8px; background:#fff; font:inherit; color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--palm); outline-offset:1px}
+  textarea{min-height:76px; resize:vertical}
+  .hint{font-size:.8rem; color:var(--ink-soft); margin-top:4px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+  .chip{display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1.5px solid var(--sand-deep); border-radius:999px; background:#fff; font-size:.85rem; cursor:pointer; user-select:none}
+  .chip input{accent-color:var(--palm)}
+  .chip.on, .chip:has(input:checked){border-color:var(--palm); background:#E8F1EC}
+  button.chip{font-family:inherit; color:var(--ink)}
+  .consent{display:flex; gap:10px; align-items:flex-start; margin-top:16px; font-size:.86rem; color:var(--ink-soft)}
+  .consent input{margin-top:5px; accent-color:var(--palm)}
+  .msg{border-radius:10px; padding:12px 14px; font-size:.9rem; margin-top:14px}
+  .msg.ok{background:#E3F1E8; color:#14502F} .msg.err{background:#FAE4E1; color:#7A2321} .msg.info{background:#FFF4DD; color:#6B4A12}
+  .steps3{display:grid; gap:10px; margin-top:14px; list-style:none}
+  .steps3 li{display:grid; grid-template-columns:32px 1fr; gap:12px; align-items:start; font-size:.92rem; color:var(--ink-soft)}
+  .steps3 b{width:30px; height:30px; border-radius:50%; background:var(--palm); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem}
+  footer{text-align:center; padding:24px 0; color:var(--ink-soft); font-size:.8rem}
+  [hidden]{display:none !important}
+  body.lang-ur, body.lang-ur *:not(code){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 } body.lang-ur h1, body.lang-ur h2, body.lang-ur h3{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea{ line-height:1.8 }
+
+  #langToggle{display:none}
+  .tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px}
+  .app{background:var(--card); border-radius:14px; padding:18px; margin-bottom:14px; border-inline-start:5px solid var(--date)}
+  .app h3{font-size:1.05rem; color:var(--palm-deep); margin-bottom:6px}
+  .app dl{display:grid; grid-template-columns:auto 1fr; gap:4px 14px; font-size:.9rem; margin-bottom:12px}
+  .app dt{color:var(--ink-soft)} .app dd{font-weight:500; word-break:break-word}
+  .app .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+  .app input[type=text]{flex:1; min-width:180px}
+  .btn-ok{background:var(--ok); color:#fff} .btn-no{background:#fff; color:var(--alert); border-color:var(--alert)}
+  .checklist{font-size:.88rem; color:var(--ink-soft); padding-inline-start:18px; margin-top:8px}
+</style>
+</head>
+<body>
+<button id="langToggle" onclick="toggleLang()">العربية</button>
+
+<div class="phero"><div class="wrap">
+  <span class="badge">للمشرف فقط</span>
+  <h1>مراجعة طلبات المزارعين</h1>
+  <p>لا يظهر مزارع لأصحاب الأجهزة إلا بعد أن تعتمده من هنا.</p>
+</div></div>
+<main><div class="wrap">
+  <div class="card">
+    <h2>قبل الاعتماد</h2>
+    <ul class="checklist">
+      <li>افتح وثيقة الترخيص (المصدّرة من منصة نما أو من المنصة الوطنية GOV.SA) وطابق الاسم ورقم الترخيص ونوعه وتاريخ الصلاحية.</li>
+      <li>تأكد أن الترخيص ساري، وأن اسم صاحبه هو نفس المتقدّم.</li>
+      <li>لا يوجد ربط آلي مع أي منصة حكومية: المراجعة يدوية، فاعتمد فقط ما تأكدت منه بنفسك.</li>
+    </ul>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div id="list"></div>
+  <div id="msg" class="msg err" hidden></div>
+</div></main>
+
+<script>
+// ---------- تبديل اللغة (عربي / English / اردو) - مشترك عبر كل صفحات الموقع ----------
+var LANG_CYCLE = ['ar', 'en', 'ur'];
+var LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+var LOCALES = { ar: 'ar-SA', en: 'en-US', ur: 'ur-PK' };
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return (l === 'ar' || l === 'en' || l === 'ur') ? l : 'ar'; }   // لا يعتمد على ثوابت معرَّفة لاحقًا، لأن بعض الصفحات تناديه قبل نهاية السكربت
+function setLang(lang){
+  if(!LANG_CYCLE.includes(lang)) lang = 'ar';
+  try{ localStorage.setItem('nakhlaguard-lang', lang); }catch(e){}
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.body.classList.toggle('rtl', lang !== 'en');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
+  });
+  document.querySelectorAll('[data-en-ph]').forEach(el => {
+    el.placeholder = el.getAttribute('data-' + lang + '-ph') ?? el.getAttribute('data-en-ph');
+  });
+  const btn = document.getElementById('langToggle');
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
+}
+function toggleLang(){ setLang(LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length]); }
+setLang(getLang());
+
+
+
+var LIC = {practice:'رخصة ممارسة النشاط الزراعي', profession:'ترخيص مزاولة مهنة زراعية', farm:'ترخيص مزرعة ريفية', other:'ترخيص آخر من الوزارة'};
+var EXPL = {inspect:'فحص وتشخيص', treat:'علاج ومكافحة', remove:'إزالة نخلة مصابة', prune:'تقليم وصيانة', general:'رعاية عامة'};
+var ST = {pending:'بانتظار المراجعة', approved:'معتمد', rejected:'مرفوض', revoked:'مسحوب'};
+var cur = 'pending', counts = {};
+function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function msg(t){ var m = document.getElementById('msg'); m.hidden = !t; m.textContent = t || ''; }
+function drawTabs(){
+  var box = document.getElementById('tabs'); box.textContent = '';
+  Object.keys(ST).forEach(function(k){
+    var b = el('button', 'chip' + (k === cur ? ' on' : ''), ST[k] + ' (' + (counts[k] || 0) + ')'); b.type = 'button';
+    b.addEventListener('click', function(){ cur = k; load(); }); box.appendChild(b);
+  });
+}
+async function decide(id, decision, note){
+  var fd = new FormData(); fd.append('decision', decision); fd.append('note', note || '');
+  var r = await fetch('/admin/applications/' + id + '/decision', {method:'POST', body:fd, credentials:'same-origin'});
+  if (!r.ok) { msg('تعذّر التنفيذ (' + r.status + ')'); return; }
+  msg(''); load();
+}
+async function load(){
+  var r;
+  try { r = await fetch('/admin/applications?status=' + cur, {credentials:'same-origin'}); } catch (e) { msg('تعذّر الاتصال'); return; }
+  if (r.status === 401) { msg('غير مصرّح. افتح رابط المشرف /a/<مفتاح المشرف> أولًا.'); return; }
+  var j = await r.json(); counts = j.counts || {}; drawTabs(); msg('');
+  var box = document.getElementById('list'); box.textContent = '';
+  if (!j.applications.length) { box.appendChild(el('div', 'card', 'لا توجد طلبات في هذه الحالة.')); return; }
+  j.applications.forEach(function(a){
+    var c = el('div', 'app'); c.appendChild(el('h3', '', a.name));
+    var dl = el('dl');
+    [['الجوال', a.phone], ['المنطقة', a.area], ['نوع الترخيص', LIC[a.license_type] || a.license_type], ['رقم الترخيص', a.license_no],
+     ['الخبرة', (a.expertise || '').split(',').filter(Boolean).map(function(k){ return EXPL[k] || k; }).join('، ')],
+     ['ملاحظته', a.note || '—'], ['وقت التقديم', (a.created_at || '').replace('T', ' ').slice(0, 16) + ' UTC']].forEach(function(p){
+      dl.appendChild(el('dt', '', p[0])); var dd = el('dd', '', p[1]); if (p[0] === 'الجوال' || p[0] === 'رقم الترخيص') dd.dir = 'ltr'; dl.appendChild(dd);
+    });
+    c.appendChild(dl);
+    if (a.review_note) c.appendChild(el('p', 'hint', 'ملاحظة المراجعة: ' + a.review_note));
+    var row = el('div', 'row'), note = el('input'); note.type = 'text'; note.placeholder = 'ملاحظة (اختياري)'; note.maxLength = 200;
+    if (a.status === 'approved') { var rv = el('button', 'btn btn-no', 'سحب الاعتماد'); rv.type = 'button'; rv.addEventListener('click', function(){ if (confirm('سحب اعتماد ' + a.name + '؟')) decide(a.id, 'revoke', note.value); }); row.appendChild(note); row.appendChild(rv); }
+    else {
+      var ok = el('button', 'btn btn-ok', 'اعتماد'); ok.type = 'button'; ok.addEventListener('click', function(){ if (confirm('اعتماد ' + a.name + '؟ سيظهر لأصحاب الأجهزة.')) decide(a.id, 'approve', note.value); });
+      row.appendChild(note); row.appendChild(ok);
+      if (a.status === 'pending') { var no = el('button', 'btn btn-no', 'رفض'); no.type = 'button'; no.addEventListener('click', function(){ decide(a.id, 'reject', note.value); }); row.appendChild(no); }
+    }
+    c.appendChild(row); box.appendChild(c);
+  });
+}
+load();
+
+</script>
+
+</body>
+</html>

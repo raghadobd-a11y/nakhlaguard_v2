@@ -1,0 +1,210 @@
+{
+ "time": "2026-11-17T12:48:53",
+ "environment": {
+  "python": "3.13.18",
+  "os": "Linux-6.18.44-fc-v553-x86_64-with-glibc2.39",
+  "numpy": "2.5.3",
+  "scikit_learn": "1.9.1"
+ },
+ "datasets": {},
+ "ran": [
+  "train_model.py",
+  "baseline_check.py",
+  "sensor_location.py"
+ ],
+ "counts": {
+  "pass": 6,
+  "fail": 0,
+  "reported": 1,
+  "skipped": 3
+ },
+ "checks": [
+  {
+   "id": "M1",
+   "kind": "measured_sim",
+   "ar": "دقة تصنيف المراحل الأربع على 60 تسجيلًا محاكيًا محجوزًا للاختبار: نحو 93%.",
+   "en": "4-stage accuracy on 60 held-out SIMULATED recordings: about 93%.",
+   "shown": "93%",
+   "metric": "sim.accuracy",
+   "expect": [
+    0.88,
+    0.96
+   ],
+   "measured": 0.933,
+   "measured_text": "93.3%",
+   "status": "pass",
+   "reproduce": "python train_model.py"
+  },
+  {
+   "id": "M2",
+   "kind": "measured_sim",
+   "ar": "كشف الإصابة (المراحل الثلاث مجتمعة) على المحاكاة: 43 من 45، وإنذار كاذب 1 من 15.",
+   "en": "Infestation detection (3 infested stages combined) on simulation: 43 of 45, one false alarm in 15.",
+   "shown": "43/45",
+   "metric": "sim.detection",
+   "expect": [
+    0.9,
+    1.0
+   ],
+   "measured": 0.9555555555555556,
+   "measured_text": "95.6%",
+   "status": "pass",
+   "reproduce": "python train_model.py"
+  },
+  {
+   "id": "M3",
+   "kind": "measured_sim",
+   "ar": "إنذار كاذب على السليم بالمحاكاة: مقطع واحد من 15.",
+   "en": "False alarms on healthy simulation clips: one in 15.",
+   "shown": "1/15",
+   "metric": "sim.false_alarm",
+   "expect": [
+    0.0,
+    0.14
+   ],
+   "measured": 0.06666666666666667,
+   "measured_text": "6.7%",
+   "status": "pass",
+   "reproduce": "python train_model.py"
+  },
+  {
+   "id": "M4",
+   "kind": "measured_sim",
+   "ar": "استرجاع المرحلة المبكرة على المحاكاة: نحو 80%. تنبيه: دراسة ميدانية فحصت المرحلة المبكرة وجدت حساسية أقل بكثير (انظر L2)، فهذا الرقم لا يُقارَن بالواقع.",
+   "en": "Early-stage recall on simulation: about 80%. Warning: a field study of the early phase found much lower sensitivity (see L2), so this number does not transfer to reality.",
+   "shown": "80%",
+   "metric": "sim.early_recall",
+   "expect": [
+    0.7,
+    0.9
+   ],
+   "measured": 0.8,
+   "measured_text": "80.0%",
+   "status": "pass",
+   "reproduce": "python train_model.py"
+  },
+  {
+   "id": "M5",
+   "kind": "measured_sim",
+   "ar": "كاشف بعتبة واحدة (ميزة واحدة) يكشف 42 من 45 بلا إنذار كاذب، ودقته بالمراحل 85%.",
+   "en": "A one-feature threshold detects 42 of 45 with no false alarm; stage accuracy 85%.",
+   "shown": "42/45",
+   "metric": "baseline.detection",
+   "expect": [
+    0.88,
+    1.0
+   ],
+   "measured": 0.9333333333333333,
+   "measured_text": "93.3%",
+   "status": "pass",
+   "reproduce": "python baseline_check.py"
+  },
+  {
+   "id": "M6",
+   "kind": "measured_sim",
+   "ar": "تحديد موقع المصدر على الجذع بالمحاكاة: يُسترجع الموقع المعروف بخطأ لا يتجاوز سنتيمترًا بلا ضجيج.",
+   "en": "Source location on the trunk in simulation: a known position is recovered within 1 cm without noise.",
+   "shown": "<= 1 cm",
+   "metric": "locator.max_error_cm_noise_free",
+   "expect": [
+    0.0,
+    1.0
+   ],
+   "measured": 0.0,
+   "measured_text": "0.00",
+   "status": "pass",
+   "reproduce": "python verify_all.py"
+  },
+  {
+   "id": "M7",
+   "kind": "measured_sim",
+   "ar": "تحديد الموقع بالمحاكاة مع ضجيج 5% بقراءات المستشعرات: وسيط الخطأ (يُقاس ويُعرض كما هو).",
+   "en": "Location in simulation with 5% sensor noise: median error (measured and reported as it is).",
+   "shown": "reported",
+   "metric": "locator.median_error_cm_5pct_noise",
+   "expect": null,
+   "measured": 1.1690236556790174,
+   "measured_text": "1.17",
+   "status": "reported",
+   "reproduce": "python verify_all.py"
+  },
+  {
+   "id": "D1",
+   "kind": "measured_real",
+   "ar": "النموذج القديم (المدرَّب على محاكاة) على تسجيلات TreeVibes الحقيقية: كشف الإصابة نحو 96% لكن إنذارات كاذبة نحو 68%.",
+   "en": "The old model (trained on simulation) on real TreeVibes recordings: detection about 96% but false alarms about 68%.",
+   "shown": "95.8%",
+   "metric": "tv_old.detection",
+   "expect": [
+    0.9,
+    1.0
+   ],
+   "measured": null,
+   "measured_text": "-",
+   "status": "skipped",
+   "reproduce": "python verify_all.py --treevibes \"G:\\TreeVibes\""
+  },
+  {
+   "id": "D2",
+   "kind": "measured_real",
+   "ar": "مرشّح الضجيج على أشجار TreeVibes لم يرها: كشف 59%، إنذار كاذب 32%، ROC AUC نحو 0.65 (تمييز متواضع).",
+   "en": "The noise filter on TreeVibes trees it never saw: detection 59%, false alarm 32%, ROC AUC about 0.65 (modest discrimination).",
+   "shown": "0.65",
+   "metric": "tv_filter.auc",
+   "expect": [
+    0.6,
+    0.7
+   ],
+   "measured": null,
+   "measured_text": "-",
+   "status": "skipped",
+   "reproduce": "python verify_all.py --treevibes \"G:\\TreeVibes\" --esc \"G:\\ESC50\\ESC-50-master\""
+  },
+  {
+   "id": "D3",
+   "kind": "measured_real",
+   "ar": "على مقاطع رياح وحشرات (ESC-50) حُجزت من التدريب لم يُصنَّف أي منها إصابة (0 من 80).",
+   "en": "On wind and insect clips (ESC-50) held out of training, none was flagged as infested (0 of 80).",
+   "shown": "0/80",
+   "metric": "esc.flagged_fraction",
+   "expect": [
+    0.0,
+    0.05
+   ],
+   "measured": null,
+   "measured_text": "-",
+   "status": "skipped",
+   "reproduce": "python verify_all.py --treevibes \"G:\\TreeVibes\" --esc \"G:\\ESC50\\ESC-50-master\""
+  }
+ ],
+ "poster": null,
+ "extra_metrics": {
+  "_sim.confusion": [
+   [
+    14,
+    1,
+    0,
+    0
+   ],
+   [
+    2,
+    12,
+    1,
+    0
+   ],
+   [
+    0,
+    0,
+    15,
+    0
+   ],
+   [
+    0,
+    0,
+    0,
+    15
+   ]
+  ],
+  "_locator.lost_of_300": 0
+ }
+}

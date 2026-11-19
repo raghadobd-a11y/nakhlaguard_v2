@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NakhlaGuard — Palm Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2;
+    --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --card:#FBF9F3;
+    --healthy:#2E8B57; --early:#D9822B; --moderate:#C1650E; --advanced:#A63D40;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{
+    font-family:'IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink);
+    min-height:100vh; padding:0 0 28px;
+  }
+  body.rtl{font-family:'Tajawal',sans-serif; direction:rtl}
+  body.rtl h1, body.rtl h2{font-family:'Tajawal',sans-serif}
+  h1,h2{font-family:'Space Grotesk',sans-serif}
+  .wrap{max-width:560px; margin:0 auto; padding:0 20px}
+  .back{display:inline-block; font-size:.85rem; color:var(--palm-deep); text-decoration:none; margin:14px 0}
+
+  #langToggle{
+    position:fixed; top:14px; right:14px; z-index:1000; width:auto; margin:0;
+    background:var(--ink); border:1px solid rgba(237,230,214,.35); color:var(--sand);
+    padding:7px 16px; border-radius:20px; font-size:.78rem; cursor:pointer; font-family:inherit;
+    box-shadow:0 2px 10px rgba(0,0,0,.3);
+  }
+  #langToggle:hover{border-color:var(--sand)}
+
+  .card{background:var(--card); border-radius:14px; padding:24px; margin-bottom:18px}
+  .pid{font-size:1.5rem; font-weight:700; color:var(--palm-deep); margin-bottom:6px}
+  .meta-row{display:flex; justify-content:space-between; font-size:.88rem; color:var(--ink-soft); padding:6px 0; border-bottom:1px solid var(--sand-deep)}
+  .meta-row:last-child{border-bottom:none}
+  .badge{display:inline-block; padding:6px 16px; border-radius:20px; font-weight:700; color:#fff; font-size:.95rem; margin-top:10px}
+  .b-healthy{background:var(--healthy)} .b-early{background:var(--early)}
+  .b-moderate{background:var(--moderate)} .b-advanced{background:var(--advanced)}
+
+  .hist-title{font-size:1rem; color:var(--palm-deep); margin-bottom:10px}
+  .hist-row{display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid var(--sand-deep); font-size:.85rem}
+  .hist-row:last-child{border-bottom:none}
+  .hist-date{color:var(--ink-soft)}
+  .mini-badge{font-size:.72rem; padding:3px 10px; border-radius:10px; color:#fff; font-weight:600}
+
+  .empty{text-align:center; color:var(--ink-soft); font-size:.9rem; padding:30px 0}
+  .error-box{background:#FAECE7; border:1px solid #F0997B; color:#993C1D; border-radius:10px; padding:16px; font-size:.88rem}
+
+  /* ---- Urdu (اردو): Noto Nastaliq Urdu, tall line-height, RTL ---- */
+  body.lang-ur, body.lang-ur *:not(code):not(.repro){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 }
+  body.lang-ur h1, body.lang-ur h2, body.lang-ur h3, body.lang-ur h4{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea, body.lang-ur .nk-tab{ line-height:1.8 }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="/palms.html" class="back" data-en="← Back to registry" data-ar="← رجوع لسجل النخيل" data-ur="← کھجوروں کے ریکارڈ پر واپس">← Back to registry</a>
+
+  <div id="content">
+    <div class="empty" data-en="Loading…" data-ar="جارٍ التحميل…" data-ur="لوڈ ہو رہا ہے…">Loading…</div>
+  </div>
+</div>
+
+<script>
+var LANG_CYCLE = ['ar', 'en', 'ur'];
+var LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+var LOCALES = { ar: 'ar-SA', en: 'en-US', ur: 'ur-PK' };
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return (l === 'ar' || l === 'en' || l === 'ur') ? l : 'ar'; }   // لا يعتمد على ثوابت معرَّفة لاحقًا، لأن بعض الصفحات تناديه قبل نهاية السكربت
+function setLang(lang){
+  if(!LANG_CYCLE.includes(lang)) lang = 'ar';
+  try{ localStorage.setItem('nakhlaguard-lang', lang); }catch(e){}
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.body.classList.toggle('rtl', lang !== 'en');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
+  });
+  document.querySelectorAll('[data-en-ph]').forEach(el => {
+    el.placeholder = el.getAttribute('data-' + lang + '-ph') ?? el.getAttribute('data-en-ph');
+  });
+  const btn = document.getElementById('langToggle');
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
+}
+function toggleLang(){ setLang(LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length]); }
+
+const CLASS_MAP = { "سليم":"healthy", "مبكرة":"early", "متوسطة":"moderate", "متقدمة":"advanced" };
+const CLASS_LABEL = {
+  en: { healthy:"Healthy", early:"Early stage", moderate:"Moderate", advanced:"Advanced" },
+  ar: { healthy:"سليم", early:"مبكرة", moderate:"متوسطة", advanced:"متقدمة" },
+  ur: { healthy:"صحت مند", early:"ابتدائی مرحلہ", moderate:"درمیانہ", advanced:"شدید" },
+};
+const T = {
+  en: { location:"Location", age:"Age", registered:"Registered", noChecks:"No checks recorded yet.",
+        history:"Check history", notFound:"No palm found with this ID.", noId:"No palm ID given in the link." },
+  ar: { location:"الموقع", age:"العمر", registered:"تاريخ التسجيل", noChecks:"لا توجد فحوصات مسجّلة بعد.",
+        history:"سجل الفحوصات", notFound:"لا توجد نخلة بهذا الرقم.", noId:"لا يوجد رقم نخلة في الرابط." },
+  ur: { location:"مقام", age:"عمر", registered:"اندراج کی تاریخ", noChecks:"ابھی تک کوئی جانچ درج نہیں۔",
+        history:"جانچ کی تاریخ", notFound:"اس نمبر کی کوئی کھجور نہیں ملی۔", noId:"لنک میں کھجور کا نمبر نہیں دیا گیا۔" },
+};
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function loadPalm(){
+  const lang = getLang(); const t = T[lang];
+  const content = document.getElementById('content');
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if(!id){ content.innerHTML = `<div class="error-box">${t.noId}</div>`; return; }
+
+  try{
+    const res = await fetch(`/palms/${encodeURIComponent(id)}`);
+    if(!res.ok){ content.innerHTML = `<div class="error-box">${t.notFound}</div>`; return; }
+    const data = await res.json();
+
+    const history = data.check_history || [];
+    const latest = history.length ? history[history.length - 1] : null;
+    const latestCls = latest ? (CLASS_MAP[latest.class] || 'healthy') : null;
+
+    let html = `<div class="card">
+      <div class="pid">🌴 ${escapeHtml(data.palm_id)}</div>`;
+    if(data.location) html += `<div class="meta-row"><span>${t.location}</span><span>${escapeHtml(data.location)}</span></div>`;
+    if(data.age_years != null) html += `<div class="meta-row"><span>${t.age}</span><span>${data.age_years}</span></div>`;
+    if(data.registered_at) html += `<div class="meta-row"><span>${t.registered}</span><span>${new Date(data.registered_at).toLocaleDateString()}</span></div>`;
+    if(latest){
+      html += `<div class="badge b-${latestCls}">${CLASS_LABEL[lang][latestCls]}</div>`;
+    }
+    html += `</div>`;
+
+    html += `<div class="card"><div class="hist-title">${t.history}</div>`;
+    if(!history.length){
+      html += `<div class="empty">${t.noChecks}</div>`;
+    } else {
+      [...history].reverse().forEach(h => {
+        const cls = CLASS_MAP[h.class] || 'healthy';
+        html += `<div class="hist-row">
+          <span class="hist-date">${new Date(h.date).toLocaleString()}</span>
+          <span class="mini-badge b-${cls}">${CLASS_LABEL[lang][cls]}</span>
+        </div>`;
+      });
+    }
+    html += `</div>`;
+    content.innerHTML = html;
+    const trunkT = { ar:'🌴 خريطة الجذع: موقع المستشعرات والعلامات الظاهرة', en:'🌴 Trunk map: sensor location and visible signs', ur:'🌴 تنے کا نقشہ: سینسر کا مقام اور نظر آنے والی علامات' }[lang];
+    content.insertAdjacentHTML('beforeend', `<div class="card"><div class="hist-title">${trunkT}</div><iframe id="trunkFrame" src="/locate.html?embed=1&lang=${lang}&palm=${encodeURIComponent(id)}" allow="camera" title="trunk map" style="width:100%;height:640px;border:0;border-radius:10px"></iframe></div>`);
+  }catch(e){
+    content.innerHTML = `<div class="error-box">${t.notFound}</div>`;
+  }
+}
+
+setLang(getLang());
+window.addEventListener('message', e => { if (e.data && e.data.type === 'nk-embed-height') { const f = document.getElementById('trunkFrame'); if (f) f.style.height = Math.max(420, e.data.h + 12) + 'px'; } });
+loadPalm();
+</script>
+<button id="langToggle" onclick="toggleLang()">العربية</button>
+<script src="/nav.js" defer></script>
+</body>
+</html>

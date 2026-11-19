@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NakhlaGuard — المساعد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2; --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --card:#FBF9F3; --warn:#B3342d; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{ font-family:'Tajawal','IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink); min-height:100vh; line-height:1.8 }
+  html[lang=en] body{ font-family:'IBM Plex Sans',sans-serif }
+  #langToggle{ position:fixed; top:14px; left:14px; z-index:5; background:var(--palm-deep); color:#fff; border:1px solid #fff3; border-radius:999px; padding:6px 14px; cursor:pointer; font:inherit }
+  .wrap{ max-width:860px; margin:0 auto; padding:0 16px }
+  .hero{ background:linear-gradient(160deg,#1c5a47,#102f26); color:var(--sand); padding:30px 0 34px }
+  .hero h1{ font-size:clamp(1.5rem,4vw,2.1rem); line-height:1.5; margin-bottom:6px }
+  .hero p{ color:#CBD9D3; max-width:680px }
+  .badge{ display:inline-block; font-size:.72rem; font-weight:600; border:1px solid rgba(237,230,214,.45); border-radius:999px; padding:2px 11px; margin-bottom:10px; color:var(--sand) }
+  h2{ font-size:1.2rem; color:var(--palm-deep); margin:0 0 8px }
+  .card{ background:var(--card); border-radius:16px; padding:18px; margin-top:16px; border-top:3px solid var(--palm) }
+  .steps{ list-style:none; display:grid; gap:10px; margin-top:6px }
+  .steps li{ display:grid; grid-template-columns:30px 1fr; gap:10px; align-items:start }
+  .steps b{ width:30px; height:30px; border-radius:50%; background:var(--palm); color:#fff; display:grid; place-items:center; font-size:.9rem }
+  .steps strong{ display:block; color:var(--palm-deep) } .steps span{ color:var(--ink-soft); font-size:.92rem }
+  .chat{ display:grid; gap:8px }
+  .chat .who{ font-size:.74rem; font-weight:700; color:var(--ink-soft) }
+  .chat .msg{ border-radius:12px; padding:10px 13px; font-size:.95rem; line-height:1.9; white-space:pre-wrap; word-break:break-word }
+  .chat .msg.you{ background:var(--sand-deep); color:var(--ink) }
+  .chat .msg.bot{ background:var(--palm); color:#fff }
+  .chat .msg.wait{ opacity:.75 }
+  .chat .tool{ background:#EAF3EE; color:#123A2E; border:1px solid #cfe3d8; border-radius:999px; padding:5px 14px; font-size:.84rem; margin-inline:14px; align-self:flex-start }
+  .log{ display:grid; gap:8px; max-height:60vh; overflow:auto; padding:2px } .log:empty{ display:none }
+  .cachedtag{ font-size:.74rem; color:var(--palm-deep); opacity:.75; margin:-4px 4px 6px }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px }
+  .chips button{ font:inherit; font-size:.82rem; cursor:pointer; color:var(--palm-deep); background:#fff; border:1px solid var(--sand-deep); border-radius:999px; padding:5px 12px }
+  .chips button:hover{ border-color:var(--palm) }
+  .ask{ display:flex; gap:8px; margin-top:12px }
+  .ask input{ flex:1; min-width:0; font:inherit; font-size:.95rem; padding:10px 12px; border:1.5px solid var(--sand-deep); border-radius:10px; background:#fff; color:var(--ink) }
+  .ask input:focus{ outline:2px solid var(--palm); border-color:var(--palm) }
+  .ask button{ font:inherit; font-weight:700; cursor:pointer; color:#fff; background:var(--palm); border:0; border-radius:10px; padding:10px 18px }
+  .ask button:disabled{ opacity:.5; cursor:wait }
+  .hint{ margin-top:8px; font-size:.86rem; color:var(--palm-deep); background:#EAF3EE; border-radius:10px; padding:7px 12px }
+  .soft{ font-size:.82rem; color:var(--ink-soft); margin-top:10px }
+  .hide{ display:none !important }
+  .cta{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px }
+  .cta a{ text-decoration:none; display:inline-block; font:inherit; font-weight:700; color:var(--palm-deep); background:#fff; border:1.5px solid var(--palm); border-radius:10px; padding:9px 16px }
+  .cta a.fill{ background:var(--palm); color:#fff }
+  body.lang-ur, body.lang-ur *:not(code){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 } body.lang-ur h1, body.lang-ur h2, body.lang-ur h3{ line-height:2 }
+</style>
+</head>
+<body>
+<button id="langToggle" onclick="toggleLang()">English</button>
+
+<div class="hero"><div class="wrap">
+  <span class="badge" id="badge"></span>
+  <h1 id="h1"></h1>
+  <p id="sub"></p>
+</div></div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2 id="h_how"></h2>
+    <ol class="steps" id="steps"></ol>
+  </div>
+
+  <div class="card" style="border-top-color:var(--date)">
+    <h2 id="h_chat"></h2>
+    <div class="chat">
+      <div id="log" class="log" aria-live="polite"></div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="hint hide" id="hint"></div>
+    <form id="form" class="ask" autocomplete="off">
+      <input id="inp" type="text" maxlength="300">
+      <button id="btn" type="submit"></button>
+    </form>
+    <div class="soft" id="note"></div>
+  </div>
+
+  <div class="card" style="border-top-color:var(--palm-deep)">
+    <h2 id="h_own"></h2>
+    <div class="soft" style="margin-top:0" id="own"></div>
+    <div class="cta">
+      <a class="fill" href="/owner.html" id="c_owner"></a>
+      <a href="/try.html" id="c_try"></a>
+      <a href="/evidence.html" id="c_ev"></a>
+    </div>
+  </div>
+</div>
+<div style="height:110px"></div>
+
+<script>
+const T = {
+  ar: { badge:"الذكاء الاصطناعي التوكيلي", h1:"«حارس»، مساعدك الذكي", sub:"يفهم سؤالك بلغتك، ويقرّر بنفسه أي أدوات يستعمل ليقرأ بيانات المزرعة، ثم يجيب مما وجده. ويجيب أيضًا عن الأسئلة العامة في سوسة النخيل ومكافحتها.",
+    h_how:"كيف يعمل", steps:[["تسأل","مثلًا: أي نخلة تحتاج انتباهي؟ أو: اشرح لي الأسبوع الثاني من خطة العلاج."],["يختار أدواته","قائمة النخيل، تفاصيل نخلة، النخيل التي تحتاج انتباهًا، النخيل المتأخر فحصها، جهة الاتصال الاحتياطية. وقد يستعمل أكثر من أداة على التوالي."],["يجيب من بيانات حقيقية","لا يخمّن أرقامًا ولا مواقع. وفي هذه التجربة يقرأ فقط ولا ينفّذ أي فعل نيابةً عنك."]],
+    h_chat:"جرّب «حارس» الآن", ph:"اسأل عن مزرعة العرض أو عن سوسة النخيل…", send:"أرسل", cached:"✓ إجابة محفوظة من حارس لنفس السؤال على نفس مزرعة العرض", wait:"يفكّر…", slow:"ما زال يعمل… قد يستغرق لحظات إن كان الخادم يستيقظ.", you:"أنت", bot:"حارس", err:"تعذّر الاتصال. حاول بعد قليل.", limit:"وصلت للحد المسموح للتجربة. جرّب لاحقًا.", off:"التجربة العامة متوقفة حاليًا.",
+    chips:["أي نخلة تحتاج عناية؟","أي نخلة متأخر فحصها؟","حدّثني عن Palm-E05","كيف أحمي النخيل المجاورة لنخلة مصابة؟","ماذا أنتبه له عند تقليم النخيل؟"],
+    hint:"السؤال جاهز من تقريرك. اضغط «أرسل» ليجيب «حارس».",
+    note:"التجربة على مزرعة عرض فيها 5 نخلات وهمية، وليست بياناتك. عدد الأسئلة محدود لكل زائر. الأسئلة العامة يجيب عنها «حارس» بمعرفته العامة، وهي إرشادات وليست وصفة علاج، والقرار لمختص بعد الفحص الميداني.",
+    h_own:"مزرعتك الحقيقية", own:"مساعد مزرعتك الحقيقية داخل موقع المالك، ويُفتح بباركود الجهاز، ويقرأ نخيلك أنت لا مزرعة العرض.", c_owner:"🔑 ادخل موقع المالك", c_try:"🎙️ جرّب الجهاز", c_ev:"📚 الأدلة والمصادر",
+    steps_tools:{list_palms:"📋 يعرض النخيل", get_palm_details:"🔍 يقرأ تفاصيل {p}", palms_needing_attention:"🔎 يبحث عن النخيل التي تحتاج انتباهًا", palms_due_for_recheck:"📅 يبحث عن النخيل المستحقة لإعادة الفحص", get_farm_contact:"📞 يقرأ جهة الاتصال الاحتياطية للمزرعة"} },
+  en: { badge:"Agentic AI", h1:"Haris, your smart assistant", sub:"It understands your question in your language, decides by itself which tools to use to read the farm data, and answers from what it found. It also answers general questions about the red palm weevil and its control.",
+    h_how:"How it works", steps:[["You ask","For example: which palm needs my attention? Or: explain week 2 of the treatment plan."],["It chooses its tools","List of palms, one palm in detail, palms that need attention, palms due for a re-check, the farm's backup contact. It may use several tools in a row."],["It answers from real data","It does not guess numbers or locations. In this demo it only reads; it does not act on your behalf."]],
+    h_chat:"Try Haris now", ph:"Ask about the demo farm or about the red palm weevil…", send:"Send", cached:"✓ Haris's saved answer to the same question on the same demo farm", wait:"Thinking…", slow:"Still working… this can take a few seconds if the server is waking up.", you:"You", bot:"Haris", err:"Could not connect. Please try again shortly.", limit:"The demo limit was reached. Please try later.", off:"The public demo is switched off for now.",
+    chips:["Which palm needs attention?","Which palms are due for a re-check?","Tell me about Palm-E05","How do I protect the palms next to an infested one?","What should I watch for when pruning palms?"],
+    hint:"The question is ready from your report. Press “Send” for Haris to answer.",
+    note:"The demo runs on a sample farm of 5 made-up palms, not your data. The number of questions per visitor is limited. General questions are answered from Haris's general knowledge; this is guidance, not a treatment prescription, and the decision belongs to a specialist after the field inspection.",
+    h_own:"Your real farm", own:"The assistant for your real farm is inside the owner site, opened with the device's QR code, and it reads your palms, not the demo farm.", c_owner:"🔑 Enter the owner site", c_try:"🎙️ Try the device", c_ev:"📚 Evidence and sources",
+    steps_tools:{list_palms:"📋 Looking at the palms", get_palm_details:"🔍 Reading the details of {p}", palms_needing_attention:"🔎 Looking for the palms that need attention", palms_due_for_recheck:"📅 Looking for the palms due for a re-check", get_farm_contact:"📞 Reading the farm backup contact"} },
+  ur: { badge:"ایجنٹک AI", h1:"«حارس»، آپ کا ذہین معاون", sub:"یہ آپ کا سوال آپ کی زبان میں سمجھتا ہے، خود طے کرتا ہے کہ فارم کا ڈیٹا پڑھنے کے لیے کون سے ٹول استعمال کرے، اور جو ملا اس سے جواب دیتا ہے۔ یہ ریڈ پام ویول اور اس کے کنٹرول کے عمومی سوالوں کے جواب بھی دیتا ہے۔",
+    h_how:"یہ کیسے کام کرتا ہے", steps:[["آپ پوچھتے ہیں","مثلاً: کون سی کھجور کو میری توجہ چاہیے؟ یا: علاج کے منصوبے کا دوسرا ہفتہ سمجھائیں۔"],["یہ اپنے ٹول چنتا ہے","کھجوروں کی فہرست، ایک کھجور کی تفصیل، توجہ طلب کھجوریں، دوبارہ جانچ کی منتظر کھجوریں، فارم کا متبادل رابطہ۔ یہ ایک کے بعد ایک کئی ٹول بھی استعمال کر سکتا ہے۔"],["یہ اصل ڈیٹا سے جواب دیتا ہے","یہ اعداد یا مقامات کا اندازہ نہیں لگاتا۔ اس ڈیمو میں یہ صرف پڑھتا ہے اور آپ کی طرف سے کوئی عمل نہیں کرتا۔"]],
+    h_chat:"ابھی «حارس» آزمائیں", ph:"ڈیمو فارم یا ریڈ پام ویول کے بارے میں پوچھیں…", send:"بھیجیں", cached:"✓ اسی سوال پر اسی ڈیمو فارم کے لیے حارس کا محفوظ شدہ جواب", wait:"سوچ رہا ہے…", slow:"ابھی کام جاری ہے… سرور جاگ رہا ہو تو چند لمحے لگ سکتے ہیں۔", you:"آپ", bot:"حارس", err:"رابطہ نہیں ہو سکا۔ تھوڑی دیر بعد کوشش کریں۔", limit:"ڈیمو کی حد پوری ہو گئی۔ بعد میں کوشش کریں۔", off:"عوامی ڈیمو فی الحال بند ہے۔",
+    chips:["کس کھجور کو توجہ چاہیے؟","کون سی کھجوریں دوبارہ جانچ کی منتظر ہیں؟","Palm-E05 کے بارے میں بتائیں","متاثرہ کھجور کے پاس والی کھجوروں کو کیسے بچاؤں؟","کھجور کی کٹائی میں کس بات کا خیال رکھوں؟"],
+    hint:"آپ کی رپورٹ سے سوال تیار ہے۔ «بھیجیں» دبائیں تاکہ «حارس» جواب دے۔",
+    note:"یہ ڈیمو 5 فرضی کھجوروں کے نمونہ فارم پر چلتا ہے، آپ کا ڈیٹا نہیں۔ ہر وزیٹر کے لیے سوالوں کی تعداد محدود ہے۔ عمومی سوالوں کے جواب «حارس» اپنے عمومی علم سے دیتا ہے؛ یہ رہنمائی ہے، علاج کا نسخہ نہیں، اور فیصلہ میدانی معائنے کے بعد ماہر کا ہے۔",
+    h_own:"آپ کا اصل فارم", own:"آپ کے اصل فارم کا معاون مالک کی سائٹ کے اندر ہے، جو ڈیوائس کے کیو آر کوڈ سے کھلتی ہے، اور آپ کی کھجوریں پڑھتا ہے، ڈیمو فارم نہیں۔", c_owner:"🔑 مالک کی سائٹ میں جائیں", c_try:"🎙️ ڈیوائس آزمائیں", c_ev:"📚 ثبوت اور ذرائع",
+    steps_tools:{list_palms:"📋 کھجوریں دیکھ رہا ہے", get_palm_details:"🔍 {p} کی تفصیل پڑھ رہا ہے", palms_needing_attention:"🔎 توجہ طلب کھجوریں تلاش کر رہا ہے", palms_due_for_recheck:"📅 دوبارہ جانچ کی منتظر کھجوریں تلاش کر رہا ہے", get_farm_contact:"📞 فارم کا متبادل رابطہ پڑھ رہا ہے"} }
+};
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let prefilled = false, busy = false;
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return ['ar','en','ur'].includes(l) ? l : 'ar'; }
+function setLang(l){
+  try{ localStorage.setItem('nakhlaguard-lang', l); }catch(e){}
+  document.documentElement.lang = l; document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl'; document.body.classList.toggle('lang-ur', l === 'ur');
+  const b = $('langToggle'); if(b) b.textContent = {ar:'English', en:'اردو', ur:'العربية'}[l];
+  paint();
+}
+function toggleLang(){ const c = ['ar','en','ur']; setLang(c[(c.indexOf(getLang()) + 1) % c.length]); }
+function paint(){
+  const t = T[getLang()];
+  $('badge').textContent = t.badge; $('h1').textContent = t.h1; $('sub').textContent = t.sub; $('h_how').textContent = t.h_how;
+  $('steps').innerHTML = t.steps.map((s, i) => `<li><b>${i + 1}</b><div><strong>${esc(s[0])}</strong><span>${esc(s[1])}</span></div></li>`).join('');
+  $('h_chat').textContent = t.h_chat; $('inp').placeholder = t.ph; $('btn').textContent = t.send; $('note').textContent = t.note; $('hint').textContent = t.hint;
+  $('chips').innerHTML = t.chips.map(q => `<button type="button">${esc(q)}</button>`).join('');
+  $('chips').querySelectorAll('button').forEach((b, i) => b.addEventListener('click', () => send(T[getLang()].chips[i])));
+  $('h_own').textContent = t.h_own; $('own').textContent = t.own; $('c_owner').textContent = t.c_owner; $('c_try').textContent = t.c_try; $('c_ev').textContent = t.c_ev;
+}
+function add(cls, text){ const d = document.createElement('div'); d.className = cls; d.textContent = text; $('log').appendChild(d); $('log').scrollTop = $('log').scrollHeight; return d; }
+function stepText(tr){ const t = T[getLang()].steps_tools, d = t[tr.tool]; if(!d) return '⚙️ ' + (tr.tool || ''); const a = tr.args || {}; return d.replace('{p}', a.palm_id || a.palm || ''); }
+function send(q){
+  q = (q || '').trim().slice(0, 300); if(!q || busy) return;
+  const t = T[getLang()]; busy = true; $('btn').disabled = true; $('hint').classList.add('hide');
+  add('msg you', q); $('inp').value = '';
+  const wait = add('msg bot wait', t.wait);
+  const fd = new FormData(); fd.append('message', q); fd.append('language', getLang());
+  // never hang forever: after 8 s say it is still working; after 75 s give up politely (the server itself answers from ready-made data after about 22 s)
+  const slowTimer = setTimeout(() => { wait.textContent = t.slow; }, 8000);
+  const ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  const killTimer = setTimeout(() => { try{ ctl && ctl.abort(); }catch(e){} }, 75000);
+  fetch('/demo/agent', { method: 'POST', body: fd, signal: ctl ? ctl.signal : undefined })
+    .then(r => r.json().catch(() => ({})).then(j => ({ ok: r.ok, st: r.status, j })))
+    .then(x => {
+      clearTimeout(slowTimer); clearTimeout(killTimer);
+      wait.remove();
+      if(!x.ok){ add('msg bot', x.st === 403 ? t.off : x.st === 429 ? t.limit : t.err); return; }
+      (x.j.trace || []).forEach(tr => add('tool', stepText(tr)));
+      const b = add('msg bot', x.j.answer || t.err);
+      if(x.j.cached){ const c = document.createElement('div'); c.className = 'cachedtag'; c.textContent = t.cached; $('log').appendChild(c); $('log').scrollTop = $('log').scrollHeight; }
+    })
+    .catch(() => { clearTimeout(slowTimer); clearTimeout(killTimer); wait.remove(); add('msg bot', t.err); })
+    .then(() => { busy = false; $('btn').disabled = false; });
+}
+$('form').addEventListener('submit', e => { e.preventDefault(); send($('inp').value); });
+setLang(getLang());
+// a question handed over from the try page report (?q=...): put it in the box and let the visitor press Send (nothing is sent by itself)
+try {
+  const q = new URLSearchParams(location.search).get('q');
+  if(q && q.trim()){ $('inp').value = q.trim().slice(0, 300); $('hint').classList.remove('hide'); prefilled = true; $('inp').focus(); }
+} catch(e){}
+</script>
+<script src="/nav.js" defer></script>
+</body>
+</html>

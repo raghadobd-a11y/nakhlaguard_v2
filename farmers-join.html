@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>NakhlaGuard — Farmer application</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2; --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --date-light:#D99A55; --alert:#A63D40; --card:#FBF9F3; --ok:#1F6B45 }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink); line-height:1.65; font-size:16px}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif; letter-spacing:-0.01em}
+  body.rtl{font-family:'Tajawal',sans-serif; direction:rtl}
+  body.rtl h1, body.rtl h2, body.rtl h3{font-family:'Tajawal',sans-serif; letter-spacing:0}
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px}
+  a{color:inherit}
+  #langToggle{position:fixed; top:14px; right:14px; z-index:1000; background:var(--ink); border:1px solid rgba(237,230,214,.35); color:var(--sand); padding:7px 16px; border-radius:20px; font-size:.78rem; cursor:pointer; font-family:inherit}
+  .phero{background:radial-gradient(ellipse at 30% -10%, var(--palm) 0%, var(--palm-deep) 60%, var(--ink) 100%); color:var(--sand); padding:44px 0 36px}
+  .phero h1{font-size:2rem; line-height:1.2; margin-bottom:10px}
+  .phero p{color:#D8E2DC; max-width:560px; font-size:1rem}
+  .badge{display:inline-block; font-size:.72rem; font-weight:600; color:var(--sand); border:1px solid rgba(237,230,214,.45); border-radius:999px; padding:2px 11px; margin-bottom:12px}
+  main{padding:30px 0 40px}
+  .card{background:var(--card); border-radius:14px; padding:22px; margin-bottom:18px}
+  .card h2{font-size:1.2rem; color:var(--palm-deep); margin-bottom:10px}
+  .card p{color:var(--ink-soft); font-size:.92rem}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 22px; border-radius:8px; font-weight:600; font-size:.92rem; text-decoration:none; border:1.5px solid transparent; cursor:pointer; font-family:inherit}
+  .btn-fill{background:var(--date); color:var(--ink)} .btn-fill:hover{background:var(--date-light)}
+  .btn-line{border-color:var(--palm); color:var(--palm-deep); background:transparent}
+  .btn-dark{background:var(--palm-deep); color:var(--sand)}
+  .btn[disabled]{opacity:.55; cursor:not-allowed}
+  label.f{display:block; font-weight:600; font-size:.88rem; margin:14px 0 5px; color:var(--palm-deep)}
+  input[type=text],input[type=tel],input[type=password],select,textarea{width:100%; padding:11px 12px; border:1.5px solid var(--sand-deep); border-radius:8px; background:#fff; font:inherit; color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--palm); outline-offset:1px}
+  textarea{min-height:76px; resize:vertical}
+  .hint{font-size:.8rem; color:var(--ink-soft); margin-top:4px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+  .chip{display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1.5px solid var(--sand-deep); border-radius:999px; background:#fff; font-size:.85rem; cursor:pointer; user-select:none}
+  .chip input{accent-color:var(--palm)}
+  .chip.on, .chip:has(input:checked){border-color:var(--palm); background:#E8F1EC}
+  button.chip{font-family:inherit; color:var(--ink)}
+  .consent{display:flex; gap:10px; align-items:flex-start; margin-top:16px; font-size:.86rem; color:var(--ink-soft)}
+  .consent input{margin-top:5px; accent-color:var(--palm)}
+  .msg{border-radius:10px; padding:12px 14px; font-size:.9rem; margin-top:14px}
+  .msg.ok{background:#E3F1E8; color:#14502F} .msg.err{background:#FAE4E1; color:#7A2321} .msg.info{background:#FFF4DD; color:#6B4A12}
+  .steps3{display:grid; gap:10px; margin-top:14px; list-style:none}
+  .steps3 li{display:grid; grid-template-columns:32px 1fr; gap:12px; align-items:start; font-size:.92rem; color:var(--ink-soft)}
+  .steps3 b{width:30px; height:30px; border-radius:50%; background:var(--palm); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem}
+  footer{text-align:center; padding:24px 0; color:var(--ink-soft); font-size:.8rem}
+  [hidden]{display:none !important}
+  body.lang-ur, body.lang-ur *:not(code){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 } body.lang-ur h1, body.lang-ur h2, body.lang-ur h3{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea{ line-height:1.8 }
+</style>
+</head>
+<body>
+<button id="langToggle" onclick="toggleLang()">العربية</button>
+
+<div class="phero"><div class="wrap">
+  <span class="badge" data-en="For farmers" data-ar="للمزارعين" data-ur="کسانوں کے لیے">For farmers</span>
+  <h1 data-en="Join as a licensed farmer" data-ar="انضم كمزارع مرخّص" data-ur="لائسنس یافتہ کسان کے طور پر شامل ہوں">Join as a licensed farmer</h1>
+  <p data-en="Device owners choose a farmer to visit their palm. We show them only farmers whose license we have reviewed." data-ar="يختار أصحاب الأجهزة مزارعًا يزور نخلتهم. ولا نعرض لهم إلا المزارعين الذين راجعنا ترخيصهم." data-ur="ڈیوائس مالکان اپنی کھجور کے لیے کسان چنتے ہیں۔ ہم صرف انہی کسانوں کو دکھاتے ہیں جن کا لائسنس ہم نے جانچ لیا ہو۔">Device owners choose a farmer to visit their palm. We show them only farmers whose license we have reviewed.</p>
+</div></div>
+<main><div class="wrap">
+  <div class="card">
+    <h2 data-en="What we need" data-ar="ماذا نحتاج" data-ur="ہمیں کیا چاہیے">What we need</h2>
+    <ul class="steps3">
+      <li><b>✓</b><span data-en="A valid license from the Ministry of Environment, Water and Agriculture (for example an agricultural activity license issued through the Nama platform)." data-ar="ترخيص ساري من وزارة البيئة والمياه والزراعة (مثل رخصة ممارسة النشاط الزراعي الصادرة عبر منصة نما)." data-ur="وزارتِ ماحولیات، پانی و زراعت کا درست لائسنس (مثلاً نما پلیٹ فارم سے جاری زرعی سرگرمی کا لائسنس)۔">A valid license from the Ministry of Environment, Water and Agriculture (for example an agricultural activity license issued through the Nama platform).</span></li>
+      <li><b>✓</b><span data-en="We review each license by hand before approving. Until then you do not appear to anyone." data-ar="نراجع كل ترخيص يدويًا قبل الاعتماد. وإلى ذلك الحين لا تظهر لأي أحد." data-ur="ہم منظوری سے پہلے ہر لائسنس ہاتھ سے جانچتے ہیں۔ تب تک آپ کسی کو نظر نہیں آتے۔">We review each license by hand before approving. Until then you do not appear to anyone.</span></li>
+    </ul>
+  </div>
+  <form class="card" id="applyForm" novalidate>
+    <h2 data-en="Your application" data-ar="طلبك" data-ur="آپ کی درخواست">Your application</h2>
+    <label class="f" for="name"><span data-en="Full name" data-ar="الاسم الكامل" data-ur="پورا نام">Full name</span></label>
+    <input type="text" id="name" maxlength="60" required autocomplete="name">
+    <label class="f" for="phone"><span data-en="Mobile number" data-ar="رقم الجوال" data-ur="موبائل نمبر">Mobile number</span></label>
+    <input type="tel" id="phone" dir="ltr" maxlength="20" required autocomplete="tel" data-en-ph="05xxxxxxxx" data-ar-ph="05xxxxxxxx" data-ur-ph="05xxxxxxxx" placeholder="05xxxxxxxx" >
+    <label class="f" for="area"><span data-en="Area you work in" data-ar="المنطقة التي تعمل بها" data-ur="جس علاقے میں کام کرتے ہیں">Area you work in</span></label>
+    <input type="text" id="area" maxlength="80" required data-en-ph="e.g. Al-Qassim, Buraidah" data-ar-ph="مثال: القصيم، بريدة" data-ur-ph="مثلاً: القصیم، بریدہ" placeholder="e.g. Al-Qassim, Buraidah" >
+    <label class="f" for="ltype"><span data-en="License type" data-ar="نوع الترخيص" data-ur="لائسنس کی قسم">License type</span></label>
+    <select id="ltype" required>
+<option value="practice" data-en="Agricultural activity practice license" data-ar="رخصة ممارسة النشاط الزراعي" data-ur="زرعی سرگرمی کا لائسنس">Agricultural activity practice license</option>
+<option value="profession" data-en="Agricultural profession license" data-ar="ترخيص مزاولة مهنة زراعية" data-ur="زرعی پیشہ کا لائسنس">Agricultural profession license</option>
+<option value="farm" data-en="Rural farm license" data-ar="ترخيص مزرعة ريفية" data-ur="دیہی فارم کا لائسنس">Rural farm license</option>
+<option value="other" data-en="Another license from the Ministry" data-ar="ترخيص آخر من الوزارة" data-ur="وزارت کا کوئی اور لائسنس">Another license from the Ministry</option>
+    </select>
+    <label class="f" for="lno"><span data-en="License number" data-ar="رقم الترخيص" data-ur="لائسنس نمبر">License number</span></label>
+    <input type="text" id="lno" dir="ltr" maxlength="40" required autocomplete="off">
+    <p class="hint"><span data-en="The number printed on your license. We check it against the license document." data-ar="الرقم المطبوع على ترخيصك. نطابقه مع وثيقة الترخيص." data-ur="آپ کے لائسنس پر چھپا نمبر۔ ہم اسے لائسنس کی دستاویز سے ملاتے ہیں۔">The number printed on your license. We check it against the license document.</span></p>
+    <label class="f"><span data-en="Your expertise (choose all that apply)" data-ar="خبرتك (اختر ما ينطبق)" data-ur="آپ کی مہارت (جو لاگو ہو چنیں)">Your expertise (choose all that apply)</span></label>
+    <div class="chips">
+<label class="chip"><input type="checkbox" name="exp" value="inspect"><span data-en="Inspection and diagnosis" data-ar="فحص وتشخيص النخلة" data-ur="کھجور کی جانچ اور تشخیص">Inspection and diagnosis</span></label>
+<label class="chip"><input type="checkbox" name="exp" value="treat"><span data-en="Weevil treatment and control" data-ar="علاج ومكافحة سوسة النخيل" data-ur="ویول کا علاج اور کنٹرول">Weevil treatment and control</span></label>
+<label class="chip"><input type="checkbox" name="exp" value="remove"><span data-en="Removing an infested palm" data-ar="إزالة نخلة مصابة" data-ur="متاثرہ کھجور ہٹانا">Removing an infested palm</span></label>
+<label class="chip"><input type="checkbox" name="exp" value="prune"><span data-en="Pruning and upkeep" data-ar="تقليم وصيانة" data-ur="کٹائی اور دیکھ بھال">Pruning and upkeep</span></label>
+<label class="chip"><input type="checkbox" name="exp" value="general"><span data-en="General palm care" data-ar="رعاية عامة للنخيل" data-ur="کھجور کی عمومی دیکھ بھال">General palm care</span></label>
+    </div>
+    <label class="f" for="note"><span data-en="Short note (optional)" data-ar="ملاحظة قصيرة (اختياري)" data-ur="مختصر نوٹ (اختیاری)">Short note (optional)</span></label>
+    <textarea id="note" maxlength="160"></textarea>
+    <label class="consent"><input type="checkbox" id="consent"><span data-en="I agree that my name, area and expertise are shown to device owners, and that my mobile number is sent to an owner when he asks me to visit." data-ar="أوافق على عرض اسمي ومنطقتي وخبرتي لأصحاب الأجهزة، وعلى إرسال رقم جوالي لصاحب الجهاز عندما يطلب زيارتي." data-ur="میں اپنے نام، علاقے اور مہارت کو ڈیوائس مالکان کو دکھانے، اور زیارت کی درخواست پر اپنا موبائل نمبر مالک کو بھیجنے سے متفق ہوں۔">I agree that my name, area and expertise are shown to device owners, and that my mobile number is sent to an owner when he asks me to visit.</span></label>
+    <div id="res" class="msg" hidden></div>
+    <p style="margin-top:18px"><button class="btn btn-fill" type="submit" id="go" data-en="Send application" data-ar="أرسل الطلب" data-ur="درخواست بھیجیں">Send application</button></p>
+  </form>
+</div></main>
+<footer data-en="NakhlaGuard — a prototype. Approval is manual." data-ar="NakhlaGuard — نموذج أولي. الاعتماد يدوي." data-ur="NakhlaGuard — ابتدائی نمونہ۔ منظوری دستی ہے۔">NakhlaGuard — a prototype. Approval is manual.</footer>
+
+<script>
+// ---------- تبديل اللغة (عربي / English / اردو) - مشترك عبر كل صفحات الموقع ----------
+var LANG_CYCLE = ['ar', 'en', 'ur'];
+var LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+var LOCALES = { ar: 'ar-SA', en: 'en-US', ur: 'ur-PK' };
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return (l === 'ar' || l === 'en' || l === 'ur') ? l : 'ar'; }   // لا يعتمد على ثوابت معرَّفة لاحقًا، لأن بعض الصفحات تناديه قبل نهاية السكربت
+function setLang(lang){
+  if(!LANG_CYCLE.includes(lang)) lang = 'ar';
+  try{ localStorage.setItem('nakhlaguard-lang', lang); }catch(e){}
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.body.classList.toggle('rtl', lang !== 'en');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
+  });
+  document.querySelectorAll('[data-en-ph]').forEach(el => {
+    el.placeholder = el.getAttribute('data-' + lang + '-ph') ?? el.getAttribute('data-en-ph');
+  });
+  const btn = document.getElementById('langToggle');
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
+}
+function toggleLang(){ setLang(LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length]); }
+setLang(getLang());
+
+
+
+var TX = {
+  ar: {need:'أكمل كل الحقول المطلوبة واختر خبرة واحدة على الأقل، ووافق على الشرط.', ok:'استلمنا طلبك. لن تظهر لأصحاب الأجهزة إلا بعد مراجعة ترخيصك واعتماده، وقد نتواصل معك على رقمك للتأكد.', dup:'رقمك معتمد من قبل.', bad:'تحقق من رقم الجوال ورقم الترخيص.', rate:'محاولات كثيرة. حاول بعد دقيقة.', net:'تعذّر الإرسال. حاول مرة أخرى.', sending:'جارٍ الإرسال…'},
+  en: {need:'Fill in every required field, pick at least one expertise and tick the consent box.', ok:'Application received. You will not appear to device owners until your license is reviewed and approved. We may call you to confirm.', dup:'This number is already approved.', bad:'Check the mobile number and license number.', rate:'Too many attempts. Try again in a minute.', net:'Could not send. Please try again.', sending:'Sending…'},
+  ur: {need:'تمام مطلوبہ خانے بھریں، کم از کم ایک مہارت چنیں اور رضامندی پر نشان لگائیں۔', ok:'درخواست موصول ہو گئی۔ لائسنس کی جانچ اور منظوری تک آپ ڈیوائس مالکان کو نظر نہیں آئیں گے۔ تصدیق کے لیے ہم آپ کو فون کر سکتے ہیں۔', dup:'یہ نمبر پہلے سے منظور شدہ ہے۔', bad:'موبائل نمبر اور لائسنس نمبر چیک کریں۔', rate:'بہت زیادہ کوششیں۔ ایک منٹ بعد کوشش کریں۔', net:'بھیجا نہیں جا سکا۔ دوبارہ کوشش کریں۔', sending:'بھیجا جا رہا ہے…'}
+};
+function L(){ var l = document.documentElement.lang; return (l === 'ar' || l === 'ur') ? l : 'en'; }
+var lastKey = null;
+function show(kind, key){ lastKey = key; var r = document.getElementById('res'); r.hidden = false; r.className = 'msg ' + kind; r.textContent = TX[L()][key]; }
+new MutationObserver(function(){ if (lastKey) document.getElementById('res').textContent = TX[L()][lastKey]; }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+document.getElementById('applyForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  var g = function(id){ return document.getElementById(id).value.trim(); };
+  var exp = Array.prototype.map.call(document.querySelectorAll('input[name=exp]:checked'), function(i){ return i.value; });
+  if (!g('name') || !g('phone') || !g('area') || !g('lno') || !exp.length || !document.getElementById('consent').checked) return show('err', 'need');
+  var fd = new FormData();
+  fd.append('name', g('name')); fd.append('phone', g('phone')); fd.append('area', g('area'));
+  fd.append('license_type', g('ltype')); fd.append('license_no', g('lno')); fd.append('expertise', exp.join(','));
+  fd.append('note', g('note')); fd.append('consent', 'yes');
+  var btn = document.getElementById('go'); btn.disabled = true; show('info', 'sending');
+  try {
+    var r = await fetch('/farmers/apply', {method:'POST', body:fd});
+    var j = await r.json().catch(function(){ return {}; });
+    if (r.status === 429) show('err', 'rate');
+    else if (!r.ok) show('err', 'bad');
+    else if (j.status === 'already_approved') show('info', 'dup');
+    else { show('ok', 'ok'); document.getElementById('applyForm').reset(); }
+  } catch (err) { show('err', 'net'); }
+  btn.disabled = false;
+});
+
+</script>
+<script src="/nav.js" defer></script>
+</body>
+</html>

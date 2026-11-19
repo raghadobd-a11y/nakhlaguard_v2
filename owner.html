@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>NakhlaGuard — Owner site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2; --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --date-light:#D99A55; --alert:#A63D40; --card:#FBF9F3; --ok:#1F6B45 }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink); line-height:1.65; font-size:16px}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif; letter-spacing:-0.01em}
+  body.rtl{font-family:'Tajawal',sans-serif; direction:rtl}
+  body.rtl h1, body.rtl h2, body.rtl h3{font-family:'Tajawal',sans-serif; letter-spacing:0}
+  .wrap{max-width:760px; margin:0 auto; padding:0 20px}
+  a{color:inherit}
+  #langToggle{position:fixed; top:14px; right:14px; z-index:1000; background:var(--ink); border:1px solid rgba(237,230,214,.35); color:var(--sand); padding:7px 16px; border-radius:20px; font-size:.78rem; cursor:pointer; font-family:inherit}
+  .phero{background:radial-gradient(ellipse at 30% -10%, var(--palm) 0%, var(--palm-deep) 60%, var(--ink) 100%); color:var(--sand); padding:44px 0 36px}
+  .phero h1{font-size:2rem; line-height:1.2; margin-bottom:10px}
+  .phero p{color:#D8E2DC; max-width:560px; font-size:1rem}
+  .badge{display:inline-block; font-size:.72rem; font-weight:600; color:var(--sand); border:1px solid rgba(237,230,214,.45); border-radius:999px; padding:2px 11px; margin-bottom:12px}
+  main{padding:30px 0 40px}
+  .card{background:var(--card); border-radius:14px; padding:22px; margin-bottom:18px}
+  .card h2{font-size:1.2rem; color:var(--palm-deep); margin-bottom:10px}
+  .card p{color:var(--ink-soft); font-size:.92rem}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 22px; border-radius:8px; font-weight:600; font-size:.92rem; text-decoration:none; border:1.5px solid transparent; cursor:pointer; font-family:inherit}
+  .btn-fill{background:var(--date); color:var(--ink)} .btn-fill:hover{background:var(--date-light)}
+  .btn-line{border-color:var(--palm); color:var(--palm-deep); background:transparent}
+  .btn-dark{background:var(--palm-deep); color:var(--sand)}
+  .btn[disabled]{opacity:.55; cursor:not-allowed}
+  label.f{display:block; font-weight:600; font-size:.88rem; margin:14px 0 5px; color:var(--palm-deep)}
+  input[type=text],input[type=tel],input[type=password],select,textarea{width:100%; padding:11px 12px; border:1.5px solid var(--sand-deep); border-radius:8px; background:#fff; font:inherit; color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--palm); outline-offset:1px}
+  textarea{min-height:76px; resize:vertical}
+  .hint{font-size:.8rem; color:var(--ink-soft); margin-top:4px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+  .chip{display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border:1.5px solid var(--sand-deep); border-radius:999px; background:#fff; font-size:.85rem; cursor:pointer; user-select:none}
+  .chip input{accent-color:var(--palm)}
+  .chip.on, .chip:has(input:checked){border-color:var(--palm); background:#E8F1EC}
+  button.chip{font-family:inherit; color:var(--ink)}
+  .consent{display:flex; gap:10px; align-items:flex-start; margin-top:16px; font-size:.86rem; color:var(--ink-soft)}
+  .consent input{margin-top:5px; accent-color:var(--palm)}
+  .msg{border-radius:10px; padding:12px 14px; font-size:.9rem; margin-top:14px}
+  .msg.ok{background:#E3F1E8; color:#14502F} .msg.err{background:#FAE4E1; color:#7A2321} .msg.info{background:#FFF4DD; color:#6B4A12}
+  .steps3{display:grid; gap:10px; margin-top:14px; list-style:none}
+  .steps3 li{display:grid; grid-template-columns:32px 1fr; gap:12px; align-items:start; font-size:.92rem; color:var(--ink-soft)}
+  .steps3 b{width:30px; height:30px; border-radius:50%; background:var(--palm); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem}
+  footer{text-align:center; padding:24px 0; color:var(--ink-soft); font-size:.8rem}
+  [hidden]{display:none !important}
+  body.lang-ur, body.lang-ur *:not(code){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 } body.lang-ur h1, body.lang-ur h2, body.lang-ur h3{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea{ line-height:1.8 }
+</style>
+</head>
+<body>
+<button id="langToggle" onclick="toggleLang()">العربية</button>
+
+<div class="phero"><div class="wrap">
+  <span class="badge" data-en="Owner site" data-ar="موقع المالك" data-ur="مالک کی سائٹ">Owner site</span>
+  <h1 data-en="Your private NakhlaGuard site" data-ar="موقعك الخاص في NakhlaGuard" data-ur="آپ کی نجی NakhlaGuard سائٹ">Your private NakhlaGuard site</h1>
+  <p data-en="This site is not public. Only the owner of a device can enter it, using the code that comes with the device." data-ar="هذا الموقع ليس عامًا. لا يدخله إلا مالك الجهاز، بالباركود المرفق مع الجهاز." data-ur="یہ سائٹ عوامی نہیں ہے۔ صرف ڈیوائس کا مالک ڈیوائس کے ساتھ ملنے والے کوڈ سے داخل ہو سکتا ہے۔">This site is not public. Only the owner of a device can enter it, using the code that comes with the device.</p>
+</div></div>
+<main><div class="wrap">
+  <div class="card" id="inNow" hidden>
+    <p data-en="You are already signed in on this phone." data-ar="أنت داخل بالفعل على هذا الجهاز." data-ur="آپ اس فون پر پہلے سے داخل ہیں۔">You are already signed in on this phone.</p>
+    <p style="margin-top:12px"><a class="btn btn-fill" href="/test.html" data-en="Continue to your site" data-ar="تابع إلى موقعك" data-ur="اپنی سائٹ پر جائیں">Continue to your site</a></p>
+  </div>
+  <div class="card">
+    <h2 data-en="How to enter" data-ar="كيف تدخل" data-ur="کیسے داخل ہوں">How to enter</h2>
+    <ol class="steps3">
+      <li><b>1</b><span data-en="Find the QR code on the device box (or the card inside it)." data-ar="ابحث عن الباركود على علبة الجهاز (أو البطاقة داخلها)." data-ur="ڈیوائس کے باکس (یا اندر کارڈ) پر QR کوڈ دیکھیں۔">Find the QR code on the device box (or the card inside it).</span></li>
+      <li><b>2</b><span data-en="Scan it with your phone camera." data-ar="امسحه بكاميرا جوالك." data-ur="اسے اپنے فون کے کیمرے سے اسکین کریں۔">Scan it with your phone camera.</span></li>
+      <li><b>3</b><span data-en="Your private site opens, and your phone remembers you." data-ar="يفتح موقعك الخاص، ويتذكّرك جوالك." data-ur="آپ کی نجی سائٹ کھل جاتی ہے اور فون آپ کو یاد رکھتا ہے۔">Your private site opens, and your phone remembers you.</span></li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2 data-en="The code did not open?" data-ar="ما انفتح الباركود؟" data-ur="کوڈ نہیں کھلا؟">The code did not open?</h2>
+    <p data-en="Type the device key printed under the code." data-ar="اكتب مفتاح الجهاز المطبوع تحت الباركود." data-ur="کوڈ کے نیچے چھپی ڈیوائس کی چابی لکھیں۔">Type the device key printed under the code.</p>
+    <div id="bad" class="msg err" hidden><span data-en="That key is not valid. Check it and try again." data-ar="المفتاح غير صحيح. تأكد منه وحاول مرة أخرى." data-ur="یہ چابی درست نہیں۔ دوبارہ چیک کر کے کوشش کریں۔">That key is not valid. Check it and try again.</span></div>
+    <form id="keyForm" autocomplete="off">
+      <label class="f" for="key"><span data-en="Device key" data-ar="مفتاح الجهاز" data-ur="ڈیوائس کی چابی">Device key</span></label>
+      <input type="password" id="key" dir="ltr" autocomplete="off" autocapitalize="off" spellcheck="false" required>
+      <p style="margin-top:14px"><button class="btn btn-dark" type="submit" data-en="Enter" data-ar="دخول" data-ur="داخل ہوں">Enter</button></p>
+    </form>
+  </div>
+  <div class="card">
+    <h2 data-en="No device yet?" data-ar="ما عندك جهاز بعد؟" data-ur="ابھی ڈیوائس نہیں ہے؟">No device yet?</h2>
+    <p><span data-en="See what the device does and how it is installed." data-ar="تعرّف على ما يفعله الجهاز وكيف يُركَّب." data-ur="جانیں کہ ڈیوائس کیا کرتی ہے اور کیسے لگتی ہے۔">See what the device does and how it is installed.</span> <a href="/index.html" style="color:var(--palm);font-weight:600" data-en="Home page" data-ar="الصفحة الرئيسية" data-ur="ہوم پیج">Home page</a></p>
+  </div>
+</div></main>
+
+<script>
+// ---------- تبديل اللغة (عربي / English / اردو) - مشترك عبر كل صفحات الموقع ----------
+var LANG_CYCLE = ['ar', 'en', 'ur'];
+var LANG_BTN_LABEL = { ar: 'English', en: 'اردو', ur: 'العربية' };
+var LOCALES = { ar: 'ar-SA', en: 'en-US', ur: 'ur-PK' };
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return (l === 'ar' || l === 'en' || l === 'ur') ? l : 'ar'; }   // لا يعتمد على ثوابت معرَّفة لاحقًا، لأن بعض الصفحات تناديه قبل نهاية السكربت
+function setLang(lang){
+  if(!LANG_CYCLE.includes(lang)) lang = 'ar';
+  try{ localStorage.setItem('nakhlaguard-lang', lang); }catch(e){}
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+  document.body.classList.toggle('rtl', lang !== 'en');
+  document.body.classList.toggle('lang-ur', lang === 'ur');
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
+  });
+  document.querySelectorAll('[data-en-ph]').forEach(el => {
+    el.placeholder = el.getAttribute('data-' + lang + '-ph') ?? el.getAttribute('data-en-ph');
+  });
+  const btn = document.getElementById('langToggle');
+  if(btn) btn.textContent = LANG_BTN_LABEL[lang];
+}
+function toggleLang(){ setLang(LANG_CYCLE[(LANG_CYCLE.indexOf(getLang()) + 1) % LANG_CYCLE.length]); }
+setLang(getLang());
+
+
+
+var qs = new URLSearchParams(location.search);
+if (qs.get('bad') === '1') document.getElementById('bad').hidden = false;
+document.getElementById('keyForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var k = document.getElementById('key').value.trim();
+  if (k) location.href = '/o/' + encodeURIComponent(k);
+});
+fetch('/palms', {credentials:'same-origin'}).then(function(r){ if (r.ok) document.getElementById('inNow').hidden = false; }).catch(function(){});
+
+</script>
+<script src="/nav.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NakhlaGuard — الأدلة والمصادر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Tajawal:wght@400;500;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#14201B; --ink-soft:#4A5750; --sand:#EDE6D6; --sand-deep:#E1D8C2; --palm:#1F5C4A; --palm-deep:#123A2E; --date:#B8752E; --card:#FBF9F3; }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{ font-family:'Tajawal','IBM Plex Sans',sans-serif; background:var(--sand); color:var(--ink); min-height:100vh; padding-bottom:40px }
+  html[lang=en] body{ font-family:'IBM Plex Sans',sans-serif }
+  #langToggle{ position:fixed; top:14px; left:14px; z-index:5; background:var(--palm-deep); color:#fff; border:1px solid #fff3; border-radius:999px; padding:6px 14px; cursor:pointer; font:inherit }
+  .wrap{ max-width:900px; margin:0 auto; padding:0 16px }
+  h1{ font-size:1.7rem; color:var(--palm-deep); margin:22px 0 6px }
+  .sub{ color:var(--ink-soft); line-height:1.9; margin-bottom:14px }
+  .legend, .filters{ display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 }
+  .chip{ border:1px solid var(--palm); background:#fff; color:var(--palm-deep); border-radius:999px; padding:7px 14px; font:inherit; font-size:.88rem; cursor:pointer }
+  .chip.on{ background:var(--palm); color:#fff }
+  .sum{ background:#fff; border-radius:14px; padding:12px 14px; margin:10px 0 16px; font-size:.92rem; line-height:1.8 }
+  .claim{ background:var(--card); border-radius:14px; padding:14px 16px; margin:10px 0; border-inline-start:6px solid var(--palm) }
+  .claim[data-kind=measured_sim]{ border-color:#1F618D } .claim[data-kind=measured_real]{ border-color:#2e7d4f } .claim[data-kind=literature]{ border-color:var(--date) } .claim[data-kind=not_claimed]{ border-color:#8a8f8c; background:#f1efe8 }
+  .top{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px }
+  .id{ font-weight:800; color:var(--palm-deep) } .kind{ font-size:.75rem; color:#fff; border-radius:999px; padding:2px 10px }
+  .k-measured_sim{ background:#1F618D } .k-measured_real{ background:#2e7d4f } .k-literature{ background:var(--date) } .k-not_claimed{ background:#8a8f8c }
+  .txt{ line-height:1.9 } .note{ margin-top:6px; font-size:.85rem; color:#7a2e1a; background:#faece7; border-radius:8px; padding:6px 10px; line-height:1.7 }
+  .refs{ margin-top:8px; display:flex; gap:6px; flex-wrap:wrap } .refs a{ font-size:.8rem; background:#fff; border:1px solid var(--sand-deep); border-radius:8px; padding:3px 9px; color:var(--palm-deep); text-decoration:none }
+  .repro{ margin-top:8px; font-size:.8rem; direction:ltr; text-align:left; background:#14201B; color:#d6e6dc; border-radius:8px; padding:7px 10px; overflow-x:auto; white-space:pre }
+  .refl{ list-style:none; padding:0 } .refl li{ margin-bottom:12px; line-height:1.8 }
+  .rv{ display:inline-block; border-radius:9px; padding:1px 9px; font-size:.72rem; color:#fff; margin-inline-start:6px; vertical-align:middle } .rv.full{ background:#2f6b3a } .rv.partial{ background:#a8631a } .rnote{ display:block; margin-top:4px; font-size:.82rem; color:#5a4a32; line-height:1.7 }
+  .ver{ margin-top:8px; font-size:.85rem } .badge{ color:#fff; border-radius:9px; padding:2px 9px; font-size:.75rem; margin-inline-end:6px }
+  .pass{ background:#2e7d4f } .fail{ background:#b3342d } .reported{ background:#1F618D } .skipped{ background:#8a8f8c }
+  h2{ font-size:1.2rem; color:var(--palm-deep); margin:26px 0 8px }
+  ol.refl{ padding-inline-start:22px; line-height:1.8; font-size:.9rem } ol.refl li{ margin:8px 0 } ol.refl a{ color:var(--palm-deep); word-break:break-all }
+
+  /* ---- plain-language summary ---- */
+  .plain{ display:grid; gap:12px; margin:18px 0 6px }
+  .pc{ background:var(--card); border-radius:14px; padding:16px 18px; border-inline-start:6px solid var(--palm) }
+  .pc h3{ font-size:1.08rem; color:var(--palm-deep); margin-bottom:4px }
+  .pc .ps{ font-size:.86rem; color:var(--ink-soft); margin-bottom:8px; line-height:1.8 }
+  .pc p.pt{ line-height:2; font-size:.97rem }
+  .pc ul{ padding-inline-start:22px; line-height:2; font-size:.97rem }
+  .pc.sim{ border-color:#1F618D } .pc.pub{ border-color:var(--date) } .pc.real{ border-color:#2e7d4f } .pc.not{ border-color:#8a8f8c; background:#f1efe8 }
+  .tiles{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:8px 0 }
+  @media(max-width:560px){ .tiles{ grid-template-columns:1fr } }
+  .tile{ background:#fff; border-radius:12px; padding:12px 14px; text-align:center }
+  .tile b{ display:block; font-size:1.55rem; color:#1F618D; line-height:1.4 }
+  .tile span{ font-size:.85rem; color:var(--ink-soft); line-height:1.7 }
+  .pc .pn{ font-size:.85rem; color:#7a2e1a; background:#faece7; border-radius:8px; padding:6px 10px; margin-top:6px; line-height:1.8 }
+  .bottom{ background:var(--palm-deep); color:#fff; border-radius:14px; padding:16px 18px; line-height:2; font-size:.98rem }
+  details.rp{ margin-top:8px } details.rp > summary{ cursor:pointer; font-size:.82rem; color:var(--palm-deep); font-weight:600; list-style:none }
+  details.rp > summary::-webkit-details-marker{ display:none }
+  details.rp > summary::before{ content:"▸ " } details.rp[open] > summary::before{ content:"▾ " }
+  .id{ font-size:.72rem !important; font-weight:600 !important; color:#7b857f !important }
+
+  /* ---- Urdu (اردو): Noto Nastaliq Urdu, tall line-height, RTL ---- */
+  body.lang-ur, body.lang-ur *:not(code):not(.repro){ font-family:'Noto Nastaliq Urdu','Noto Naskh Arabic','Tajawal',serif !important }
+  body.lang-ur{ line-height:2.1 }
+  body.lang-ur h1, body.lang-ur h2, body.lang-ur h3, body.lang-ur h4{ line-height:2 }
+  body.lang-ur button, body.lang-ur input, body.lang-ur select, body.lang-ur textarea, body.lang-ur .nk-tab{ line-height:1.8 }
+</style>
+</head>
+<body>
+<button id="langToggle" onclick="toggleLang()">English</button>
+<div class="wrap">
+  <h1 id="h1"></h1>
+  <p class="sub" id="sub"></p>
+  <div class="plain" id="plain"></div>
+  <h2 id="alh"></h2>
+  <p id="alsub" class="lead" style="margin:4px 0 10px; color:var(--ink-soft); line-height:1.9"></p>
+  <div class="filters" id="filters"></div>
+  <div id="list"></div>
+  <div class="sum" id="sum" style="margin-top:16px"></div>
+  <h2 id="refh"></h2>
+  <p id="refsub" class="lead" style="margin:4px 0 10px"></p>
+  <ol class="refl" id="refs"></ol>
+</div>
+<script>
+const T = {
+  ar: { h1:"الأدلة والمصادر", sub:"كل رقم أو معلومة بالمشروع هنا بنوعه ومصدره. نثبت فقط ما يمكن إعادة حسابه بأمر تشغّله بنفسك، أو ما له مرجع منشور تفتح رابطه. وما لا نستطيع إثباته مكتوب صراحة تحت «لا نزعمه».",
+        all:"الكل", refh:"المراجع", vfull:"مراجَع كاملًا", vpart:"مراجَع جزئيًا", checked:"تاريخ المراجعة", refsub:"لكل مرجع حالة: «مراجَع كاملًا» أي قُرئ وقورنت الأرقام المقتبسة منه، و«مراجَع جزئيًا» أي تحقّقنا من بعضه وسبب ذلك مكتوب تحته.", repro:"أعد حسابه:", copy:"نسخ", copied:"تم النسخ", noRun:"لم يُشغَّل التحقق بعد: شغّل python verify_all.py", last:"آخر تحقق", measured:"المقيس الآن", pass:"مطابق", fail:"غير مطابق", reported:"مُعلَن", skipped:"لم يُشغَّل",
+        sum:(c, r) => `${c.measured_sim || 0} ادعاء مقيس بالمحاكاة، ${c.measured_real || 0} على تسجيلات حقيقية عامة، ${c.literature || 0} من مراجع منشورة، و${c.not_claimed || 0} نقول صراحة إننا لا نزعمها.` + (r ? ` آخر تشغيل للتحقق: ${r.time} (مطابق ${r.counts.pass}، غير مطابق ${r.counts.fail}، لم يُشغَّل ${r.counts.skipped}).` : " لم يُشغَّل التحقق التلقائي على هذا الجهاز بعد.") },
+  en: { h1:"Evidence and sources", sub:"Every number or fact in the project is here with its kind and source. We only state what you can recompute with a command you run yourself, or what has a published reference you can open. What we cannot prove is written openly under 'Not claimed'.",
+        all:"All", refh:"References", vfull:"Fully checked", vpart:"Partly checked", checked:"Checked on", refsub:"Each reference has a status: \"Fully checked\" means it was read and the numbers quoted from it were compared; \"Partly checked\" means only part was verified, and the reason is written under it.", repro:"Recompute it:", copy:"Copy", copied:"Copied", noRun:"Verification has not been run yet: run python verify_all.py", last:"Last verification", measured:"Measured now", pass:"matches", fail:"does not match", reported:"reported", skipped:"not run",
+        sum:(c, r) => `${c.measured_sim || 0} claims measured on simulation, ${c.measured_real || 0} on real public recordings, ${c.literature || 0} from published sources, and ${c.not_claimed || 0} we openly say we do not claim.` + (r ? ` Last verification run: ${r.time} (${r.counts.pass} match, ${r.counts.fail} do not match, ${r.counts.skipped} not run).` : " The automatic verification has not been run on this device yet.") },
+  ur: { h1:"ثبوت اور ذرائع", sub:"پروجیکٹ کا ہر عدد یا معلومات یہاں اپنی قسم اور ذریعے کے ساتھ موجود ہے۔ ہم صرف وہی بیان کرتے ہیں جسے آپ خود چلائے گئے کمانڈ سے دوبارہ حساب کر سکیں، یا جس کا شائع شدہ حوالہ آپ کھول سکیں۔ جو ہم ثابت نہیں کر سکتے وہ «ہم دعویٰ نہیں کرتے» کے تحت صاف لکھا ہے۔",
+        all:"سب", refh:"حوالہ جات", vfull:"مکمل جانچ", vpart:"جزوی جانچ", checked:"جانچ کی تاریخ", refsub:"ہر حوالے کی ایک حالت ہے: «مکمل جانچ» یعنی اسے پڑھا گیا اور اس سے لیے گئے اعداد کا موازنہ کیا گیا؛ «جزوی جانچ» یعنی صرف کچھ حصہ جانچا گیا اور وجہ نیچے لکھی ہے۔", repro:"دوبارہ حساب کریں:", copy:"کاپی", copied:"کاپی ہو گیا", noRun:"تصدیق ابھی نہیں چلائی گئی: python verify_all.py چلائیں", last:"آخری تصدیق", measured:"ابھی ناپا گیا", pass:"مطابق", fail:"مطابق نہیں", reported:"اعلان شدہ", skipped:"نہیں چلائی گئی",
+        sum:(c, r) => `${c.measured_sim || 0} دعوے سمولیشن پر ناپے گئے، ${c.measured_real || 0} عوامی حقیقی ریکارڈنگز پر، ${c.literature || 0} شائع شدہ ذرائع سے، اور ${c.not_claimed || 0} ایسے جن کے بارے میں ہم صاف کہتے ہیں کہ ہم دعویٰ نہیں کرتے۔` + (r ? ` تصدیق کا آخری رن: ${r.time} (${r.counts.pass} مطابق، ${r.counts.fail} غیر مطابق، ${r.counts.skipped} نہیں چلائے گئے)۔` : " خودکار تصدیق اس ڈیوائس پر ابھی نہیں چلائی گئی۔") },
+};
+/* Plain-language summary. Numbers mirror claims.json (M1, M2, D1, D2, L1, L2, N1, N5, N6, N3, N4): keep them in step. */
+const P = {
+  ar: { sub:"هذه الصفحة تشرح ببساطة ما أثبتناه وما لم نثبته بعد. وتحتها قائمة مفصّلة لمن يريد أن يتحقق من كل رقم بنفسه.",
+    a_t:"ما قسناه نحن", a_s:"على تسجيلات صنعناها بالحاسوب (محاكاة)، ولم يتدرّب عليها البرنامج.",
+    tiles:[["نحو 93%","صنّف مرحلة الإصابة الصحيحة من أربع مراحل"],["43 من 45","كشف الإصابة في التسجيلات المصابة"],["1 من 15","إنذار كاذب على التسجيلات السليمة"]],
+    a_n:"هذه أرقام على محاكاة، وليست على نخيل حقيقي.",
+    b_t:"ما تقوله الأبحاث المنشورة", b_p:"الاستماع إلى يرقات سوسة النخيل داخل الجذع طريقة بحثية معروفة وليست من ابتكارنا. في دراسة على بساتين سعودية صُنّفت 26 من 29 نخلة مصابة باحتمال متوسط أو عالٍ، وتأكّدت النتيجة بتشريح الجذوع. لكن الكشف في المرحلة المبكرة أضعف بكثير: نحو الثلث في تجربة على نخيل صغير، ويتحسّن كلما كبرت اليرقات.",
+    c_t:"ما حدث على تسجيلات حقيقية", c_p:"جرّبنا أيضًا على تسجيلات حقيقية لأشجار أخرى (ليست نخيلًا)، والنتيجة ليست جيدة بما يكفي بعد. النموذج الأول كشف معظم الإصابات (نحو 96%) لكنه أعطى إنذارات كاذبة كثيرة (نحو 68%). وفي اختبار ثانٍ لمرشّح الضجيج على أشجار لم يرها: كشف نحو 59% وإنذارات كاذبة نحو 32%. لذلك لا نقول إن الأداء على الواقع قد ثبت.",
+    d_t:"ما لم نختبره بعد", d_li:["لم نختبر الجهاز على نخيل حقيقي مصاب.","موضع المصدر على الجذع (من المستشعرات الثلاثة) تقدير غير معايَر على خشب حقيقي.","لا نميّز نوع الحشرة من الصوت.","الجهاز الحالي يقيس حتى نحو 2 كيلوهرتز، بينما تذكر دراسات طاقة في صوت اليرقة حتى 20 كيلوهرتز.","لا نذكر سعرًا للجهاز لأنه لم يُقَس."],
+    z:"الخلاصة: الفكرة لها سند في أبحاث منشورة، والبرنامج يعمل جيدًا على محاكاة، أما الأداء على نخيل حقيقي مصاب فهو الخطوة التالية.",
+    det_h:"كل الأدلة بالتفصيل", det_s:"لكل رقم نوعه ومصدره. الرمز مثل M1 مجرد رقم للإشارة إلى الادعاء. اضغط «أعد حسابه» لترى الأمر الذي يعيد الحساب.",
+    kinds:{measured_sim:"قِسناه على محاكاة", measured_real:"قِسناه على تسجيلات حقيقية", literature:"من أبحاث منشورة", not_claimed:"لا نزعمه"} },
+  en: { sub:"This page explains in plain words what we have shown and what we have not shown yet. Below it is a detailed list for anyone who wants to check every number.",
+    a_t:"What we measured ourselves", a_s:"On recordings we generated by computer (simulation), which the program was not trained on.",
+    tiles:[["about 93%","picked the right one of four stages"],["43 of 45","detected infestation in infested recordings"],["1 of 15","false alarm on healthy recordings"]],
+    a_n:"These are numbers on simulation, not on real palms.",
+    b_t:"What published research says", b_p:"Listening for red palm weevil larvae inside the trunk is an established research method, not our invention. In a study in Saudi orchards, 26 of 29 infested palms were rated medium or high likelihood, confirmed by dissecting the trunks. But detection in the early phase is much weaker: about a third in an experiment on young palms, and it improves as the larvae grow.",
+    c_t:"What happened on real recordings", c_p:"We also tested on real recordings of other trees (not palms), and the result is not good enough yet. The first model detected most infestations (about 96%) but raised many false alarms (about 68%). In a second test of the noise filter on trees it had never seen, detection was about 59% and false alarms about 32%. So we do not say real-world performance has been shown.",
+    d_t:"What we have not tested yet", d_li:["We have not tested the device on real infested palms.","The source position on the trunk (from the three sensors) is an estimate, not calibrated on real wood.","We cannot tell insect species apart from sound.","The current device records up to about 2 kHz, while studies report larval sound energy up to 20 kHz.","We do not state a price for the device because it has not been measured."],
+    z:"In short: the idea has support in published research, the program works well on simulation, and performance on real infested palms is the next step.",
+    det_h:"All the evidence in detail", det_s:"Every number has its kind and its source. A code such as M1 is just a reference number for the claim. Press “Recompute it” to see the command that repeats the calculation.",
+    kinds:{measured_sim:"Measured on simulation", measured_real:"Measured on real recordings", literature:"From published research", not_claimed:"Not claimed"} },
+  ur: { sub:"یہ صفحہ سادہ الفاظ میں بتاتا ہے کہ ہم نے کیا ثابت کیا ہے اور کیا ابھی ثابت نہیں کیا۔ نیچے تفصیلی فہرست ہے جو ہر عدد خود جانچنا چاہے اس کے لیے۔",
+    a_t:"ہم نے خود جو ناپا", a_s:"کمپیوٹر سے بنائی گئی ریکارڈنگز (سمولیشن) پر، جن پر پروگرام نے تربیت نہیں لی تھی۔",
+    tiles:[["تقریباً 93%","چار مراحل میں سے صحیح مرحلہ پہچانا"],["45 میں سے 43","متاثرہ ریکارڈنگز میں حملہ پکڑا"],["15 میں سے 1","صحت مند ریکارڈنگز پر غلط الارم"]],
+    a_n:"یہ اعداد سمولیشن پر ہیں، حقیقی کھجوروں پر نہیں۔",
+    b_t:"شائع شدہ تحقیق جو کہتی ہے", b_p:"تنے کے اندر ریڈ پام ویول کی سنڈیوں کی آواز سننا ایک معروف تحقیقی طریقہ ہے، ہماری ایجاد نہیں۔ سعودی باغات کی ایک تحقیق میں 29 متاثرہ کھجوروں میں سے 26 کو درمیانے یا زیادہ امکان کی درجہ بندی ملی، اور تنوں کو چیر کر تصدیق کی گئی۔ لیکن ابتدائی مرحلے میں شناخت بہت کمزور ہے: چھوٹی کھجوروں پر ایک تجربے میں تقریباً ایک تہائی، اور سنڈیاں بڑی ہونے پر یہ بہتر ہوتی ہے۔",
+    c_t:"حقیقی ریکارڈنگز پر جو ہوا", c_p:"ہم نے دوسرے درختوں (کھجور نہیں) کی حقیقی ریکارڈنگز پر بھی آزمایا، اور نتیجہ ابھی کافی اچھا نہیں۔ پہلے ماڈل نے زیادہ تر حملے پکڑے (تقریباً 96%) مگر غلط الارم بہت دیے (تقریباً 68%)۔ شور فلٹر کے دوسرے ٹیسٹ میں، ان درختوں پر جو اس نے پہلے نہیں دیکھے تھے، شناخت تقریباً 59% اور غلط الارم تقریباً 32% رہے۔ اس لیے ہم یہ نہیں کہتے کہ حقیقی دنیا میں کارکردگی ثابت ہو چکی ہے۔",
+    d_t:"جو ہم نے ابھی نہیں آزمایا", d_li:["ڈیوائس کو حقیقی متاثرہ کھجوروں پر نہیں آزمایا۔","تنے پر ماخذ کا مقام (تین سینسروں سے) ایک تخمینہ ہے، حقیقی لکڑی پر کیلیبریٹ نہیں ہوا۔","ہم آواز سے کیڑے کی قسم الگ نہیں کر سکتے۔","موجودہ ڈیوائس تقریباً 2 کلوہرٹز تک ناپتی ہے، جبکہ تحقیقات میں سنڈی کی آواز کی توانائی 20 کلوہرٹز تک بتائی گئی ہے۔","ہم ڈیوائس کی قیمت نہیں بتاتے کیونکہ وہ ناپی نہیں گئی۔"],
+    z:"خلاصہ: خیال کو شائع شدہ تحقیق کا سہارا حاصل ہے، پروگرام سمولیشن پر اچھا چلتا ہے، اور حقیقی متاثرہ کھجوروں پر کارکردگی اگلا قدم ہے۔",
+    det_h:"تمام ثبوت تفصیل سے", det_s:"ہر عدد کی قسم اور ذریعہ درج ہے۔ M1 جیسا کوڈ صرف دعوے کا حوالہ نمبر ہے۔ «دوبارہ حساب کریں» دبائیں تاکہ حساب دہرانے والا کمانڈ نظر آئے۔",
+    kinds:{measured_sim:"سمولیشن پر ناپا", measured_real:"حقیقی ریکارڈنگز پر ناپا", literature:"شائع شدہ تحقیق سے", not_claimed:"ہم دعویٰ نہیں کرتے"} },
+};
+function getLang(){ let l = null; try{ l = localStorage.getItem('nakhlaguard-lang'); }catch(e){} return ['ar','en','ur'].includes(l) ? l : 'ar'; }
+function setLang(l){ try{ localStorage.setItem('nakhlaguard-lang', l); }catch(e){} document.documentElement.lang = l; document.documentElement.dir = l === 'en' ? 'ltr' : 'rtl'; document.body.classList.toggle('lang-ur', l === 'ur'); const b = document.getElementById('langToggle'); if(b) b.textContent = {ar:'English', en:'اردو', ur:'العربية'}[l]; render(); }
+function toggleLang(){ const c = ['ar','en','ur']; setLang(c[(c.indexOf(getLang()) + 1) % c.length]); }
+let REG = null, REP = null, filter = 'all';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function render(){
+  if(!REG) return; const l = getLang(), t = T[l];
+  const p = P[l];
+  document.getElementById('h1').textContent = t.h1; document.getElementById('sub').textContent = p.sub; document.getElementById('refh').textContent = t.refh;
+  document.getElementById('alh').textContent = p.det_h; document.getElementById('alsub').textContent = p.det_s;
+  document.getElementById('plain').innerHTML =
+    `<div class="pc sim"><h3>${p.a_t}</h3><div class="ps">${p.a_s}</div><div class="tiles">${p.tiles.map(x => `<div class="tile"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div><div class="pn">${p.a_n}</div></div>` +
+    `<div class="pc pub"><h3>${p.b_t}</h3><p class="pt">${p.b_p}</p></div>` +
+    `<div class="pc real"><h3>${p.c_t}</h3><p class="pt">${p.c_p}</p></div>` +
+    `<div class="pc not"><h3>${p.d_t}</h3><ul>${p.d_li.map(x => `<li>${x}</li>`).join('')}</ul></div>` +
+    `<div class="bottom">${p.z}</div>`;
+  const counts = {}; REG.claims.forEach(c => counts[c.kind] = (counts[c.kind] || 0) + 1);
+  document.getElementById('sum').textContent = t.sum(counts, REP);
+  const kinds = Object.keys(REG.kinds);
+  document.getElementById('filters').innerHTML = `<button class="chip ${filter === 'all' ? 'on' : ''}" onclick="setFilter('all')">${t.all}</button>` + kinds.map(k => `<button class="chip ${filter === k ? 'on' : ''}" onclick="setFilter('${k}')">${esc(p.kinds[k])} (${counts[k] || 0})</button>`).join('');
+  const checks = {}; if(REP) REP.checks.forEach(r => checks[r.id] = r);
+  document.getElementById('list').innerHTML = REG.claims.filter(c => filter === 'all' || c.kind === filter).map(c => {
+    const refs = (c.refs || []).map(id => `<a href="#ref-${id}">${id}</a>`).join('');
+    let ver = '';
+    if(c.kind === 'measured_sim' || c.kind === 'measured_real'){
+      const r = checks[c.id];
+      ver = r ? `<div class="ver"><span class="badge ${r.status}">${t[r.status]}</span>${t.measured}: <b>${esc(r.measured_text)}</b></div>` : `<div class="ver" style="color:#7a2e1a">${t.noRun}</div>`;
+    }
+    const note = c['note_' + l] ? `<div class="note">${esc(c['note_' + l])}</div>` : '';
+    const repro = c.reproduce ? `<details class="rp"><summary>${t.repro.replace(/:$/, '')}</summary><div class="repro">${esc(c.reproduce)}</div></details>` : '';
+    return `<div class="claim" data-kind="${c.kind}"><div class="top"><span class="kind k-${c.kind}">${esc(p.kinds[c.kind])}</span><span class="id">${c.id}</span></div><div class="txt">${esc(c[l] || c.en)}</div>${note}${ver}${refs ? `<div class="refs">${refs}</div>` : ''}${repro}</div>`;
+  }).join('');
+  document.getElementById('refsub').textContent = t.refsub;
+  document.getElementById('refs').innerHTML = REG.references.map(r => {
+    const rn = r['note_' + l] || '';
+    const badge = r.verified ? `<span class="rv ${r.verified}">${r.verified === 'full' ? t.vfull : t.vpart}${r.checked ? ' · ' + esc(r.checked) : ''}</span>` : '';
+    return `<li id="ref-${r.id}"><b>${r.id}</b> ${esc(r.cite)} ${badge}${rn ? `<span class="rnote">${esc(rn)}</span>` : ''}<br><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)}</a></li>`;
+  }).join('');
+}
+function setFilter(f){ filter = f; render(); }
+(async function(){
+  try{ REG = await (await fetch('/claims.json')).json(); }catch(e){ document.getElementById('sub').textContent = 'claims.json not found'; return; }
+  try{ const r = await fetch('/verification_report.json'); if(r.ok) REP = await r.json(); }catch(e){}
+  setLang(getLang());
+})();
+</script>
+<script src="/nav.js" defer></script>
+</body>
+</html>

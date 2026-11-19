@@ -58,6 +58,12 @@ be answered directly without a tool.
 Respond in English only, regardless of the language the farmer wrote in - be \
 concise, clear, and practically useful."""
 
+# الأردية: نفس تعليمات الإنجليزية مع طلب الجواب بالأردية
+AGENT_SYSTEM_PROMPT_UR = AGENT_SYSTEM_PROMPT_EN.replace(
+    "Respond in English only,",
+    "Respond in Urdu only (Urdu script, simple words a farmer understands; keep palm IDs and numbers as they are),")
+assert AGENT_SYSTEM_PROMPT_UR != AGENT_SYSTEM_PROMPT_EN
+
 AGENT_SYSTEM_PROMPT_AR = """أنت "مساعد نخلة" - وكيل ذكاء اصطناعي واسع المعرفة
 داخل نظام NakhlaGuard، متخصص بإدارة آفة سوسة النخيل الحمراء لمزارعي النخيل.
 تعتمد على معرفة عميقة بأحياء الآفة، عوامل الخطورة، والمكافحة المتكاملة،
@@ -177,12 +183,16 @@ async def run_agent(user_message, tool_executor, history=None, max_steps=5, lang
                  الاستدعاء - مفيد لعرض "كيف فكّر الوكيل" بالعرض التقديمي
     }
     """
-    system_prompt = AGENT_SYSTEM_PROMPT_AR if language == "ar" else AGENT_SYSTEM_PROMPT_EN
+    system_prompt = {"ar": AGENT_SYSTEM_PROMPT_AR, "ur": AGENT_SYSTEM_PROMPT_UR}.get(language, AGENT_SYSTEM_PROMPT_EN)
 
     if language == "ar":
         no_key_msg = "⚠️ لم يتم ضبط GEMINI_API_KEY - المساعد الذكي يحتاج المفتاح ليعمل."
         fail_prefix = "⚠️ تعذّر الاتصال بالمساعد الذكي حاليًا"
-        stuck_msg = "⚠️ الوكيل استخدم عدة أدوات بدون التوصل لجواب نهائي - جربي إعادة صياغة السؤال."
+        stuck_msg = "⚠️ الوكيل استخدم عدة أدوات بدون التوصل لجواب نهائي - جرّب إعادة صياغة السؤال."
+    elif language == "ur":
+        no_key_msg = "⚠️ GEMINI_API_KEY سیٹ نہیں ہے - AI اسسٹنٹ کو چلنے کے لیے اس کی ضرورت ہے۔"
+        fail_prefix = "⚠️ AI اسسٹنٹ سے ابھی رابطہ نہیں ہو سکا"
+        stuck_msg = "⚠️ ایجنٹ نے کئی ٹولز استعمال کیے لیکن حتمی جواب تک نہیں پہنچ سکا - سوال دوسرے الفاظ میں پوچھ کر دیکھیں۔"
     else:
         no_key_msg = "⚠️ GEMINI_API_KEY is not set - the AI assistant needs it to work."
         fail_prefix = "⚠️ Could not reach the AI assistant right now"
@@ -236,7 +246,7 @@ async def run_agent(user_message, tool_executor, history=None, max_steps=5, lang
 
         # بالإنجليزي: نترجم أي تصنيف شدة عربي (سليم/مبكرة...) للإنجليزي
         # قبل ما يوصل النموذج. بالعربي: نبقيها كما هي (أطبع لجواب عربي).
-        if language == "en":
+        if language in ("en", "ur"):
             tool_result = anglicize(tool_result)
 
         contents.append({
