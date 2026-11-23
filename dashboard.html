@@ -254,7 +254,7 @@ loadFarmContact();
 
 
 document.getElementById('enableSound').onclick = async () => {
-  if ("Notification" in window) { await Notification.requestPermission(); }
+  if (typeof Notification !== "undefined" && Notification.requestPermission) { try{ await Notification.requestPermission(); }catch(e){} }
   soundEnabled = true;
   document.getElementById('enableSound').textContent = UI_TEXT[getLang()].enabled;
 };
@@ -306,15 +306,24 @@ function prettyRecBase(t){
     .replace(/^\s*((?:Week|الأسبوع)\s*\d+)\s*\|\s*([^|]+?)\s*(?:\|\s*(.+))?$/gim, (m, a, b, c) => a + ' — ' + b + (c ? ': ' + c : ''))
     .replace(/^\s*((?:Day|اليوم)\s*\d+)\s*\|\s*(.+)$/gim, '     $1: $2');
 }
+const liveShown = new Set();   // نخلات وصل لها تنبيه حي في هذه الجلسة
 function addAlertCard(data){
   document.getElementById('emptyState')?.remove();
+  if(!data.saved){
+    liveShown.add(data.palm_id);
+    document.querySelectorAll('.alert-card[data-saved="1"]').forEach(c => { if(c.dataset.palm === data.palm_id) c.remove(); });
+  }
   const container = document.getElementById('alertsContainer');
   const lang = getLang();
   const severityKey = CLASS_MAP[data.severity] || 'moderate';
   const severityLabel = CLASS_LABEL[lang][severityKey] || data.severity;
   const card = document.createElement('div');
   card.className = `alert-card ${severityKey}`;
-  const time = new Date(data.timestamp).toLocaleString(LOCALES[lang]);
+  card.dataset.palm = data.palm_id;
+  if(data.saved) card.dataset.saved = '1';
+  let ts = String(data.timestamp || '').replace(' ', 'T');
+  if(ts && !/(Z|[+-]\d\d:?\d\d)$/.test(ts)) ts += 'Z';   // الخادم يكتب UTC بلا Z
+  const time = new Date(ts).toLocaleString(LOCALES[lang]);
   card.innerHTML = `
     <div class="alert-top">
       <span class="palm-id">🌴 ${data.palm_id}</span>
@@ -322,16 +331,16 @@ function addAlertCard(data){
     </div>
     ${data.location ? `<div class="time">📍 ${data.location}</div>` : ''}
     <div class="time">${time} — ${UI_TEXT[lang].risk} ${(data.score*100).toFixed(0)}%</div>
-    <div class="rec">${prettyRec(data.recommendation)}</div>
+    <div class="rec">${data.saved ? UI_TEXT[lang].savedNote : prettyRec(data.recommendation)}</div>
     ${data.farm_contact && data.farm_contact.contact_name ? `<div class="alert-contact">${UI_TEXT[lang].alertContact(data.farm_contact.contact_name, data.farm_contact.contact_phone)}</div>` : ''}
     <a class="ask-farmer" href="/farmers.html?palm=${encodeURIComponent(data.palm_id)}&severity=${encodeURIComponent(severityLabel)}${data.location ? '&area=' + encodeURIComponent(data.location) : ''}">${UI_TEXT[lang].askFarmer}</a>
-    ${alertMapHtml(data, lang)}
+    ${data.saved ? '' : alertMapHtml(data, lang)}
   `;
   container.prepend(card);
 
-  if(soundEnabled){
+  if(soundEnabled && !data.saved){
     playBeep();
-    if (Notification.permission === "granted") {
+    if (typeof Notification !== "undefined" && Notification.permission === "granted") {
       new Notification(UI_TEXT[lang].alertTitle(data.palm_id), {
         body: UI_TEXT[lang].alertBody(severityLabel),
       });
@@ -339,11 +348,34 @@ function addAlertCard(data){
   }
 }
 
+Object.assign(UI_TEXT.en, { savedNote:"Saved from the latest check of this palm (shown again because this page was opened or woke up after the check)." });
+Object.assign(UI_TEXT.ar, { savedNote:"محفوظ من آخر فحص لهذه النخلة، ويظهر هنا لأن الصفحة فُتحت أو استيقظت بعد الفحص." });
+Object.assign(UI_TEXT.ur, { savedNote:"اس کھجور کے آخری معائنے سے محفوظ شدہ، یہاں اس لیے دکھایا گیا کہ صفحہ معائنے کے بعد کھلا یا دوبارہ فعال ہوا۔" });
+
+// ---------- تنبيهات محفوظة: آخر حالة متوسطة/متقدمة لكل نخلة، حتى لو لم تكن الصفحة مفتوحة وقت الفحص ----------
+async function loadSavedAlerts(){
+  try{
+    const res = await fetch('/palms');
+    if(!res.ok) return;
+    const data = await res.json();
+    const list = Array.isArray(data) ? data : (data.palms || []);
+    document.querySelectorAll('.alert-card[data-saved="1"]').forEach(c => c.remove());
+    list.filter(p => (p.latest_status === 'متوسطة' || p.latest_status === 'متقدمة') && !liveShown.has(p.palm_id))
+        .sort((a, b) => String(b.latest_check || '').localeCompare(String(a.latest_check || '')))
+        .slice(0, 10).reverse()
+        .forEach(p => addAlertCard({ palm_id:p.palm_id, location:p.location, severity:p.latest_status, score:p.latest_score || 0,
+                                     recommendation:'', farm_contact:null, sensor_location:null, timestamp:p.latest_check, saved:true }));
+  }catch(e){ /* صامت: التنبيهات الحية تعمل بدونه */ }
+}
+loadSavedAlerts();
+document.addEventListener('visibilitychange', () => { if(!document.hidden) loadSavedAlerts(); });
+
 function connect(){
   const proto = window.location.protocol === "https:" ? "wss" : "ws";
   const ws = new WebSocket(`${proto}://${API_HOST}/ws/alerts`);
 
   ws.onopen = () => {
+    loadSavedAlerts();
     document.getElementById('statusDot').className = 'dot on';
     document.getElementById('statusText').textContent = UI_TEXT[getLang()].connected;
   };
