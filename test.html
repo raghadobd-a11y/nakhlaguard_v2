@@ -193,6 +193,8 @@
   .samples{ margin:0 0 16px } .samples-h{ font-size:.9rem; color:#4A5750; margin-bottom:8px } .samples-n{ font-size:.78rem; color:#6a746d; margin-top:8px; line-height:1.6 }
   .chips{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px }
   @media (min-width:640px){ .chips{ grid-template-columns:repeat(4,1fr) } }
+  #result{ scroll-margin-top:70px; scroll-margin-bottom:110px }
+  .chip:disabled{ cursor:wait }
   .chip{ min-width:0; border:none; border-radius:999px; padding:11px 8px; font:inherit; font-weight:700; cursor:pointer; color:#fff }
   .chip.healthy{ background:#2e7d4f } .chip.early{ background:#c79a1b } .chip.moderate{ background:#d9701f } .chip.advanced{ background:#b3342d }
   .go-big{ width:100%; padding:16px; font-size:1.15rem; border-radius:14px; box-shadow:0 6px 16px rgba(31,92,74,.35) }
@@ -412,19 +414,43 @@ function useMyLocation(inputId, statusId){
 window.addEventListener('message', e => { if (e.data && e.data.type === 'nk-embed-height') { const f = document.getElementById('trunkFrame'); if (f) f.style.height = Math.max(300, e.data.h + 8) + 'px'; } });
 function openTrunkFull(btn){ const f = document.getElementById('trunkFrame'); if (f && window.__trunkBase) { f.style.height = '640px'; f.src = window.__trunkBase + '&autocam=1'; } if (btn) btn.remove(); }
 const SAMPLE_FILES = { healthy: '1_healthy.wav', early: '2_early.wav', moderate: '3_moderate.wav', advanced: '4_advanced.wav' };
+window.__pickedSample = null;
+function getAudioFile(){
+  const fi = document.getElementById('audioFile');
+  return (fi.files && fi.files.length) ? fi.files[0] : window.__pickedSample;
+}
+function showSampleError(msg){
+  const rd = document.getElementById('result');
+  rd.style.display = 'block'; rd.className = '';
+  rd.innerHTML = `<div class="soft-err">${msg}</div>`;
+  try{ rd.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){}
+}
 async function useSample(key){
   const t = UI_TEXT[getLang()];
+  const chips = document.querySelectorAll('.chip');
+  chips.forEach(c => { c.disabled = true; c.style.opacity = '.6'; });
+  const rd = document.getElementById('result');
+  rd.style.display = 'block'; rd.className = '';
+  rd.innerHTML = `<div class="loading-box"><div class="spinner"></div><div class="loading-text">${t.analyzing}</div></div>`;
+  try{ rd.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){}
   try{
-    const r = await fetch(`${API_BASE}/demo-wav/${SAMPLE_FILES[key]}`);
-    if(!r.ok) throw new Error('sample');
-    const file = new File([await r.blob()], SAMPLE_FILES[key], { type: 'audio/wav' });
-    const dt = new DataTransfer(); dt.items.add(file);
-    document.getElementById('audioFile').files = dt.files;
+    const r = await fetch(`${API_BASE}/demo-wav/${SAMPLE_FILES[key]}`, { cache:'no-store' });
+    if(!r.ok) throw new Error('sample HTTP ' + r.status);
+    const blob = await r.blob();
+    let file;
+    try{ file = new File([blob], SAMPLE_FILES[key], { type: 'audio/wav' }); }
+    catch(_){ file = blob; try{ file.name = SAMPLE_FILES[key]; }catch(__){} }
+    window.__pickedSample = file;
+    try{ const dt = new DataTransfer(); dt.items.add(file); document.getElementById('audioFile').files = dt.files; }catch(_){ /* متصفحات قديمة: نستخدم النسخة المحفوظة */ }
     document.getElementById('audioName').textContent = '🎧 ' + SAMPLE_FILES[key];
-    analyze();
-  }catch(e){ alert(t.sampleErr); }
+    await analyze();
+  }catch(e){
+    showSampleError(t.sampleErr + ' (' + (e && e.message ? e.message : e) + ')');
+  }finally{
+    chips.forEach(c => { c.disabled = false; c.style.opacity = ''; });
+  }
 }
-document.getElementById('audioFile').addEventListener('change', e => { const f = e.target.files[0]; document.getElementById('audioName').textContent = f ? '🎧 ' + f.name : ''; });
+document.getElementById('audioFile').addEventListener('change', e => { const f = e.target.files[0]; if(f) window.__pickedSample = null; document.getElementById('audioName').textContent = f ? '🎧 ' + f.name : ''; });
 if(location.hash === '#samples'){ setTimeout(() => { const el = document.getElementById('samples'); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 500); }
 async function loadSavedPalms(){
   try{
@@ -491,10 +517,11 @@ async function analyze(){
   const imgProb = document.getElementById('imgProb').value;
   const resultDiv = document.getElementById('result');
 
-  if(!fileInput.files.length){ alert(t.needFile); return; }
+  const audioFile = getAudioFile();
+  if(!audioFile){ alert(t.needFile); return; }
 
   const form = new FormData();
-  form.append('audio', fileInput.files[0]);
+  form.append('audio', audioFile, audioFile.name || 'sample.wav');
   form.append('palm_id', palmId);
   if(location) form.append('location', location);
   if(notes) form.append('notes', notes);
@@ -507,6 +534,7 @@ async function analyze(){
   resultDiv.className = '';
   let stepIdx = 0;
   resultDiv.innerHTML = `<div class="loading-box"><div class="spinner"></div><div class="loading-text">${t.loadingSteps[0]}</div></div>`;
+  try{ resultDiv.scrollIntoView({behavior:'smooth', block:'center'}); }catch(_){}
   const loadingTimer = setInterval(() => {
     stepIdx = Math.min(stepIdx + 1, t.loadingSteps.length - 1);
     const el = resultDiv.querySelector('.loading-text');
@@ -559,6 +587,7 @@ async function analyze(){
       </div>
       <button type="button" id="pdfBtn" class="pdf-btn" onclick="printReport()">${t.downloadPdf}</button>
     `;
+    try{ resultDiv.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_){}
     document.getElementById('pdfPalmId').textContent = palmId;
     document.getElementById('pdfDate').textContent = new Date().toLocaleString();
     loadSavedPalms();
